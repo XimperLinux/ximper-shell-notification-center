@@ -9,6 +9,10 @@ namespace SwayNotificationCenter.Widgets {
         }
 
         BacklightUtil client;
+#if HAVE_DDC
+        DdcUtil[] ddc_clients = {};
+        bool use_ddc = false;
+#endif
 
         Gtk.Label label_widget = new Gtk.Label (null);
         Gtk.Scale slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
@@ -27,9 +31,17 @@ namespace SwayNotificationCenter.Widgets {
                 switch (subsystem) {
                     default :
                     case "backlight":
-                        if (subsystem != "backlight") {
+                        if (subsystem != "backlight"
+#if HAVE_DDC
+                            && subsystem != "ddc"
+#endif
+                        ) {
                             info ("Invalid subsystem %s for device %s. " +
-                                  "Use 'backlight' or 'leds'. Using default: 'backlight'",
+                                  "Use 'backlight', 'leds'" +
+#if HAVE_DDC
+                                  ", 'ddc'" +
+#endif
+                                  ". Using default: 'backlight'",
                                   subsystem, device);
                         }
                         client = new BacklightUtil ("backlight", device);
@@ -39,8 +51,89 @@ namespace SwayNotificationCenter.Widgets {
                         client = new BacklightUtil ("leds", device);
                         slider.set_range (min, this.client.get_max_value ());
                         break;
+#if HAVE_DDC
+                    case "ddc":
+                        int display_number = int.max (0, get_prop<int> (config, "display-number"));
+                        use_ddc = true;
+
+                        if (display_number > 0) {
+                            ddc_clients += new DdcUtil (display_number);
+                            slider.set_range (min, 100);
+                        } else {
+                            // Auto-detect all DDC displays
+                            var displays = DdcUtil.detect_displays ();
+                            if (displays.length == 0) {
+                                warning ("No DDC displays found");
+                                hide ();
+                                return;
+                            }
+                            for (int i = 0; i < displays.length; i++) {
+                                var ddc = new DdcUtil (displays[i].dispno);
+                                ddc_clients += ddc;
+                            }
+                        }
+                        break;
+#endif
                 }
             }
+
+#if HAVE_DDC
+            if (use_ddc) {
+                if (ddc_clients.length == 1) {
+                    // Single DDC display — use the existing label + slider
+                    if (label_widget.get_label () == "Brightness") {
+                        label_widget.set_label ("󰍹");
+                        label_widget.set_tooltip_text (ddc_clients[0].get_display_name ());
+                    }
+                    ddc_clients[0].brightness_change.connect ((percent) => {
+                        if (percent < 0) {
+                            hide ();
+                        } else {
+                            slider.set_value (percent);
+                        }
+                    });
+                    slider.set_draw_value (false);
+                    slider.set_round_digits (0);
+                    slider.set_hexpand (true);
+                    slider.value_changed.connect (() => {
+                        ddc_clients[0].set_brightness.begin ((float) slider.get_value ());
+                        slider.tooltip_text = ((int) slider.get_value ()).to_string ();
+                    });
+                    append (label_widget);
+                    append (slider);
+                } else {
+                    // Multiple DDC displays — create a row per display
+                    set_orientation (Gtk.Orientation.VERTICAL);
+                    for (int i = 0; i < ddc_clients.length; i++) {
+                        var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+                        var lbl = new Gtk.Label ("󰍹 %d".printf (i + 1));
+                        lbl.set_tooltip_text (ddc_clients[i].get_display_name ());
+                        var scl = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
+                        scl.set_draw_value (false);
+                        scl.set_round_digits (0);
+                        scl.set_hexpand (true);
+
+                        int idx = i;
+                        ddc_clients[i].brightness_change.connect ((percent) => {
+                            if (percent < 0) {
+                                row.hide ();
+                            } else {
+                                scl.set_value (percent);
+                            }
+                        });
+                        scl.value_changed.connect (() => {
+                            ddc_clients[idx].set_brightness.begin ((float) scl.get_value ());
+                            scl.tooltip_text = ((int) scl.get_value ()).to_string ();
+                        });
+
+                        row.append (lbl);
+                        row.append (scl);
+                        append (row);
+                    }
+                }
+                return;
+            }
+#endif
 
             this.client.brightness_change.connect ((percent) => {
                 if (percent < 0) { // invalid device path
@@ -63,6 +156,18 @@ namespace SwayNotificationCenter.Widgets {
         }
 
         public override void on_cc_visibility_change (bool val) {
+#if HAVE_DDC
+            if (use_ddc) {
+                foreach (var ddc in ddc_clients) {
+                    if (val) {
+                        ddc.start ();
+                    } else {
+                        ddc.close ();
+                    }
+                }
+                return;
+            }
+#endif
             if (val) {
                 this.client.start ();
             } else {

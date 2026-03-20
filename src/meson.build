@@ -120,6 +120,19 @@ if get_option('pulse-audio')
   ]
 endif
 
+# Checks if the user wants to compile with DDC/CI support
+if get_option('ddc')
+  add_project_arguments('-D', 'HAVE_DDC', language: 'vala')
+  ddcutil_vapi_dir = meson.current_source_dir() / 'controlCenter' / 'widgets' / 'backlight'
+  app_deps += [
+    cc.find_library('ddcutil', required: true),
+    vala.find_library('ddcutil', dirs: ddcutil_vapi_dir),
+  ]
+  app_sources += [
+    'controlCenter/widgets/backlight/ddcUtil.vala',
+  ]
+endif
+
 args = [
   '--target-glib=2.82',
 ]

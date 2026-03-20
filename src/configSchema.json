@@ -794,14 +794,19 @@
         },
         "subsystem": {
           "type": "string",
-          "description": "Kernel subsystem for brightness control",
+          "description": "Kernel subsystem for brightness control. Use 'ddc' for external monitors via DDC/CI (requires build with -Dddc=true).",
           "default": "backlight",
-          "enum": ["backlight", "leds"]
+          "enum": ["backlight", "leds", "ddc"]
         },
         "min": {
           "type": "integer",
           "default": 0,
           "description": "Lowest possible value for brightness"
+        },
+        "display-number": {
+          "type": "integer",
+          "default": 0,
+          "description": "DDC display number (from ddcutil detect). 0 means first available. Only used with subsystem 'ddc'."
         }
       }
     },
