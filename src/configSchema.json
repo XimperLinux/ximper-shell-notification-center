@@ -627,6 +627,42 @@
               "$ref": "#/widgets/buttons-grid/properties/actions"
             }
           }
+        },
+        "^power-profiles(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+          "type": "object",
+          "description": "A button that opens a dropdown with power profile options from D-Bus PowerProfiles daemon. Profiles are detected automatically.",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "Text to be displayed in the button",
+              "default": "Power"
+            },
+            "position": {
+              "type": "string",
+              "description": "Horizontal position of the button in the bar",
+              "default": "right",
+              "enum": ["right", "left"]
+            },
+            "animation-type": {
+              "type": "string",
+              "default": "slide_down",
+              "description": "Animation type for the dropdown",
+              "enum": ["slide_down", "slide_up", "none"]
+            },
+            "animation-duration": {
+              "type": "integer",
+              "default": 250,
+              "description": "Duration of animation in milliseconds"
+            },
+            "button-labels": {
+              "type": "object",
+              "description": "Override button text for specific profiles. Keys are profile names (performance, balanced, power-saver), values are the full button text.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },

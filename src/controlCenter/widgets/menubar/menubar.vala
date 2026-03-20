@@ -3,7 +3,8 @@ using GLib;
 namespace SwayNotificationCenter.Widgets {
     public enum MenuType {
         BUTTONS,
-        MENU
+        MENU,
+        POWER_PROFILES
     }
 
     public enum Position {
@@ -20,6 +21,7 @@ namespace SwayNotificationCenter.Widgets {
         Gtk.Revealer ?revealer;
         int animation_duration;
         Gtk.RevealerTransitionType animation_type;
+        HashTable<string, string> ?label_overrides;
     }
 
     public struct Action {
@@ -42,11 +44,14 @@ namespace SwayNotificationCenter.Widgets {
 
         List<ConfigObject ?> menu_objects;
         List<ToggleButton> toggle_buttons;
+        List<PowerProfiles> power_profiles_widgets;
 
         public Menubar (string suffix) {
             base (suffix);
             set_orientation (Gtk.Orientation.VERTICAL);
             set_hexpand (true);
+
+            power_profiles_widgets = new List<PowerProfiles> ();
 
             Json.Object ?config = get_config (this);
             if (config != null) {
@@ -140,6 +145,9 @@ namespace SwayNotificationCenter.Widgets {
                     foreach (var o in menu_objects) {
                         o.revealer ?.set_reveal_child (false);
                     }
+                    foreach (var pp in power_profiles_widgets) {
+                        pp.close ();
+                    }
                     r.set_reveal_child (visible);
                 });
 
@@ -172,6 +180,38 @@ namespace SwayNotificationCenter.Widgets {
 
                     append (r);
                     break;
+                case MenuType.POWER_PROFILES :
+                    var pp = new PowerProfiles (
+                        obj.label,
+                        obj.animation_duration,
+                        obj.animation_type,
+                        obj.label_overrides);
+
+                    pp.request_close_other_revealers.connect (() => {
+                        foreach (var o in menu_objects) {
+                            o.revealer ?.set_reveal_child (false);
+                        }
+                        foreach (var other_pp in power_profiles_widgets) {
+                            if (other_pp != pp) {
+                                other_pp.close ();
+                            }
+                        }
+                    });
+
+                    obj.revealer = pp.get_revealer ();
+                    power_profiles_widgets.append (pp);
+
+                    switch (obj.position) {
+                        case Position.RIGHT:
+                            right_container.append (pp.get_button ());
+                            break;
+                        case Position.LEFT:
+                            left_container.append (pp.get_button ());
+                            break;
+                    }
+
+                    append (pp.get_revealer ());
+                    break;
             }
         }
 
@@ -194,9 +234,11 @@ namespace SwayNotificationCenter.Widgets {
                     type = MenuType.BUTTONS;
                 } else if (t == "menu") {
                     type = MenuType.MENU;
+                } else if (t == "power-profiles") {
+                    type = MenuType.POWER_PROFILES;
                 } else {
                     info ("Invalid type for menu-object - valid options: " +
-                          "'menu' || 'buttons' using default");
+                          "'menu' || 'buttons' || 'power-profiles' using default");
                 }
 
                 string name = key[1];
@@ -213,7 +255,7 @@ namespace SwayNotificationCenter.Widgets {
                 }
 
                 Json.Array ?actions = get_prop_array (obj, "actions");
-                if (actions == null) {
+                if (actions == null && type != MenuType.POWER_PROFILES) {
                     info ("Error parsing actions for menu-object");
                 }
 
@@ -249,7 +291,20 @@ namespace SwayNotificationCenter.Widgets {
                         break;
                 }
 
-                Action[] actions_list = parse_actions (actions);
+                Action[] actions_list = actions != null ? parse_actions (actions) : new Action[0];
+
+                // Parse label overrides for power-profiles
+                HashTable<string, string>? icons = null;
+                if (type == MenuType.POWER_PROFILES && obj.has_member ("button-labels")) {
+                    icons = new HashTable<string, string> (str_hash, str_equal);
+                    var icons_obj = obj.get_object_member ("button-labels");
+                    if (icons_obj != null) {
+                        foreach (string profile_key in icons_obj.get_members ()) {
+                            icons.insert (profile_key, icons_obj.get_string_member (profile_key));
+                        }
+                    }
+                }
+
                 menu_objects.append (ConfigObject () {
                     name = name,
                     type = type,
@@ -259,6 +314,7 @@ namespace SwayNotificationCenter.Widgets {
                     revealer = null,
                     animation_duration = duration,
                     animation_type = revealer_type,
+                    label_overrides = icons,
                 });
             }
         }
@@ -267,6 +323,9 @@ namespace SwayNotificationCenter.Widgets {
             if (!val) {
                 foreach (var obj in menu_objects) {
                     obj.revealer ?.set_reveal_child (false);
+                }
+                foreach (var pp in power_profiles_widgets) {
+                    pp.close ();
                 }
             } else {
                 foreach (var tb in toggle_buttons) {

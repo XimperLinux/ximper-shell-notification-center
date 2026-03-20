@@ -50,6 +50,8 @@ widget_sources = [
   'controlCenter/widgets/backlight/backlightUtil.vala',
   # Widget: Inhibitors
   'controlCenter/widgets/inhibitors/inhibitors.vala',
+  # Widget: Power Profiles (D-Bus PPD integration for menubar)
+  'controlCenter/widgets/powerProfiles/powerProfiles.vala',
 ]
 
 app_sources = [
