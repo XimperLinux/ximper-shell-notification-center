@@ -459,7 +459,6 @@ namespace XimperShellNotificationCenter {
         }
 
         private void action_clicked (Action ?action) {
-            noti_daemon.run_scripts (param, ScriptRunOnType.ACTION);
             if (action != null
                 && action.identifier != null
                 && action.identifier != "") {

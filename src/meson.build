@@ -98,11 +98,6 @@ app_deps = [
   protocol_dep,
 ]
 
-# Checks if the user wants scripting enabled
-if get_option('scripting')
-  add_project_arguments('-D', 'WANT_SCRIPTING', language: 'vala')
-endif
-
 # Checks if the user wants to compile with the PulseAudio dependency
 if get_option('pulse-audio')
   add_project_arguments('-D', 'HAVE_PULSE_AUDIO', language: 'vala')

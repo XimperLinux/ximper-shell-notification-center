@@ -20,8 +20,6 @@ theme might require extra tweaks to the default CSS style file*
   * [Configuring](#configuring)
     * [Toggle Buttons](#toggle-buttons)
   * [Notification Inhibition](#notification-inhibition)
-  * [Scripting](#scripting)
-     * [Disable scripting](#disable-scripting)
   * [Waybar Example](#waybar-example)
   * [Debugging Environment Variables](#debugging-environment-variables)
 
@@ -216,70 +214,6 @@ Here's an example of notification inhibition while screen sharing through
 [screencast]
 exec_before=ximper-shell-notification-center-client --inhibitor-add "xdg-desktop-portal-wlr"
 exec_after=ximper-shell-notification-center-client --inhibitor-remove "xdg-desktop-portal-wlr"
-```
-
-## Scripting
-
-Scripting rules and logic:
-
-. <b>Only one</b> script can be fired per notification
-. Each script requires `exec` and at least one of the other properties
-. All listed properties must match the notification for the script to be ran
-. If any of the properties doesn't match, the script will be skipped
-. If a notification doesn't include one of the properties, that property will
-be skipped
-· If a script has `run-on` set to `action`, the script will only run when an
-action is taken on the notification
-
-More information can be found in the `ximper-shell-notification-center(5)` man page
-
-Notification information can be printed into a terminal by running
-`G_MESSAGES_DEBUG=all ximper-shell-notification-center` (when a notification appears).
-
-Config properties:
-
-```jsonc
-{
-  "scripts": {
-    "example-script": {
-      "exec": "Your shell command or script here...",
-      "app-name": "Notification app-name Regex",
-      "summary": "Notification summary Regex",
-      "body": "Notification body Regex",
-      "urgency": "Low or Normal or Critical",
-      "category": "Notification category Regex"
-    }
-  }
-  // other non scripting properties...
-}
-```
-
-`config.json` example:
-
-```jsonc
-{
-  "scripts": {
-    // This script will only run when Spotify sends a notification containing
-    // that exact summary and body
-    "example-script": {
-      "exec": "/path/to/myRickRollScript.sh",
-      "app-name": "Spotify",
-      "summary": "Never Gonna Give You Up",
-      "body": "Rick Astley - Whenever You Need Somebody"
-    }
-  }
-  // other non scripting properties...
-}
-```
-
-### Disable scripting
-
-To completely disable scripting, the project needs to be built like so:
-
-```zsh
-meson build -Dscripting=false
-ninja -C build
-meson install -C build
 ```
 
 ## Waybar Example

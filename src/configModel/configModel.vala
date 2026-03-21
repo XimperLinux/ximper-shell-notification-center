@@ -435,50 +435,6 @@ namespace XimperShellNotificationCenter {
         }
     }
 
-    public enum ScriptRunOnType {
-        ACTION,
-        RECEIVE;
-    }
-
-#if WANT_SCRIPTING
-    public class Script : NotificationMatching {
-        public string ?exec { get; set; default = null; }
-        public ScriptRunOnType run_on { get; set; default = ScriptRunOnType.RECEIVE; }
-
-        public async bool run_script (NotifyParams param, out string msg) {
-            string[] spawn_env = {};
-            spawn_env += "XSNC_APP_NAME=%s".printf (param.app_name);
-            spawn_env += "XSNC_SUMMARY=%s".printf (param.summary);
-            spawn_env += "XSNC_BODY=%s".printf (param.body);
-            spawn_env += "XSNC_URGENCY=%s".printf (param.urgency.to_string ());
-            spawn_env += "XSNC_CATEGORY=%s".printf (param.category);
-            spawn_env += "XSNC_SOUND_NAME=%s".printf (param.sound_name);
-            spawn_env += "XSNC_SOUND_FILE=%s".printf (param.sound_file);
-            spawn_env += "XSNC_ID=%s".printf (param.applied_id.to_string ());
-            spawn_env += "XSNC_REPLACES_ID=%s".printf (param.replaces_id.to_string ());
-            spawn_env += "XSNC_TIME=%s".printf (param.time.to_string ());
-            spawn_env += "XSNC_DESKTOP_ENTRY=%s".printf (param.desktop_entry ?? "");
-            foreach (string hint in param.hints.get_keys ()) {
-                if (hint.contains ("image") || hint.contains ("icon")) {
-                    continue;
-                }
-                spawn_env += "XSNC_HINT_%s=%s".printf (
-                    hint.up ().replace ("-", "_"),
-                    param.hints[hint].print (false));
-            }
-
-            return yield Functions.execute_command (exec, spawn_env, out msg);
-        }
-
-        public override bool matches_notification (NotifyParams param) {
-            if (exec == null) {
-                return false;
-            }
-            return base.matches_notification (param);
-        }
-    }
-#endif
-
     public class ConfigModel : Object, Json.Serializable {
         private static ConfigModel ?_instance = null;
         private static string _path = "";
@@ -756,18 +712,6 @@ namespace XimperShellNotificationCenter {
             default = new OrderedHashTable<NotificationVisibility> ();
         }
 
-#if WANT_SCRIPTING
-        /** Scripts */
-        public OrderedHashTable<Script> scripts {
-            get;
-            set;
-            default = new OrderedHashTable<Script> ();
-        }
-
-        /** Show notification if script fails */
-        public bool script_fail_notify { get; set; default = true; }
-#endif
-
         /** Whether to expand the notification center across both edges of the screen */
         public bool fit_to_screen { get; set; default = true; }
 
@@ -931,17 +875,6 @@ namespace XimperShellNotificationCenter {
                             out status);
                     value = result;
                     return status;
-#if WANT_SCRIPTING
-                case "scripts":
-                    bool status;
-                    OrderedHashTable<Script> result =
-                        extract_hashtable<Script> (
-                            property_name,
-                            property_node,
-                            out status);
-                    value = result;
-                    return status;
-#endif
                 case "widgets":
                     bool status;
                     GenericArray<string> result =
@@ -1016,13 +949,6 @@ namespace XimperShellNotificationCenter {
                     var table = (OrderedHashTable<NotificationVisibility>) value;
                     node.set_object (serialize_hashtable<NotificationVisibility> (table));
                     break;
-#if WANT_SCRIPTING
-                case "scripts":
-                    node = new Json.Node (Json.NodeType.OBJECT);
-                    var table = (OrderedHashTable<Script>) value;
-                    node.set_object (serialize_hashtable<Script> (table));
-                    break;
-#endif
                 case "widgets":
                     node = new Json.Node (Json.NodeType.ARRAY);
                     var table = (GenericArray<string>) value;

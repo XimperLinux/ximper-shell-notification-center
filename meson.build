@@ -126,7 +126,7 @@ if get_option('man-pages')
 
     # Remove parts of man page if necessary
     sed_command = []
-    foreach option : ['pulse-audio', 'scripting']
+    foreach option : ['pulse-audio']
       if get_option(option) == false
         # Removes all lines between the #START and #END lines (inclusive)
         sed_command += ['-e', '/#START @0@/,/#END @0@/d'.format(option)]

@@ -289,86 +289,8 @@ namespace XimperShellNotificationCenter {
                 ximper_shell_notification_center_daemon.emit_subscribe ();
             }
 
-#if WANT_SCRIPTING
-            if (param.ximper_shell_notification_center_no_script) {
-                debug ("Skipped scripts for this notification\n");
-                return id;
-            }
-            // Run the first script if notification meets requirements
-            OrderedHashTable<Script> scripts = ConfigModel.instance.scripts;
-            if (scripts.length == 0) {
-                return id;
-            }
-            this.run_scripts (param, ScriptRunOnType.RECEIVE);
-#endif
             debug ("\n");
             return id;
-        }
-
-        /**
-         * Runs scripts that meet the requirements of the given `param`.
-         */
-        internal void run_scripts (NotifyParams param, ScriptRunOnType run_on) {
-#if WANT_SCRIPTING
-            if (param.ximper_shell_notification_center_no_script) {
-                debug ("Skipped action scripts for this notification\n");
-                return;
-            }
-            // Run the first script if notification meets requirements
-            OrderedHashTable<Script> scripts = ConfigModel.instance.scripts;
-            if (scripts.length == 0) {
-                return;
-            }
-            foreach (string key in scripts.get_keys ()) {
-                unowned Script script = scripts[key];
-                if (!script.matches_notification (param)) {
-                    continue;
-                }
-                if (script.run_on != run_on) {
-                    continue;
-                }
-
-                script.run_script.begin (param, (obj, res) => {
-                    // Gets the end status
-                    string error_msg;
-                    if (script.run_script.end (res, out error_msg)) {
-                        return;
-                    }
-
-                    if (!ConfigModel.instance.script_fail_notify) {
-                        stderr.printf (
-                            "Failed to run script: \"%s\" with exec: \"%s\"\n",
-                            key, script.exec);
-                    } else {
-                        // Send notification with error message
-                        try {
-                            var _hints = new HashTable<string, Variant> (
-                                str_hash,
-                                str_equal);
-                            // Disable scripts for this notification
-                            _hints.insert ("XSNC_NO_SCRIPT", true);
-                            _hints.insert ("urgency",
-                                           UrgencyLevels.CRITICAL.to_byte ());
-
-                            string _summary = "Failed to run script: %s".printf (key);
-                            string _body = "<b>Output:</b> " + error_msg;
-                            this.new_notification ("XimperShellNotificationCenter",
-                                                   0,
-                                                   "dialog-error",
-                                                   _summary,
-                                                   _body,
-                                                   {},
-                                                   _hints,
-                                                   -1);
-                        } catch (Error e) {
-                            stderr.printf ("NOTIFING SCRIPT-FAIL ERROR: %s\n",
-                                           e.message);
-                        }
-                    }
-                });
-                break;
-            }
-#endif
         }
 
         /**

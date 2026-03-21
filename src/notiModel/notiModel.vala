@@ -152,9 +152,6 @@ namespace XimperShellNotificationCenter {
         public string ?inline_reply_placeholder { get; private set; }
 
         // Custom hints
-        /** Disables scripting for notification */
-        public bool ximper_shell_notification_center_no_script { get; private set; }
-
         /** Always show the notification, regardless of dnd/inhibit state */
         public bool ximper_shell_notification_center_bypass_dnd { get; private set; }
 
@@ -247,13 +244,6 @@ namespace XimperShellNotificationCenter {
             foreach (var hint in hints.get_keys ()) {
                 Variant hint_value = hints[hint];
                 switch (hint) {
-                    case "XSNC_NO_SCRIPT" :
-                        if (hint_value.is_of_type (VariantType.INT32)) {
-                            ximper_shell_notification_center_no_script = hint_value.get_int32 () == 1;
-                        } else if (hint_value.is_of_type (VariantType.BOOLEAN)) {
-                            ximper_shell_notification_center_no_script = hint_value.get_boolean ();
-                        }
-                        break;
                     case "XSNC_BYPASS_DND" :
                         if (hint_value.is_of_type (VariantType.INT32)) {
                             ximper_shell_notification_center_bypass_dnd = hint_value.get_int32 () == 1;
