@@ -53,7 +53,6 @@ A component of the Ximper Shell.
 %_bindir/%name
 %_bindir/%name-client
 
-%_userunitdir/%name.service
 %_datadir/dbus-1/services/%xdg_name.service
 %_datadir/dbus-1/services/%xdg_name.cc.service
 %_datadir/glib-2.0/schemas/%xdg_name.gschema.xml
