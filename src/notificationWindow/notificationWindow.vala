@@ -20,7 +20,7 @@ namespace XimperShellNotificationCenter {
                 if (!GtkLayerShell.is_supported ()) {
                     stderr.printf ("GTKLAYERSHELL IS NOT SUPPORTED!\n");
                     stderr.printf ("Ximper Shell Notification Center only works on Wayland!\n");
-                    stderr.printf ("If running waylans session, try running:\n");
+                    stderr.printf ("If running wayland session, try running:\n");
                     stderr.printf ("\tGDK_BACKEND=wayland ximper-shell-notification-center\n");
                     Process.exit (1);
                 }
