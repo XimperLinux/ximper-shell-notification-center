@@ -122,9 +122,17 @@ public class AnimatedList : Gtk.Widget, Gtk.Scrollable {
         children = new List<AnimatedListItem> ();
         visible_children = new List<unowned AnimatedListItem> ();
 
+        Gtk.Adjustment ?prev_vadjustment = null;
+        ulong vadjustment_handler_id = 0;
         notify["vadjustment"].connect (() => {
+            if (vadjustment_handler_id != 0 && prev_vadjustment != null) {
+                prev_vadjustment.disconnect (vadjustment_handler_id);
+                vadjustment_handler_id = 0;
+            }
+            prev_vadjustment = vadjustment;
             if (vadjustment != null) {
-                vadjustment.value_changed.connect (() => {
+                vadjustment_handler_id =
+                    vadjustment.value_changed.connect (() => {
                     queue_allocate ();
                 });
             }
