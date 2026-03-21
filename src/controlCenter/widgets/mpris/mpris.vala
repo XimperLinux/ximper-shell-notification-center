@@ -232,8 +232,8 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             carousel.reorder (player, 0);
 
             if (carousel.n_pages > 1) {
-                button_prev.show ();
-                button_next.show ();
+                button_prev.set_visible (true);
+                button_next.set_visible (true);
                 carousel_dots.set_visible (true);
                 // Scroll to the new player
                 carousel.scroll_to (player, false);
@@ -277,8 +277,8 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 hide ();
             }
             if (children_length <= 1) {
-                button_prev.hide ();
-                button_next.hide ();
+                button_prev.set_visible (false);
+                button_next.set_visible (false);
                 carousel_dots.set_visible (false);
             }
         }

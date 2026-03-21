@@ -116,7 +116,7 @@ namespace XimperShellNotificationCenter.Widgets {
                         int idx = i;
                         ddc_clients[i].brightness_change.connect ((percent) => {
                             if (percent < 0) {
-                                row.hide ();
+                                row.set_visible (false);
                             } else {
                                 scl.set_value (percent);
                             }

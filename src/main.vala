@@ -204,7 +204,7 @@ namespace XimperShellNotificationCenter {
             }
             foreach (unowned BlankWindow win in blank_windows.data) {
                 if (win.monitor != ref_monitor) {
-                    win.show ();
+                    win.set_visible (true);
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace XimperShellNotificationCenter {
                 return;
             }
             foreach (unowned BlankWindow win in blank_windows.data) {
-                win.hide ();
+                win.set_visible (false);
             }
         }
 
