@@ -30,20 +30,16 @@ namespace XimperShellNotificationCenter.Widgets {
 
                 switch (subsystem) {
                     default :
+                        info ("Invalid subsystem %s for device %s. " +
+                              "Use 'backlight', 'leds'" +
+#if HAVE_DDC
+                              ", 'ddc'" +
+#endif
+                              ". Using default: 'backlight'",
+                              subsystem, device);
+                        client = new BacklightUtil ("backlight", device);
+                        break;
                     case "backlight":
-                        if (subsystem != "backlight"
-#if HAVE_DDC
-                            && subsystem != "ddc"
-#endif
-                        ) {
-                            info ("Invalid subsystem %s for device %s. " +
-                                  "Use 'backlight', 'leds'" +
-#if HAVE_DDC
-                                  ", 'ddc'" +
-#endif
-                                  ". Using default: 'backlight'",
-                                  subsystem, device);
-                        }
                         client = new BacklightUtil ("backlight", device);
                         slider.set_range (min, 100);
                         break;
