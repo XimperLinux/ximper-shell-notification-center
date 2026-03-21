@@ -42,12 +42,11 @@ namespace XimperShellNotificationCenter {
                         uri = uri.slice (URI_PREFIX.length, uri.length);
                     }
 
-                    Gtk.Requisition natural_size;
-                    img.get_preferred_size (null, out natural_size);
+                    int size = img.pixel_size > 0 ? img.pixel_size : 64;
 
                     Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_file_at_size (
                         Uri.unescape_string (uri),
-                        natural_size.width, natural_size.height);
+                        size, size);
 
                     Gdk.Texture texture = Gdk.Texture.for_pixbuf (pixbuf);
                     img.set_from_paintable (texture);
@@ -68,8 +67,7 @@ namespace XimperShellNotificationCenter {
 
         public static void set_image_data (ImageData data,
                                            Gtk.Image img) {
-            Gtk.Requisition natural_size;
-            img.get_preferred_size (null, out natural_size);
+            int size = img.pixel_size > 0 ? img.pixel_size : 64;
 
             Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.with_unowned_data (data.data,
                                                                   Gdk.Colorspace.RGB,
@@ -79,8 +77,8 @@ namespace XimperShellNotificationCenter {
                                                                   data.height,
                                                                   data.rowstride,
                                                                   null);
-            Gdk.Pixbuf scaled = pixbuf.scale_simple (natural_size.width,
-                                                     natural_size.height,
+            Gdk.Pixbuf scaled = pixbuf.scale_simple (size,
+                                                     size,
                                                      Gdk.InterpType.BILINEAR);
 
             Gdk.Texture texture = Gdk.Texture.for_pixbuf (scaled);
