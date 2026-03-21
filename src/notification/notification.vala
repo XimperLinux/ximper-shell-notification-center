@@ -87,18 +87,10 @@ namespace XimperShellNotificationCenter {
         public bool has_inline_reply { get; private set; default = false; }
 
         private static Regex code_regex;
-
         private static Regex tag_regex;
         private static Regex tag_unescape_regex;
         private static Regex img_tag_regex;
-        private const string[] TAGS = { "b", "u", "i" };
-        private const string[] UNESCAPE_CHARS = {
-            "lt;", "#60;", "#x3C;", "#x3c;", // <
-            "gt;", "#62;", "#x3E;", "#x3e;", // >
-            "apos;", "#39;", // '
-            "quot;", "#34;", // "
-            "amp;" // &
-        };
+        private static bool regexes_initialized = false;
 
         public bool dismissed { get; private set; default = false; }
         public bool dismissed_by_swipe { get; private set; default = false; }
@@ -130,18 +122,39 @@ namespace XimperShellNotificationCenter {
             build_noti ();
         }
 
-        construct {
+        private const string[] TAGS = { "b", "u", "i" };
+        private const string[] UNESCAPE_CHARS = {
+            "lt;", "#60;", "#x3C;", "#x3c;", // <
+            "gt;", "#62;", "#x3E;", "#x3e;", // >
+            "apos;", "#39;", // '
+            "quot;", "#34;", // "
+            "amp;" // &
+        };
+
+        private static void init_regexes () {
+            if (regexes_initialized) {
+                return;
+            }
             try {
-                code_regex = new Regex ("(?<= |^)(\\d{3}(-| )\\d{3}|\\d{4,8})(?= |$|\\.|,)",
-                                        RegexCompileFlags.MULTILINE);
+                code_regex = new Regex (
+                    "(?<= |^)(\\d{3}(-| )\\d{3}|\\d{4,8})(?= |$|\\.|,)",
+                    RegexCompileFlags.MULTILINE);
                 string joined_tags = string.joinv ("|", TAGS);
-                tag_regex = new Regex ("&lt;(/?(?:%s))&gt;".printf (joined_tags));
+                tag_regex = new Regex (
+                    "&lt;(/?(?:%s))&gt;".printf (joined_tags));
                 string unescaped = string.joinv ("|", UNESCAPE_CHARS);
-                tag_unescape_regex = new Regex ("&amp;(?=%s)".printf (unescaped));
-                img_tag_regex = new Regex ("<img[^>]* src=((\"([^\"]*)\")|(\'([^\']*)\'))[^>]*>");
+                tag_unescape_regex = new Regex (
+                    "&amp;(?=%s)".printf (unescaped));
+                img_tag_regex = new Regex (
+                    "<img[^>]* src=((\"([^\"]*)\")|(\'([^\']*)\'))[^>]*>");
+                regexes_initialized = true;
             } catch (Error e) {
                 stderr.printf ("Invalid regex: %s", e.message);
             }
+        }
+
+        construct {
+            init_regexes ();
 
             bind_property ("dismissed",
                            this, "sensitive",

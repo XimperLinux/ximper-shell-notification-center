@@ -113,101 +113,28 @@ namespace XimperShellNotificationCenter {
 
         private const RegexMatchFlags REGEX_MATCH_FLAGS = RegexMatchFlags.NOTEMPTY;
 
+        private static bool matches_field (string ?pattern, string ?value,
+                                            RegexCompileFlags compile_flags
+                                                = REGEX_COMPILE_OPTIONS) {
+            if (pattern == null) {
+                return true;
+            }
+            if (value == null) {
+                return false;
+            }
+            return Regex.match_simple (pattern, value,
+                                       compile_flags, REGEX_MATCH_FLAGS);
+        }
+
         public virtual bool matches_notification (NotifyParams param) {
-            if (app_name != null) {
-                if (param.app_name == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    app_name, param.app_name,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (desktop_entry != null) {
-                if (param.desktop_entry == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    desktop_entry, param.desktop_entry,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (summary != null) {
-                if (param.summary == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    summary, param.summary,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (body != null) {
-                if (param.body == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    body, param.body,
-                    0,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (urgency != null) {
-                bool result = Regex.match_simple (
-                    urgency, param.urgency.to_string (),
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (category != null) {
-                if (param.category == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    category, param.category,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (sound_file != null) {
-                if (param.sound_file == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    sound_file, param.sound_file,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            if (sound_name != null) {
-                if (param.sound_name == null) {
-                    return false;
-                }
-                bool result = Regex.match_simple (
-                    sound_name, param.sound_name,
-                    REGEX_COMPILE_OPTIONS,
-                    REGEX_MATCH_FLAGS);
-                if (!result) {
-                    return false;
-                }
-            }
-            return true;
+            return matches_field (app_name, param.app_name)
+                   && matches_field (desktop_entry, param.desktop_entry)
+                   && matches_field (summary, param.summary)
+                   && matches_field (body, param.body, 0)
+                   && matches_field (urgency, param.urgency.to_string ())
+                   && matches_field (category, param.category)
+                   && matches_field (sound_file, param.sound_file)
+                   && matches_field (sound_name, param.sound_name);
         }
 
         public string to_string () {
