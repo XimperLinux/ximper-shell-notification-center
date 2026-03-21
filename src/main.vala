@@ -42,6 +42,8 @@ namespace XimperShellNotificationCenter {
 
         public signal void config_reload (ConfigModel ?old_config, ConfigModel new_config);
 
+        private BusNameOwnerFlags bus_name_flags = BusNameOwnerFlags.NONE;
+
         public NotificationCenter (bool replace) {
             Object (
                 application_id : "ru.ximperlinux.shell.NotificationCenter",
@@ -49,6 +51,10 @@ namespace XimperShellNotificationCenter {
                 | ApplicationFlags.ALLOW_REPLACEMENT
                 | (replace ? ApplicationFlags.REPLACE : 0)
             );
+
+            if (replace) {
+                bus_name_flags = BusNameOwnerFlags.REPLACE;
+            }
 
             try {
                 register ();
@@ -107,7 +113,7 @@ namespace XimperShellNotificationCenter {
             // Notification Daemon
             Bus.own_name_on_connection (conn,
                                         "org.freedesktop.Notifications",
-                                        BusNameOwnerFlags.NONE,
+                                        bus_name_flags,
                                         () => {
                 try {
                     conn.register_object ("/org/freedesktop/Notifications", noti_daemon);
@@ -126,21 +132,14 @@ namespace XimperShellNotificationCenter {
             yield;
 
             // Ximper Shell Notification Center Daemon
-            Bus.own_name_on_connection (conn,
-                                        "ru.ximperlinux.shell.NotificationCenter",
-                                        BusNameOwnerFlags.NONE,
-                                        () => {
-                try {
-                    conn.register_object ("/ru/ximperlinux/shell/NotificationCenter", ximper_shell_notification_center_daemon);
-                    init.callback ();
-                } catch (Error e) {
-                    error ("Could not register CC service: \"%s\"", e.message);
-                }
-            },
-                                        () => {
-                error ("Could not acquire Ximper Shell Notification Center name!");
-            });
-            yield;
+            // Name is already owned by GApplication via register()
+            try {
+                conn.register_object (
+                    "/ru/ximperlinux/shell/NotificationCenter",
+                    ximper_shell_notification_center_daemon);
+            } catch (Error e) {
+                error ("Could not register CC service: \"%s\"", e.message);
+            }
 
             xdg_activation = new XdgActivationHelper ();
 
