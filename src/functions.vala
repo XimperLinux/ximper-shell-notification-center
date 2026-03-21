@@ -223,10 +223,16 @@ namespace XimperShellNotificationCenter {
                                           int buffer_height,
                                           int img_scale,
                                           Gtk.Snapshot snapshot) {
+            if (img_scale <= 0 || buffer_width <= 0 || buffer_height <= 0) {
+                return;
+            }
             int width = texture.width / img_scale;
             int height = texture.height / img_scale;
+            if (width <= 0 || height <= 0) {
+                return;
+            }
             double window_ratio = (double) buffer_width / buffer_height;
-            double bg_ratio = width / height;
+            double bg_ratio = (double) width / height;
             snapshot.save ();
             if (window_ratio > bg_ratio) { // Taller wallpaper than monitor
                 double scale = (double) buffer_width / width;
