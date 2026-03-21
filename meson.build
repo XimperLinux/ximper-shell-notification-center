@@ -1,5 +1,5 @@
 project('ximper-shell-notification-center', ['c', 'vala'],
-  version: '0.12.5',
+  version: '0.1.0',
   meson_version: '>= 0.60.0',
   default_options: [ 'warning_level=2' ],
 )
