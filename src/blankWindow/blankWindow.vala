@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public class BlankWindow : Gtk.ApplicationWindow {
         public unowned Gdk.Monitor monitor { get; private set; }
 
@@ -28,7 +28,7 @@ namespace SwayNotificationCenter {
                 blank_window_down = false;
                 if (blank_window_in) {
                     try {
-                        swaync_daemon.set_visibility (false);
+                        ximper_shell_notification_center_daemon.set_visibility (false);
                     } catch (Error e) {
                         stderr.printf ("ControlCenter BlankWindow Click Error: %s\n",
                                        e.message);
@@ -61,13 +61,13 @@ namespace SwayNotificationCenter {
 
             if (!GtkLayerShell.is_supported ()) {
                 stderr.printf ("GTKLAYERSHELL IS NOT SUPPORTED!\n");
-                stderr.printf ("Swaync only works on Wayland!\n");
+                stderr.printf ("Ximper Shell Notification Center only works on Wayland!\n");
                 stderr.printf ("If running waylans session, try running:\n");
-                stderr.printf ("\tGDK_BACKEND=wayland swaync\n");
+                stderr.printf ("\tGDK_BACKEND=wayland ximper-shell-notification-center\n");
                 Process.exit (1);
             }
             GtkLayerShell.init_for_window (this);
-            GtkLayerShell.set_namespace (this, "swaync-control-center");
+            GtkLayerShell.set_namespace (this, "ximper-shell-notification-center");
             GtkLayerShell.set_monitor (this, monitor);
 
             GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.TOP, true);

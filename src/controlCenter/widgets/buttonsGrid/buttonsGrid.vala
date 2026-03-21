@@ -1,6 +1,6 @@
 using GLib;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class ButtonsGrid : BaseWidget {
         public override string widget_name {
             get {

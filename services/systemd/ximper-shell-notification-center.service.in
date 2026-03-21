@@ -1,0 +1,17 @@
+[Unit]
+Description=Ximper Shell Notification Center daemon
+Documentation=https://github.com/niceos2/ximper-shell-notification-center
+PartOf=graphical-session.target
+After=graphical-session.target
+# ConditionEnvironment requires systemd v247 to work correctly
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.Notifications
+ExecStart=@bindir@/ximper-shell-notification-center
+ExecReload=@bindir@/ximper-shell-notification-center-client --reload-config ; @bindir@/ximper-shell-notification-center-client --reload-css
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

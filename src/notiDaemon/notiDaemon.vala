@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     /** Return true to remove notification, false to skip */
     public delegate bool notification_filter_func (Notification notification);
 
@@ -46,7 +46,7 @@ namespace SwayNotificationCenter {
             notifications_widget.remove_notification (id);
             floating_notifications.remove_notification (id);
 
-            swaync_daemon.emit_subscribe ();
+            ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
         internal inline void request_dismiss_notification (NotifyParams param,
@@ -66,7 +66,7 @@ namespace SwayNotificationCenter {
             }
             notifications_widget.remove_group (group_name_id);
 
-            swaync_daemon.emit_subscribe ();
+            ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
         internal void request_dismiss_all_notifications (ClosedReasons reason) {
@@ -79,7 +79,7 @@ namespace SwayNotificationCenter {
             remove_all_floating_notifications (false, null);
             notifications_widget.remove_all_notifications (true);
 
-            swaync_daemon.emit_subscribe ();
+            ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
         /** Hides all floating notifications (closes transient) */
@@ -221,8 +221,8 @@ namespace SwayNotificationCenter {
                 hide_floating_notification_reasons += "Control Center is visible";
             }
             // Don't show the notification window if dnd or inhibited
-            bool bypass_dnd = param.urgency == UrgencyLevels.CRITICAL || param.swaync_bypass_dnd;
-            if (!bypass_dnd && (dnd || swaync_daemon.inhibited)) {
+            bool bypass_dnd = param.urgency == UrgencyLevels.CRITICAL || param.ximper_shell_notification_center_bypass_dnd;
+            if (!bypass_dnd && (dnd || ximper_shell_notification_center_daemon.inhibited)) {
                 hide_floating_notification_reasons +=
                     "Do Not Disturb is enabled or an Inhibitor is running";
             }
@@ -286,11 +286,11 @@ namespace SwayNotificationCenter {
                     notification_ids.add (id);
                 }
 
-                swaync_daemon.emit_subscribe ();
+                ximper_shell_notification_center_daemon.emit_subscribe ();
             }
 
 #if WANT_SCRIPTING
-            if (param.swaync_no_script) {
+            if (param.ximper_shell_notification_center_no_script) {
                 debug ("Skipped scripts for this notification\n");
                 return id;
             }
@@ -310,7 +310,7 @@ namespace SwayNotificationCenter {
          */
         internal void run_scripts (NotifyParams param, ScriptRunOnType run_on) {
 #if WANT_SCRIPTING
-            if (param.swaync_no_script) {
+            if (param.ximper_shell_notification_center_no_script) {
                 debug ("Skipped action scripts for this notification\n");
                 return;
             }
@@ -346,13 +346,13 @@ namespace SwayNotificationCenter {
                                 str_hash,
                                 str_equal);
                             // Disable scripts for this notification
-                            _hints.insert ("SWAYNC_NO_SCRIPT", true);
+                            _hints.insert ("XSNC_NO_SCRIPT", true);
                             _hints.insert ("urgency",
                                            UrgencyLevels.CRITICAL.to_byte ());
 
                             string _summary = "Failed to run script: %s".printf (key);
                             string _body = "<b>Output:</b> " + error_msg;
-                            this.new_notification ("SwayNotificationCenter",
+                            this.new_notification ("XimperShellNotificationCenter",
                                                    0,
                                                    "dialog-error",
                                                    _summary,
@@ -397,8 +397,8 @@ namespace SwayNotificationCenter {
                                             out string version,
                                             out string spec_version)
         throws DBusError, IOError {
-            name = "SwayNotificationCenter";
-            vendor = "ErikReider";
+            name = "XimperShellNotificationCenter";
+            vendor = "XimperLinux";
             version = Constants.VERSIONNUM;
             spec_version = "1.3";
         }

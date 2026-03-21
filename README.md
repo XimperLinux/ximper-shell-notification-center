@@ -1,42 +1,20 @@
-# SwayNotificationCenter
+# Ximper Shell Notification Center
 
-[![Check PKGBUILD builds for Arch.](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/PKGBUILD-build.yml/badge.svg)](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/PKGBUILD-buildd.yml)
-[![Check build for Fedora.](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/fedora-build.yml/badge.svg)](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/fedora-build.yml)
-[![Check build for latest Ubuntu LTS.](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/ubuntu-build.yml/badge.svg)](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/ubuntu-build.yml)
-[![Linting](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/linting.yml/badge.svg)](https://github.com/ErikReider/SwayNotificationCenter/actions/workflows/linting.yml)
+A notification daemon with a GTK4/Libadwaita GUI for notifications and the control center.
+A component of the Ximper Shell. Fork of [SwayNotificationCenter](https://github.com/ErikReider/SwayNotificationCenter).
 
-A simple notification daemon with a GTK gui for notifications and the control center
-
-*Note: SwayNotificationCenter only supports Desktops / Window Managers that
+*Note: Ximper Shell Notification Center only supports Desktops / Window Managers that
 support `wlr_layer_shell_unstable_v1` like Sway or anything wlroots based*
 
-*Note 2: SwayNotificationCenter does not support third-party GTK3 themes and is
+*Note 2: Ximper Shell Notification Center does not support third-party GTK3 themes and is
 only tested with the default GTK **Adwaita** theme. Usage of any third-party
 theme might require extra tweaks to the default CSS style file*
 
-## Demo
-
-https://github.com/user-attachments/assets/5c054ac3-90bb-483e-a8f2-5af191805f04
-
 ## Table of Contents
 
-  * [Want to show off your sick config?](#want-to-show-off-your-sick-config)
   * [Features](#features)
   * [Available Widgets](#available-widgets)
-  * [Planned Features](#planned-features)
-  * [Install](#install)
-     * [Arch](#arch)
-     * [Fedora](#fedora)
-     * [Fedora Silverblue (and other rpm-ostree variants)](#fedora-silverblue-and-other-rpm-ostree-variants)
-     * [Gentoo](#gentoo)
-     * [OpenSUSE Tumbleweed](#opensuse-tumbleweed)
-     * [Ubuntu](#ubuntu)
-     * [Debian](#debian)
-     * [Guix](#guix)
-     * [rde](#rde)
-     * [Void](#void)
-     * [Other](#other)
-  * [Sway Usage](#sway-usage)
+  * [Build from source](#build-from-source)
   * [Run](#run)
   * [Control Center Shortcuts](#control-center-shortcuts)
   * [Configuring](#configuring)
@@ -44,23 +22,8 @@ https://github.com/user-attachments/assets/5c054ac3-90bb-483e-a8f2-5af191805f04
   * [Notification Inhibition](#notification-inhibition)
   * [Scripting](#scripting)
      * [Disable scripting](#disable-scripting)
-  * [i3status-rs Example](#i3status-rs-example)
   * [Waybar Example](#waybar-example)
   * [Debugging Environment Variables](#debugging-environment-variables)
-
-## Want to show off your sick config?
-
-Post your setup here: [Config flex 💪](https://github.com/ErikReider/SwayNotificationCenter/discussions/183)
-
-<p>
-  <img height="500" alt="Config" src="https://github.com/user-attachments/assets/5993cbb2-a54d-4d1c-9289-b7e2b9d0a09f" />
-</p>
-<p>
-  <em>
-    Example of my config
-    (<a href="https://github.com/ErikReider/Linux/tree/master/dotfiles/.config/swaync">link</a>)
-  </em>
-</p>
 
 ## Features
 
@@ -81,9 +44,9 @@ Post your setup here: [Config flex 💪](https://github.com/ErikReider/SwayNotif
 - Trackpad/mouse gesture to close notification
 - The same features as any other basic notification daemon
 - Basic configuration through a JSON config file
-- Hot-reload config through `swaync-client`
+- Hot-reload config through `ximper-shell-notification-center-client`
 - Customizable widgets
-- Select the preferred monitor to display on (with swaync-client command for scripting)
+- Select the preferred monitor to display on (with ximper-shell-notification-center-client command for scripting)
 
 ## Available Widgets
 
@@ -99,106 +62,9 @@ These widgets can be customized, added, removed and even reordered
 - Volume slider using PulseAudio
 - Backlight slider
 
-## Planned Features
+## Build from source
 
-- Slick animations 😎
-
-## Install
-
-### Alpine Linux
-
-```zsh
-apk add swaync
-````
-
-### Arch
-
-```zsh
-sudo pacman -S swaync
-```
-
-Alternatively, [swaync-git](https://aur.archlinux.org/packages/swaync-git/) is available on the AUR.
-
-### Fedora
-
-The package is available on COPR:
-
-```zsh
-dnf copr enable erikreider/SwayNotificationCenter
-# Or latest stable release or -git package
-dnf install SwayNotificationCenter
-dnf install SwayNotificationCenter-git
-```
-
-### Fedora Silverblue (and other rpm-ostree variants)
-
-The package can be layered over the base image after adding the Copr repo as an ostree repo:
-
-```zsh
-sudo curl -sL -o /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:erikreider:SwayNotificationCenter.repo https://copr.fedorainfracloud.org/coprs/erikreider/SwayNotificationCenter/repo/fedora-$(rpm -E %fedora)/erikreider-SwayNotificationCenter-fedora-$(rpm -E %fedora).repo 
-rpm-ostree install SwayNotificationCenter
-```
-
-### Gentoo
-
-An **unofficial** ebuild is available in [GURU](https://github.com/gentoo/guru)
-
-```zsh
-eselect repository enable guru
-emaint sync --repo guru
-emerge --ask gui-apps/swaync
-```
-
-### OpenSUSE Tumbleweed
-
-```zsh
-sudo zypper install SwayNotificationCenter
-```
-
-### Ubuntu
-
-Lunar and later:
-
-```zsh
-sudo apt install sway-notification-center
-```
-
-### Debian
-
-Bookworm and later:
-
-```zsh
-sudo apt install sway-notification-center
-```
-
-### Guix
-
-The simplest way is to install it to user's profile:
-
-```zsh
-guix install swaynotificationcenter
-```
-
-But we recommend to use [Guix Home](https://guix.gnu.org/manual/devel/en/html_node/Home-Configuration.html) to manage packages and their configurations declaratively.
-
-### rde
-
-```scm
-(use-modules (rde features wm))
-
-;; Include the following code into the list of your rde features:
-(feature-swaynotificationcenter)
-```
-
-### Void
-
-```zsh
-sudo xbps-install -S SwayNotificationCenter
-```
-
-### Other
-
-#### Dependencies
+### Dependencies
 
 - `vala >= 0.56`
 - `meson`
@@ -217,7 +83,7 @@ sudo xbps-install -S SwayNotificationCenter
 - `gvfs`
 - `granite7`
 
-##### Optional Dependencies
+#### Optional Dependencies
 
 - `libpulse` (requires meson build options change)
 - `libnotify`
@@ -245,14 +111,14 @@ meson devenv -C build -w .
 # Now you can start nvim, vscode, etc in the development environment
 ```
 
-## Sway Usage
+## Usage
 
 ```ini
 # Notification Daemon
-exec swaync
+exec ximper-shell-notification-center
 
 # Toggle control center
-bindsym $mod+Shift+n exec swaync-client -t -sw
+bindsym $mod+Shift+n exec ximper-shell-notification-center-client -t -sw
 ```
 
 ## Run
@@ -260,25 +126,25 @@ bindsym $mod+Shift+n exec swaync-client -t -sw
 To start the daemon (remember to kill any other notification daemon before running)
 
 ```zsh
-./build/src/swaync
+./build/src/ximper-shell-notification-center
 ```
 
 To toggle the panel
 
 ```zsh
-./build/src/swaync-client -t
+./build/src/ximper-shell-notification-center-client -t
 ```
 
 To reload the config
 
 ```zsh
-./build/src/swaync-client -R
+./build/src/ximper-shell-notification-center-client -R
 ```
 
 To reload css after changes
 
 ```zsh
-./build/src/swaync-client -rs
+./build/src/ximper-shell-notification-center-client -rs
 ```
 
 ## Control Center Shortcuts
@@ -297,25 +163,25 @@ To reload css after changes
 
 ## Configuring
 
-The main config file is located in `/etc/xdg/swaync/config.json`. Copy it over
-to your `.config/swaync/` folder to customize without needing root access.
-See `swaync(5)` man page for more information
+The main config file is located in `/etc/xdg/ximper-shell/notification-center/config.json`. Copy it over
+to your `.config/ximper-shell/notification-center/` folder to customize without needing root access.
+See `ximper-shell-notification-center(5)` man page for more information
 
-To reload the config, you'll need to run `swaync-client --reload-config`
+To reload the config, you'll need to run `ximper-shell-notification-center-client --reload-config`
 
-The main CSS style file is located in `/etc/xdg/swaync/style.css`. Copy it over
-to your `~/.config/swaync/` folder to customize without needing root access. For
+The main CSS style file is located in `/etc/xdg/ximper-shell/notification-center/style.css`. Copy it over
+to your `~/.config/ximper-shell/notification-center/` folder to customize without needing root access. For
 more advanced/larger themes, I recommend that you use the SCSS files from source
 and customize them instead. To use the SCSS files, compile with `sassc`.
 
-**Tip**: running swaync with `GTK_DEBUG=interactive swaync` will open a inspector
+**Tip**: running ximper-shell-notification-center with `GTK_DEBUG=interactive ximper-shell-notification-center` will open a inspector
 window that'll allow you to see all of the CSS classes + other information.
 
 ## Toggle Buttons
 
 To add toggle buttons to your control center you can set the "type" of any action to "toggle".
 The toggle button supports different commands depending on the state of the button and
-an "update-command" to update the state in case of changes from outside swaync. The update-command
+an "update-command" to update the state in case of changes from outside the notification center. The update-command
 is called every time the control center is opened.
 The active toggle button also gains the css-class ".toggle:checked"
 
@@ -329,7 +195,7 @@ The active toggle button also gains the css-class ".toggle:checked"
         "label": "WiFi",
         "type": "toggle",
         "active": true,
-        "command": "sh -c '[[ $SWAYNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
+        "command": "sh -c '[[ $XSNC_TOGGLE_STATE == true ]] && nmcli radio wifi on || nmcli radio wifi off'",
         "update-command": "sh -c '[[ $(nmcli radio wifi) == \"enabled\" ]] && echo true || echo false'"
       }
     ]
@@ -339,8 +205,8 @@ The active toggle button also gains the css-class ".toggle:checked"
 
 ## Notification Inhibition
 
-Notifications can be inhibited through the provided `swaync-client` executable
-or through the DBus interface `org.erikreider.swaync.cc`.
+Notifications can be inhibited through the provided `ximper-shell-notification-center-client` executable
+or through the DBus interface `ru.ximperlinux.shell.NotificationCenter`.
 
 Here's an example of notification inhibition while screen sharing through
 `xdg-desktop-portal-wlr`
@@ -348,8 +214,8 @@ Here's an example of notification inhibition while screen sharing through
 ```conf
 # xdg-desktop-portal-wlr config
 [screencast]
-exec_before=swaync-client --inhibitor-add "xdg-desktop-portal-wlr"
-exec_after=swaync-client --inhibitor-remove "xdg-desktop-portal-wlr"
+exec_before=ximper-shell-notification-center-client --inhibitor-add "xdg-desktop-portal-wlr"
+exec_after=ximper-shell-notification-center-client --inhibitor-remove "xdg-desktop-portal-wlr"
 ```
 
 ## Scripting
@@ -365,10 +231,10 @@ be skipped
 · If a script has `run-on` set to `action`, the script will only run when an
 action is taken on the notification
 
-More information can be found in the `swaync(5)` man page
+More information can be found in the `ximper-shell-notification-center(5)` man page
 
 Notification information can be printed into a terminal by running
-`G_MESSAGES_DEBUG=all swaync` (when a notification appears).
+`G_MESSAGES_DEBUG=all ximper-shell-notification-center` (when a notification appears).
 
 Config properties:
 
@@ -416,25 +282,6 @@ ninja -C build
 meson install -C build
 ```
 
-## i3status-rs Example
-
-> **Note** Ths requires i3status-rs version 0.31.0+
-
-i3status-rs config
-
-```toml
-[[block]]
-block = "notify"
-format = " $icon {($notification_count.eng(w:1)) |}"
-driver = "swaync"
-[[block.click]]
-button = "left"
-action = "show"
-[[block.click]]
-button = "right"
-action = "toggle_paused"
-```
-
 ## Waybar Example
 
 This example requires a [Nerd Fonts](https://www.nerdfonts.com/) font to get the icons looking right
@@ -456,10 +303,10 @@ Waybar config
       "dnd-inhibited-none": "󰪑"
     },
     "return-type": "json",
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
+    "exec-if": "which ximper-shell-notification-center-client",
+    "exec": "ximper-shell-notification-center-client -swb",
+    "on-click": "ximper-shell-notification-center-client -t -sw",
+    "on-click-right": "ximper-shell-notification-center-client -d -sw",
     "escape": true
   },
 ```

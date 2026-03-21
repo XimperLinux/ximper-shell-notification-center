@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     /** A regular GLib HashTable but preserves the order of inserted keys and values */
     public class OrderedHashTable<T> {
         private HashTable<string, T> hash_table;

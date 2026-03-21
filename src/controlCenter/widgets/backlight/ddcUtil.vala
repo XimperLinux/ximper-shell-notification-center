@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
 
     public struct DdcDisplayInfo {
         int dispno;

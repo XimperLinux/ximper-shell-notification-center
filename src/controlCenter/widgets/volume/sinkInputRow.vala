@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class SinkInputRow : Gtk.ListBoxRow {
         Gtk.Box container;
         Gtk.Image icon = new Gtk.Image ();

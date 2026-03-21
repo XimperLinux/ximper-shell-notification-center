@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="swaync">
-	<schema id="org.erikreider.swaync" path="/org/erikreider/swaync/">
+<schemalist gettext-domain="ximper-shell-notification-center">
+	<schema id="ru.ximperlinux.shell.NotificationCenter" path="/ru/ximperlinux/shell/NotificationCenter/">
 		<key name="dnd-state" type="b">
 			<default>false</default>
 			<summary>The current do not disturb state</summary>

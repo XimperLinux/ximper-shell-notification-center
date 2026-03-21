@@ -1,5 +1,5 @@
-namespace SwayNotificationCenter.Widgets {
-    [GtkTemplate (ui = "/org/erikreider/swaync/ui/notifications_widget.ui")]
+namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/notifications_widget.ui")]
     public class Notifications : BaseWidget {
         public override string widget_name {
             get {
@@ -322,7 +322,7 @@ namespace SwayNotificationCenter.Widgets {
                     break;
                 case "D" :
                     try {
-                        swaync_daemon.toggle_dnd ();
+                        ximper_shell_notification_center_daemon.toggle_dnd ();
                     } catch (Error e) {
                         critical ("Error: %s\n", e.message);
                     }

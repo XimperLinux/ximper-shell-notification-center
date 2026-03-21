@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public enum NotificationGroupState {
         EMPTY = 0,
         SINLGE = 1,
@@ -85,7 +85,7 @@ namespace SwayNotificationCenter {
 
             // Collapse button
             Gtk.Button collapse_button = new Gtk.Button.from_icon_name (
-                "swaync-collapse-symbolic");
+                "ximper-shell-notification-center-collapse-symbolic");
             collapse_button.add_css_class ("circular");
             collapse_button.add_css_class ("notification-group-collapse-button");
             collapse_button.set_halign (Gtk.Align.END);
@@ -98,7 +98,7 @@ namespace SwayNotificationCenter {
 
             // Close all button
             Gtk.Button close_all_button = new Gtk.Button.from_icon_name (
-                "swaync-close-symbolic");
+                "ximper-shell-notification-center-close-symbolic");
             close_all_button.add_css_class ("circular");
             close_all_button.add_css_class ("notification-group-close-all-button");
             close_all_button.set_halign (Gtk.Align.END);

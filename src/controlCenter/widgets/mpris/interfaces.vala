@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets.Mpris {
+namespace XimperShellNotificationCenter.Widgets.Mpris {
     public class MprisSource : Object {
         public MprisMediaPlayer media_player { private set; get; }
         private DbusPropChange props;

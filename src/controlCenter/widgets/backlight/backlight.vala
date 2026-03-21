@@ -1,6 +1,6 @@
 using GLib;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class Backlight : BaseWidget {
         public override string widget_name {
             get {

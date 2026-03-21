@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class Volume : BaseWidget {
         public override string widget_name {
             get {
@@ -179,13 +179,13 @@ namespace SwayNotificationCenter.Widgets {
         private void set_button_icon () {
             if (!reveal_button.active) {
                 if (expand_label == null) {
-                    reveal_button.set_icon_name ("swaync-up-small-symbolic");
+                    reveal_button.set_icon_name ("ximper-shell-notification-center-up-small-symbolic");
                 } else {
                     reveal_button.set_label (expand_label);
                 }
             } else {
                 if (collapse_label == null) {
-                    reveal_button.set_icon_name ("swaync-down-small-symbolic");
+                    reveal_button.set_icon_name ("ximper-shell-notification-center-down-small-symbolic");
                 } else {
                     reveal_button.set_label (collapse_label);
                 }

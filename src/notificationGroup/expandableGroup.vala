@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     private class ExpandableGroup : Gtk.Widget {
         const int NUM_STACKED_NOTIFICATIONS = 3;
         const int COLLAPSED_NOTIFICATION_OFFSET = 8;

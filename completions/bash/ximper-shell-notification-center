@@ -1,4 +1,4 @@
-_swaync() {
+_ximper-shell-notification-center() {
     local cur prev
     _get_comp_words_by_ref cur prev
 
@@ -44,4 +44,4 @@ _swaync() {
         COMPREPLY+=($(compgen -c -- "$cur"))
     fi
 
-} && complete -F _swaync swaync
+} && complete -F _ximper-shell-notification-center ximper-shell-notification-center

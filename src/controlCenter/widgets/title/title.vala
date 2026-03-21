@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class Title : BaseWidget {
         public override string widget_name {
             get {
@@ -50,7 +50,7 @@ namespace SwayNotificationCenter.Widgets {
                 });
                 clear_all_button.set_sensitive (!notifications_widget.is_empty ());
 
-                swaync_daemon.subscribe_v2.connect ((count) => {
+                ximper_shell_notification_center_daemon.subscribe_v2.connect ((count) => {
                     clear_all_button.set_sensitive (count > 0);
                 });
                 clear_all_button.set_can_focus (false);

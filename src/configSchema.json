@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "SwayNotificationCenter JSON schema",
+  "title": "XimperShellNotificationCenter JSON schema",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -27,7 +27,7 @@
     },
     "layer-shell": {
       "type": "boolean",
-      "description": "Whether or not the windows should be opened as layer-shell surfaces. Note: Requires swaync restart to apply",
+      "description": "Whether or not the windows should be opened as layer-shell surfaces. Note: Requires ximper-shell-notification-center restart to apply",
       "default": true
     },
     "layer-shell-cover-screen": {
@@ -306,7 +306,7 @@
             },
             "id-matcher": {
               "type": "string",
-              "description": "Matches the action identifier. Can be found by reading the output of swaync when run with the `G_MESSAGES_DEBUG=all` environment variable."
+              "description": "Matches the action identifier. Can be found by reading the output of ximper-shell-notification-center when run with the `G_MESSAGES_DEBUG=all` environment variable."
             },
             "text-matcher": {
               "type": "string",
@@ -556,7 +556,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Type of the button; toggle buttons receive the .active css class and an env variable 'SWAYNC_TOGGLE_STATE' is set. See example in the default config.json",
+                "description": "Type of the button; toggle buttons receive the .active css class and an env variable 'XSNC_TOGGLE_STATE' is set. See example in the default config.json",
                 "default": "normal",
                 "enum": ["normal", "toggle"]
               },

@@ -1,7 +1,7 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public enum NotificationType { CONTROL_CENTER, FLOATING }
 
-    [GtkTemplate (ui = "/org/erikreider/swaync/ui/notification.ui")]
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/notification.ui")]
     public class Notification : Adw.Bin {
         [GtkChild]
         unowned Gtk.Revealer revealer;
@@ -473,7 +473,7 @@ namespace SwayNotificationCenter {
                 noti_daemon.ActionInvoked (param.applied_id, action.identifier);
                 if (ConfigModel.instance.hide_on_action) {
                     try {
-                        swaync_daemon.set_visibility (false);
+                        ximper_shell_notification_center_daemon.set_visibility (false);
                     } catch (Error e) {
                         critical ("Error: %s\n", e.message);
                     }

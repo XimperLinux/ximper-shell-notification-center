@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public enum ClosedReasons {
         EXPIRED = 1,
         DISMISSED = 2,
@@ -153,10 +153,10 @@ namespace SwayNotificationCenter {
 
         // Custom hints
         /** Disables scripting for notification */
-        public bool swaync_no_script { get; private set; }
+        public bool ximper_shell_notification_center_no_script { get; private set; }
 
         /** Always show the notification, regardless of dnd/inhibit state */
-        public bool swaync_bypass_dnd { get; private set; }
+        public bool ximper_shell_notification_center_bypass_dnd { get; private set; }
 
         public Array<Action> actions { get; private set; }
 
@@ -247,18 +247,18 @@ namespace SwayNotificationCenter {
             foreach (var hint in hints.get_keys ()) {
                 Variant hint_value = hints[hint];
                 switch (hint) {
-                    case "SWAYNC_NO_SCRIPT" :
+                    case "XSNC_NO_SCRIPT" :
                         if (hint_value.is_of_type (VariantType.INT32)) {
-                            swaync_no_script = hint_value.get_int32 () == 1;
+                            ximper_shell_notification_center_no_script = hint_value.get_int32 () == 1;
                         } else if (hint_value.is_of_type (VariantType.BOOLEAN)) {
-                            swaync_no_script = hint_value.get_boolean ();
+                            ximper_shell_notification_center_no_script = hint_value.get_boolean ();
                         }
                         break;
-                    case "SWAYNC_BYPASS_DND" :
+                    case "XSNC_BYPASS_DND" :
                         if (hint_value.is_of_type (VariantType.INT32)) {
-                            swaync_bypass_dnd = hint_value.get_int32 () == 1;
+                            ximper_shell_notification_center_bypass_dnd = hint_value.get_int32 () == 1;
                         } else if (hint_value.is_of_type (VariantType.BOOLEAN)) {
-                            swaync_bypass_dnd = hint_value.get_boolean ();
+                            ximper_shell_notification_center_bypass_dnd = hint_value.get_boolean ();
                         }
                         break;
                     case "value" :

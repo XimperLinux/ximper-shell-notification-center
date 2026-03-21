@@ -3,9 +3,9 @@
 gschemas.compiled
 pkg
 build
-SwayNotificationCenter
-./swaync
-./swaync*
-./src/swaync
-./src/swaync*
+XimperShellNotificationCenter
+./ximper-shell-notification-center
+./ximper-shell-notification-center*
+./src/ximper-shell-notification-center
+./src/ximper-shell-notification-center*
 .cache/

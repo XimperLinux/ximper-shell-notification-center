@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public abstract class BaseWidget : Gtk.Box {
         public abstract string widget_name { get; }
 

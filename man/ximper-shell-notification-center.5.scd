@@ -1,8 +1,8 @@
-swaync(5)
+ximper-shell-notification-center(5)
 
 # NAME
 
-swaync - Configuration file
+ximper-shell-notification-center - Configuration file
 
 # CONFIGURATION
 
@@ -38,7 +38,7 @@ config file to be able to detect config errors
 	type: bool ++
 	default: true ++
 	description: Wether or not the windows should be opened as layer-shell ++
-		surfaces. Note: Requires swaync restart to apply
+		surfaces. Note: Requires ximper-shell-notification-center restart to apply
 
 *cssPriority* ++
 	type: string ++
@@ -226,7 +226,7 @@ config file to be able to detect config errors
 			type: string ++
 			optional: true (needs at least one *matcher*) ++
 			description: Matches the actions identifier. Can be found by ++
-				reading the output of swaync when run with the ++
+				reading the output of ximper-shell-notification-center when run with the ++
 				*G_MESSAGES_DEBUG=all* environment variable.++
 		*text-matcher*++
 			type: string ++
@@ -556,7 +556,7 @@ config file to be able to detect config errors
 										default: "normal" ++
 										description: Type of the button ++
 											Toggle buttons receive the '.active' css class and an env ++
-											variable "SWAYNC_TOGGLE_STATE" is set. See example usage in the ++
+											variable "XSNC_TOGGLE_STATE" is set. See example usage in the ++
 											default config.json ++
 										enum: ["normal", "toggle"] ++
 									update-command: ++
@@ -596,7 +596,7 @@ config file to be able to detect config errors
 								default: "normal" ++
 								description: Type of the button ++
 									Toggle buttons receive the '.active' css class and an env ++
-									variable "SWAYNC_TOGGLE_STATE" is set. See example usage in the ++
+									variable "XSNC_TOGGLE_STATE" is set. See example usage in the ++
 									default config.json ++
 								enum: ["normal", "toggle"] ++
 							active: ++
@@ -896,17 +896,17 @@ config file to be able to detect config errors
 
 	You can also use these environment variables in your script:
 ```
-$SWAYNC_BODY="Notification body content"
-$SWAYNC_DESKTOP_ENTRY="Desktop entry"
-$SWAYNC_URGENCY="Notification urgency"
-$SWAYNC_TIME="Notification time"
-$SWAYNC_APP_NAME="Notification app name"
-$SWAYNC_CATEGORY="SwayNC notification category"
-$SWAYNC_REPLACES_ID="ID of notification to replace"
-$SWAYNC_ID="SwayNC notification ID"
-$SWAYNC_SUMMARY="Notification summary"
-$SWAYNC_HINT_[NAME]="Value of the hint [NAME]"
-$SWAYNC_SOUND_NAME="The name of the requested sound"
-$SWAYNC_SOUND_FILE="The file path of the requested sound"
+$XSNC_BODY="Notification body content"
+$XSNC_DESKTOP_ENTRY="Desktop entry"
+$XSNC_URGENCY="Notification urgency"
+$XSNC_TIME="Notification time"
+$XSNC_APP_NAME="Notification app name"
+$XSNC_CATEGORY="Notification category"
+$XSNC_REPLACES_ID="ID of notification to replace"
+$XSNC_ID="Notification ID"
+$XSNC_SUMMARY="Notification summary"
+$XSNC_HINT_[NAME]="Value of the hint [NAME]"
+$XSNC_SOUND_NAME="The name of the requested sound"
+$XSNC_SOUND_FILE="The file path of the requested sound"
 ```
 #END scripting

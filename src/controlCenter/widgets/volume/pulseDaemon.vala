@@ -2,7 +2,7 @@
 using Gee;
 using PulseAudio;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     /**
      * Loosely based off of Elementary OS switchboard-plug-sound
      * https://github.com/elementary/switchboard-plug-sound

@@ -1,4 +1,4 @@
-using SwayNotificationCenter;
+using XimperShellNotificationCenter;
 using XDG.Activation;
 
 public class XdgActivationHelper : Object {

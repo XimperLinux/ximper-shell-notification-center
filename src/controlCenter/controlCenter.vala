@@ -1,5 +1,5 @@
-namespace SwayNotificationCenter {
-    [GtkTemplate (ui = "/org/erikreider/swaync/ui/control_center.ui")]
+namespace XimperShellNotificationCenter {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/control_center.ui")]
     public class ControlCenter : Gtk.ApplicationWindow {
         [GtkChild]
         unowned Gtk.ScrolledWindow window;
@@ -27,13 +27,13 @@ namespace SwayNotificationCenter {
             if (app.use_layer_shell) {
                 if (!GtkLayerShell.is_supported ()) {
                     stderr.printf ("GTKLAYERSHELL IS NOT SUPPORTED!\n");
-                    stderr.printf ("Swaync only works on Wayland!\n");
+                    stderr.printf ("Ximper Shell Notification Center only works on Wayland!\n");
                     stderr.printf ("If running wayland session, try running:\n");
-                    stderr.printf ("\tGDK_BACKEND=wayland swaync\n");
+                    stderr.printf ("\tGDK_BACKEND=wayland ximper-shell-notification-center\n");
                     Process.exit (1);
                 }
                 GtkLayerShell.init_for_window (this);
-                GtkLayerShell.set_namespace (this, "swaync-control-center");
+                GtkLayerShell.set_namespace (this, "ximper-shell-notification-center");
                 set_anchor ();
             }
 
@@ -158,7 +158,7 @@ namespace SwayNotificationCenter {
             switch (Gdk.keyval_name (keyval)) {
                 case "D":
                     try {
-                        swaync_daemon.toggle_dnd ();
+                        ximper_shell_notification_center_daemon.toggle_dnd ();
                     } catch (Error e) {
                         critical ("Error: %s\n", e.message);
                     }
@@ -393,7 +393,7 @@ namespace SwayNotificationCenter {
             } else {
                 remove_css_class ("open");
             }
-            swaync_daemon.emit_subscribe ();
+            ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
         public inline bool get_visibility () {

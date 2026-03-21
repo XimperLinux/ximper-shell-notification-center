@@ -1,5 +1,5 @@
-namespace SwayNotificationCenter.Widgets.Mpris {
-    [GtkTemplate (ui = "/org/erikreider/swaync/ui/mpris_player.ui")]
+namespace XimperShellNotificationCenter.Widgets.Mpris {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/mpris_player.ui")]
     public class MprisPlayer : Underlay {
         [GtkChild]
         public unowned Gtk.Label title;

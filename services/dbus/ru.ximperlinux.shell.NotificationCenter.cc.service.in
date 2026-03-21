@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=ru.ximperlinux.shell.NotificationCenter
+Exec=@bindir@/ximper-shell-notification-center
+SystemdService=ximper-shell-notification-center.service

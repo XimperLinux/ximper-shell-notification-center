@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public struct Data {
         public bool dnd;
         public bool cc_open;
@@ -6,13 +6,13 @@ namespace SwayNotificationCenter {
         public bool inhibited;
     }
 
-    [DBus (name = "org.erikreider.swaync.cc")]
-    public class SwayncDaemon : Object {
+    [DBus (name = "ru.ximperlinux.shell.NotificationCenter")]
+    public class XimperShellNotificationCenterDaemon : Object {
         private GenericSet<string> inhibitors = new GenericSet<string> (str_hash, str_equal);
         public bool inhibited { get; private set; default = false; }
         internal signal void inhibited_changed (uint length);
 
-        public SwayncDaemon () {
+        public XimperShellNotificationCenterDaemon () {
             subscribe_v2.connect ((count, dnd, visible, inhibited) => {
                 debug ("Emitted subscribe_v2: %u, %s, %s, %s",
                        count, dnd.to_string (), visible.to_string (), inhibited.to_string ());
@@ -21,7 +21,7 @@ namespace SwayNotificationCenter {
 
         internal inline void emit_subscribe () {
             try {
-                swaync_daemon.subscribe_v2 (noti_daemon.n_notifications,
+                ximper_shell_notification_center_daemon.subscribe_v2 (noti_daemon.n_notifications,
                                             get_dnd (),
                                             get_visibility (),
                                             inhibited);
@@ -51,7 +51,7 @@ namespace SwayNotificationCenter {
          * Called when Dot Not Disturb state changes, notification gets
          * added/removed, Control Center opens, and when inhibitor state changes
          */
-        [Version (deprecated = true, replacement = "SwayncDaemon.subscribe_v2")]
+        [Version (deprecated = true, replacement = "XimperShellNotificationCenterDaemon.subscribe_v2")]
         public signal void subscribe (uint count, bool dnd, bool cc_open);
 
         /** Reloads the CSS file */
@@ -72,7 +72,7 @@ namespace SwayNotificationCenter {
          * Changes `name` to `value`.
          *
          * If `write_to_file` is True, it will write to the users
-         * config file (`~/.config/swaync/config.json`) or `path`
+         * config file (`~/.config/ximper-shell/notification-center/config.json`) or `path`
          * if it's a valid path. Otherwise the changes will only
          * apply to the current instance.
          */

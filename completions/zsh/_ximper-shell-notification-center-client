@@ -1,4 +1,4 @@
-#compdef swaync-client
+#compdef ximper-shell-notification-center-client
 
 _arguments -s \
     '(-h --help)'{-h,--help}'[Show help options]' \
@@ -22,7 +22,7 @@ _arguments -s \
     '(--hide-all)'--hide-all'[Hides all notifications. Still shown in Control Center]' \
     '(--close-latest)'--close-latest'[Closes latest notification]' \
     '(-C --close-all)'{-C,--close-all}'[Closes all notifications]' \
-    '(-sw --skip-wait)'{-sw,--skip-wait}"[Doesn't wait when swaync hasn't been started]" \
+    '(-sw --skip-wait)'{-sw,--skip-wait}"[Doesn't wait when ximper-shell-notification-center hasn't been started]" \
     '(-s --subscribe)'{-s,--subscribe}'[Subscribe to notification add and close events]' \
     '(-swb --subscribe-waybar)'{-swb,--subscribe-waybar}'[Subscribe to notification add and close events with waybar support. Read README for example]' \
     '(--change-cc-monitor)'--change-cc-monitor'[Changes the preferred control center monitor (resets on config reload)]' \

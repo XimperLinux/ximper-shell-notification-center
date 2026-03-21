@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public class Functions {
         const Gsk.ScalingFilter SCALING_FILTER = Gsk.ScalingFilter.NEAREST;
 
@@ -13,7 +13,7 @@ namespace SwayNotificationCenter {
 
             // Init resources
             var theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
-            theme.add_resource_path ("/org/erikreider/swaync/icons");
+            theme.add_resource_path ("/ru/ximperlinux/shell/NotificationCenter/icons");
         }
 
         public static string uri_to_path (owned string uri) {
@@ -137,15 +137,15 @@ namespace SwayNotificationCenter {
             if (!only_system) {
                 paths += Path.build_path (Path.DIR_SEPARATOR.to_string (),
                                           Environment.get_user_config_dir (),
-                                          "swaync/style.css");
+                                          "ximper-shell/notification-center/style.css");
             }
 
             foreach (var path in Environment.get_system_config_dirs ()) {
                 paths += Path.build_path (Path.DIR_SEPARATOR.to_string (),
-                                          path, "swaync/style.css");
+                                          path, "ximper-shell/notification-center/style.css");
             }
             // Fallback location. Specified in postinstall.py. Mostly for Debian
-            paths += "/usr/local/etc/xdg/swaync/style.css";
+            paths += "/usr/local/etc/xdg/ximper-shell/notification-center/style.css";
 
             info ("Looking for CSS file in these directories:\n\t- %s",
                   string.joinv ("\n\t- ", paths));
@@ -181,13 +181,13 @@ namespace SwayNotificationCenter {
             }
             paths += Path.build_path (Path.DIR_SEPARATOR.to_string (),
                                       Environment.get_user_config_dir (),
-                                      "swaync/config.json");
+                                      "ximper-shell/notification-center/config.json");
             foreach (var path in Environment.get_system_config_dirs ()) {
                 paths += Path.build_path (Path.DIR_SEPARATOR.to_string (),
-                                          path, "swaync/config.json");
+                                          path, "ximper-shell/notification-center/config.json");
             }
             // Fallback location. Specified in postinstall.py. Mostly for Debian
-            paths += "/usr/local/etc/xdg/swaync/config.json";
+            paths += "/usr/local/etc/xdg/ximper-shell/notification-center/config.json";
 
             info ("Looking for config file in these directories:\n\t- %s",
                   string.joinv ("\n\t- ", paths));

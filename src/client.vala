@@ -1,11 +1,11 @@
-public struct SwayncDaemonData {
+public struct XimperShellNotificationCenterDaemonData {
     public bool dnd;
     public bool cc_open;
     public uint count;
     public bool inhibited;
 }
 
-[DBus (name = "org.erikreider.swaync.cc")]
+[DBus (name = "ru.ximperlinux.shell.NotificationCenter")]
 interface CcDaemon : Object {
     public abstract bool reload_css () throws Error;
 
@@ -37,7 +37,7 @@ interface CcDaemon : Object {
     public abstract bool set_noti_window_monitor (string monitor) throws DBusError, IOError;
 
     [DBus (name = "GetSubscribeData")]
-    public abstract SwayncDaemonData get_subscribe_data () throws Error;
+    public abstract XimperShellNotificationCenterDaemonData get_subscribe_data () throws Error;
 
     public signal void subscribe_v2 (uint count, bool dnd, bool cc_open, bool inhibited);
 
@@ -79,7 +79,7 @@ private void print_help (string[] args) {
     print ("  -C, \t --close-all \t\t\t Closes all notifications\n");
     print ("  -a, \t --action [ACTION_INDEX]\t " +
            "Invokes the action [ACTION_INDEX] of the latest notification\n");
-    print ("  -sw, \t --skip-wait \t\t\t Doesn't wait when swaync hasn't been started\n");
+    print ("  -sw, \t --skip-wait \t\t\t Doesn't wait when ximper-shell-notification-center hasn't been started\n");
     print ("  -s, \t --subscribe \t\t\t Subscribe to notification add and close events\n");
     print ("  -swb,  --subscribe-waybar \t\t Subscribe to notification add and close events "
            + "with waybar support. Read README for example\n");
@@ -98,7 +98,7 @@ private void on_subscribe (uint count, bool dnd, bool cc_open, bool inhibited) {
 
 private void print_subscribe () {
     try {
-        SwayncDaemonData data = cc_daemon.get_subscribe_data ();
+        XimperShellNotificationCenterDaemonData data = cc_daemon.get_subscribe_data ();
         on_subscribe (data.count, data.dnd, data.cc_open, data.inhibited);
     } catch (Error e) {
         on_subscribe (0, false, false, false);
@@ -127,7 +127,7 @@ private void on_subscribe_waybar (uint count, bool dnd, bool cc_open, bool inhib
 
 private void print_subscribe_waybar () {
     try {
-        SwayncDaemonData data = cc_daemon.get_subscribe_data ();
+        XimperShellNotificationCenterDaemonData data = cc_daemon.get_subscribe_data ();
         on_subscribe_waybar (data.count, data.dnd, data.cc_open, data.inhibited);
     } catch (Error e) {
         on_subscribe_waybar (0, false, false, false);
@@ -269,7 +269,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                 var loop = new MainLoop ();
                 Bus.watch_name (
                     BusType.SESSION,
-                    "org.erikreider.swaync.cc",
+                    "ru.ximperlinux.shell.NotificationCenter",
                     BusNameWatcherFlags.NONE,
                     print_subscribe,
                     print_subscribe);
@@ -281,7 +281,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                 var loop = new MainLoop ();
                 Bus.watch_name (
                     BusType.SESSION,
-                    "org.erikreider.swaync.cc",
+                    "ru.ximperlinux.shell.NotificationCenter",
                     BusNameWatcherFlags.NONE,
                     print_subscribe_waybar,
                     print_subscribe_waybar);
@@ -337,8 +337,8 @@ int try_connect (owned string[] args) {
     try {
         cc_daemon = Bus.get_proxy_sync (
             BusType.SESSION,
-            "org.erikreider.swaync.cc",
-            "/org/erikreider/swaync/cc");
+            "ru.ximperlinux.shell.NotificationCenter",
+            "/ru/ximperlinux/shell/NotificationCenter");
 
         bool skip_wait = "--skip-wait" in args || "-sw" in args;
         bool one_arg = true;
@@ -373,7 +373,7 @@ public int main (string[] args) {
         MainLoop loop = new MainLoop ();
         Bus.watch_name (
             BusType.SESSION,
-            "org.erikreider.swaync.cc",
+            "ru.ximperlinux.shell.NotificationCenter",
             BusNameWatcherFlags.NONE,
             (conn, name, name_owner) => {
             if (try_connect (args[1 :]) == 0) {

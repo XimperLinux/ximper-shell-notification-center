@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     [DBus (name = "net.hadess.PowerProfiles")]
     interface PowerProfilesProxy : Object {
         public abstract string active_profile { owned get; set; }

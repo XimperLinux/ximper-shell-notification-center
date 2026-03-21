@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public enum PositionX {
         RIGHT, LEFT, CENTER, NONE;
     }
@@ -447,22 +447,22 @@ namespace SwayNotificationCenter {
 
         public async bool run_script (NotifyParams param, out string msg) {
             string[] spawn_env = {};
-            spawn_env += "SWAYNC_APP_NAME=%s".printf (param.app_name);
-            spawn_env += "SWAYNC_SUMMARY=%s".printf (param.summary);
-            spawn_env += "SWAYNC_BODY=%s".printf (param.body);
-            spawn_env += "SWAYNC_URGENCY=%s".printf (param.urgency.to_string ());
-            spawn_env += "SWAYNC_CATEGORY=%s".printf (param.category);
-            spawn_env += "SWAYNC_SOUND_NAME=%s".printf (param.sound_name);
-            spawn_env += "SWAYNC_SOUND_FILE=%s".printf (param.sound_file);
-            spawn_env += "SWAYNC_ID=%s".printf (param.applied_id.to_string ());
-            spawn_env += "SWAYNC_REPLACES_ID=%s".printf (param.replaces_id.to_string ());
-            spawn_env += "SWAYNC_TIME=%s".printf (param.time.to_string ());
-            spawn_env += "SWAYNC_DESKTOP_ENTRY=%s".printf (param.desktop_entry ?? "");
+            spawn_env += "XSNC_APP_NAME=%s".printf (param.app_name);
+            spawn_env += "XSNC_SUMMARY=%s".printf (param.summary);
+            spawn_env += "XSNC_BODY=%s".printf (param.body);
+            spawn_env += "XSNC_URGENCY=%s".printf (param.urgency.to_string ());
+            spawn_env += "XSNC_CATEGORY=%s".printf (param.category);
+            spawn_env += "XSNC_SOUND_NAME=%s".printf (param.sound_name);
+            spawn_env += "XSNC_SOUND_FILE=%s".printf (param.sound_file);
+            spawn_env += "XSNC_ID=%s".printf (param.applied_id.to_string ());
+            spawn_env += "XSNC_REPLACES_ID=%s".printf (param.replaces_id.to_string ());
+            spawn_env += "XSNC_TIME=%s".printf (param.time.to_string ());
+            spawn_env += "XSNC_DESKTOP_ENTRY=%s".printf (param.desktop_entry ?? "");
             foreach (string hint in param.hints.get_keys ()) {
                 if (hint.contains ("image") || hint.contains ("icon")) {
                     continue;
                 }
-                spawn_env += "SWAYNC_HINT_%s=%s".printf (
+                spawn_env += "XSNC_HINT_%s=%s".printf (
                     hint.up ().replace ("-", "_"),
                     param.hints[hint].print (false));
             }
@@ -1365,7 +1365,7 @@ namespace SwayNotificationCenter {
         /**
          * Writes and replaces settings with the new settings in `path`. If
          * `path` is "null", the default user accessible config will be used
-         * ("~/.config/swaync/config.json")
+         * ("~/.config/ximper-shell/notification-center/config.json")
          */
         private bool write_to_file (owned string ?path = null) {
             try {
@@ -1374,7 +1374,7 @@ namespace SwayNotificationCenter {
                     string dir_path = Path.build_path (
                         Path.DIR_SEPARATOR.to_string (),
                         Environment.get_user_config_dir (),
-                        "swaync");
+                        "ximper-shell", "notification-center");
                     path = Path.build_path (Path.DIR_SEPARATOR.to_string (),
                                             dir_path, "config.json");
                     var dir = File.new_for_path (dir_path);

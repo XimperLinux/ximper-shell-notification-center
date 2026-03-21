@@ -1,12 +1,12 @@
-swaync-client(1)
+ximper-shell-notification-center-client(1)
 
 # NAME
 
-swaync-client - Client executable
+ximper-shell-notification-center-client - Client executable
 
 # USAGE
 
-*swaync-client* [option]
+*ximper-shell-notification-center-client* [option]
 
 # OPTIONS
 
@@ -77,7 +77,7 @@ swaync-client - Client executable
 	Invokes the action [ACTION_INDEX] (or 0) of the latest notification
 
 *-sw, --skip-wait*
-	Doesn't wait when swaync hasn't been started
+	Doesn't wait when ximper-shell-notification-center hasn't been started
 
 *-s, --subscribe*
 	Subscribe to notification add and close events

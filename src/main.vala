@@ -1,12 +1,12 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     static NotiDaemon noti_daemon;
-    static SwayncDaemon swaync_daemon;
+    static XimperShellNotificationCenterDaemon ximper_shell_notification_center_daemon;
     static Widgets.Notifications notifications_widget;
     static ControlCenter control_center;
     static NotificationWindow floating_notifications;
 
     static unowned ListModel ?monitors = null;
-    static Swaync app;
+    static NotificationCenter app;
     static Settings self_settings;
 
     static HashTable<string, unowned Gdk.PixbufFormat> pixbuf_mime_types;
@@ -30,11 +30,11 @@ namespace SwayNotificationCenter {
         }
     }
 
-    public class Swaync : Gtk.Application {
+    public class NotificationCenter : Gtk.Application {
         private bool activated = false;
         private Array<BlankWindow> blank_windows = new Array<BlankWindow> ();
 
-        // Only set on swaync start due to some limitations of GtkLayerShell
+        // Only set on start due to some limitations of GtkLayerShell
         public bool use_layer_shell = true;
         public bool has_layer_on_demand = true;
 
@@ -42,9 +42,9 @@ namespace SwayNotificationCenter {
 
         public signal void config_reload (ConfigModel ?old_config, ConfigModel new_config);
 
-        public Swaync (bool replace) {
+        public NotificationCenter (bool replace) {
             Object (
-                application_id : "org.erikreider.swaync",
+                application_id : "ru.ximperlinux.shell.NotificationCenter",
                 flags: ApplicationFlags.DEFAULT_FLAGS
                 | ApplicationFlags.ALLOW_REPLACEMENT
                 | (replace ? ApplicationFlags.REPLACE : 0)
@@ -53,7 +53,7 @@ namespace SwayNotificationCenter {
             try {
                 register ();
                 if (get_is_remote ()) {
-                    printerr ("An instance of SwayNotificationCenter is already running!\n");
+                    printerr ("An instance of Ximper Shell Notification Center is already running!\n");
                     Process.exit (1);
                 }
             } catch (Error e) {
@@ -103,7 +103,7 @@ namespace SwayNotificationCenter {
             }
 
             noti_daemon = new NotiDaemon ();
-            swaync_daemon = new SwayncDaemon ();
+            ximper_shell_notification_center_daemon = new XimperShellNotificationCenterDaemon ();
             // Notification Daemon
             Bus.own_name_on_connection (conn,
                                         "org.freedesktop.Notifications",
@@ -125,20 +125,20 @@ namespace SwayNotificationCenter {
             });
             yield;
 
-            // Swaync Daemon
+            // Ximper Shell Notification Center Daemon
             Bus.own_name_on_connection (conn,
-                                        "org.erikreider.swaync.cc",
+                                        "ru.ximperlinux.shell.NotificationCenter",
                                         BusNameOwnerFlags.NONE,
                                         () => {
                 try {
-                    conn.register_object ("/org/erikreider/swaync/cc", swaync_daemon);
+                    conn.register_object ("/ru/ximperlinux/shell/NotificationCenter", ximper_shell_notification_center_daemon);
                     init.callback ();
                 } catch (Error e) {
                     error ("Could not register CC service: \"%s\"", e.message);
                 }
             },
                                         () => {
-                error ("Could not acquire swaync name!");
+                error ("Could not acquire Ximper Shell Notification Center name!");
             });
             yield;
 
@@ -159,10 +159,10 @@ namespace SwayNotificationCenter {
                     });
                 }
 
-                swaync_daemon.emit_subscribe ();
+                ximper_shell_notification_center_daemon.emit_subscribe ();
             });
             // Update on start
-            swaync_daemon.emit_subscribe ();
+            ximper_shell_notification_center_daemon.emit_subscribe ();
 
             monitors.items_changed.connect (monitors_changed);
             Idle.add_once (() => monitors_changed (0, 0, monitors.get_n_items ()));
@@ -189,9 +189,9 @@ namespace SwayNotificationCenter {
 
             // Set preferred output
             try {
-                swaync_daemon.set_cc_monitor (
+                ximper_shell_notification_center_daemon.set_cc_monitor (
                     ConfigModel.instance.control_center_preferred_output);
-                swaync_daemon.set_noti_window_monitor (
+                ximper_shell_notification_center_daemon.set_noti_window_monitor (
                     ConfigModel.instance.notification_window_preferred_output);
             } catch (Error e) {
                 critical (e.message);
@@ -287,14 +287,14 @@ namespace SwayNotificationCenter {
             Adw.init ();
 
             Functions.init ();
-            self_settings = new Settings ("org.erikreider.swaync");
+            self_settings = new Settings ("ru.ximperlinux.shell.NotificationCenter");
 
-            app = new Swaync (replace);
+            app = new NotificationCenter (replace);
             return app.run ();
         }
 
         private static void print_startup_info () {
-            print ("Starting SwayNotificationCenter version %s\n", Constants.VERSION);
+            print ("Starting Ximper Shell Notification Center version %s\n", Constants.VERSION);
 
             // Log distro information
             string info_paths[5] = {

@@ -1,6 +1,6 @@
 using GLib;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public enum MenuType {
         BUTTONS,
         MENU,

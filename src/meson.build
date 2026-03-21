@@ -12,7 +12,7 @@ if git.found()
     )
   endif
 endif
-version = 'swaync @0@'.format(version)
+version = 'ximper-shell-notification-center @0@'.format(version)
 const_config_data = configuration_data()
 const_config_data.set_quoted('VERSION', version)
 const_config_data.set_quoted('VERSION_NUM', meson.project_version())
@@ -63,7 +63,7 @@ app_sources = [
   'iterHelpers/iterListBoxController.vala',
   'underlay/underlay.vala',
   'configModel/configModel.vala',
-  'swayncDaemon/swayncDaemon.vala',
+  'ximperShellNotificationCenterDaemon/ximperShellNotificationCenterDaemon.vala',
   'notiDaemon/notiDaemon.vala',
   'notiModel/notiModel.vala',
   'notificationWindow/notificationWindow.vala',
@@ -137,14 +137,14 @@ args = [
   '--target-glib=2.82',
 ]
 
-executable('swaync',
+executable('ximper-shell-notification-center',
   [ app_sources, app_resources ],
   vala_args: args,
   dependencies: app_deps,
   install: true,
 )
 
-executable('swaync-client',
+executable('ximper-shell-notification-center-client',
   ['client.vala', constants],
   vala_args: args,
   dependencies: app_deps,

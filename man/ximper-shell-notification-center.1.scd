@@ -1,12 +1,12 @@
-swaync(1)
+ximper-shell-notification-center(1)
 
 # NAME
 
-swaync - A simple notification daemon with a GTK gui for notifications and the control center
+ximper-shell-notification-center - A simple notification daemon with a GTK gui for notifications and the control center
 
 # USAGE
 
-*swaync* [option]
+*ximper-shell-notification-center* [option]
 
 # OPTIONS
 
@@ -20,7 +20,7 @@ swaync - A simple notification daemon with a GTK gui for notifications and the c
 	Use a custom Stylesheet file
 
 *--replace*
-	Replace the currently running instance of SwayNotificationCenter
+	Replace the currently running instance of XimperShellNotificationCenter
 
 *--skip-system-css*
 	Skip trying to parse the packaged Stylesheet file. Useful for CSS debugging
@@ -57,12 +57,12 @@ swaync - A simple notification daemon with a GTK gui for notifications and the c
 
 # CONFIGURATION
 
-The main config file is located in */etc/xdg/swaync/config.json*. Copy it over
-to your *~/.config/swaync/* folder to customize without needing root access.
+The main config file is located in */etc/xdg/ximper-shell/notification-center/config.json*. Copy it over
+to your *~/.config/ximper-shell/notification-center/* folder to customize without needing root access.
 
-To reload the config, you'll need to run *swaync-client --reload-config*
+To reload the config, you'll need to run *ximper-shell-notification-center-client --reload-config*
 
-For information on the config file format, see *swaync*(5)
+For information on the config file format, see *ximper-shell-notification-center*(5)
 
 
 # Scripting
@@ -76,7 +76,7 @@ Scripting rules and logic:
 . If a notification doesn't include one of the properties, that property will be skipped
 
 Notification information can be printed into a terminal by running
-*G_MESSAGES_DEBUG=all swaync* (when a notification appears).
+*G_MESSAGES_DEBUG=all ximper-shell-notification-center* (when a notification appears).
 
 Config properties:
 
@@ -104,7 +104,7 @@ Config properties:
 		// This script will only run when Spotify sends a notification containing
 		// that exact summary and body
 		"example-script": {
-			"exec": "~/.config/swaync/myRickRollScript.sh",
+			"exec": "~/.config/ximper-shell/notification-center/myRickRollScript.sh",
 			"app-name": "Spotify"
 			"summary": "Never Gonna Give You Up",
 			"body": "Rick Astley - Whenever You Need Somebody"
@@ -135,20 +135,20 @@ Waybar config
 	"tooltip": false,
 	"format": "{icon}",
 	"format-icons": {
-		"notification": "<span foreground='red'><sup></sup></span>",
-		"none": "",
-		"dnd-notification": "<span foreground='red'><sup></sup></span>",
-		"dnd-none": "",
-		"inhibited-notification": "<span foreground='red'><sup></sup></span>",
-		"inhibited-none": "",
-		"dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
-		"dnd-inhibited-none": ""
+		"notification": "<span foreground='red'><sup></sup></span>",
+		"none": "",
+		"dnd-notification": "<span foreground='red'><sup></sup></span>",
+		"dnd-none": "",
+		"inhibited-notification": "<span foreground='red'><sup></sup></span>",
+		"inhibited-none": "",
+		"dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+		"dnd-inhibited-none": ""
 	},
 	"return-type": "json",
-	"exec-if": "which swaync-client",
-	"exec": "swaync-client -swb",
-	"on-click": "swaync-client -t -sw",
-	"on-click-right": "swaync-client -d -sw",
+	"exec-if": "which ximper-shell-notification-center-client",
+	"exec": "ximper-shell-notification-center-client -swb",
+	"on-click": "ximper-shell-notification-center-client -t -sw",
+	"on-click-right": "ximper-shell-notification-center-client -d -sw",
 	"escape": true
 },
 ```

@@ -1,5 +1,5 @@
-namespace SwayNotificationCenter {
-    [GtkTemplate (ui = "/org/erikreider/swaync/ui/notification_window.ui")]
+namespace XimperShellNotificationCenter {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/notification_window.ui")]
     public class NotificationWindow : Gtk.ApplicationWindow {
         [GtkChild]
         unowned Gtk.ScrolledWindow scrolled_window;
@@ -19,13 +19,13 @@ namespace SwayNotificationCenter {
             if (app.use_layer_shell) {
                 if (!GtkLayerShell.is_supported ()) {
                     stderr.printf ("GTKLAYERSHELL IS NOT SUPPORTED!\n");
-                    stderr.printf ("Swaync only works on Wayland!\n");
+                    stderr.printf ("Ximper Shell Notification Center only works on Wayland!\n");
                     stderr.printf ("If running waylans session, try running:\n");
-                    stderr.printf ("\tGDK_BACKEND=wayland swaync\n");
+                    stderr.printf ("\tGDK_BACKEND=wayland ximper-shell-notification-center\n");
                     Process.exit (1);
                 }
                 GtkLayerShell.init_for_window (this);
-                GtkLayerShell.set_namespace (this, "swaync-notification-window");
+                GtkLayerShell.set_namespace (this, "ximper-shell-notification-window");
             }
             this.set_anchor ();
 
@@ -166,11 +166,11 @@ namespace SwayNotificationCenter {
             }
             switch (ConfigModel.instance.positionY) {
                 default:
-                case SwayNotificationCenter.PositionY.TOP:
-                case SwayNotificationCenter.PositionY.CENTER:
+                case XimperShellNotificationCenter.PositionY.TOP:
+                case XimperShellNotificationCenter.PositionY.CENTER:
                     list.direction = AnimatedListDirection.TOP_TO_BOTTOM;
                     break;
-                case SwayNotificationCenter.PositionY.BOTTOM:
+                case XimperShellNotificationCenter.PositionY.BOTTOM:
                     list.direction = AnimatedListDirection.BOTTOM_TO_TOP;
                     break;
             }

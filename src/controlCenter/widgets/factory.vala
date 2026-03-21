@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public static BaseWidget ?get_widget_from_key (owned string key, out bool is_notifications) {
         is_notifications = false;
 

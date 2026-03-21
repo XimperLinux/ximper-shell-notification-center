@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets.Mpris {
+namespace XimperShellNotificationCenter.Widgets.Mpris {
     public enum AlbumArtState {
         ALWAYS, WHEN_AVAILABLE, NEVER;
 

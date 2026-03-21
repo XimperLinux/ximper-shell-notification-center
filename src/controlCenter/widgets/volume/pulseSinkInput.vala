@@ -2,7 +2,7 @@
 using Gee;
 using PulseAudio;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class PulseSinkInput : Object {
         /** The card index: ex. `Sink Input #227` */
         public uint32 index;

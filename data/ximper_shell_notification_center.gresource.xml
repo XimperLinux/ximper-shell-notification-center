@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/ru/ximperlinux/shell/NotificationCenter">
+    <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-collapse-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-close-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-up-small-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-down-small-symbolic.svg</file>
+
+    <file preprocess="xml-stripblanks">ui/notification_window.ui</file>
+    <file preprocess="xml-stripblanks">ui/notification.ui</file>
+    <file preprocess="xml-stripblanks">ui/control_center.ui</file>
+    <file preprocess="xml-stripblanks">ui/mpris_player.ui</file>
+    <file preprocess="xml-stripblanks">ui/notifications_widget.ui</file>
+  </gresource>
+</gresources>

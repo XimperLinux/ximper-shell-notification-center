@@ -1,4 +1,4 @@
-project('sway-notificaton-center', ['c', 'vala'],
+project('ximper-shell-notification-center', ['c', 'vala'],
   version: '0.12.5',
   meson_version: '>= 0.60.0',
   default_options: [ 'warning_level=2' ],
@@ -18,7 +18,7 @@ gnome = import('gnome')
 
 app_resources = []
 
-config_path = join_paths(get_option('sysconfdir'), 'xdg', 'swaync')
+config_path = join_paths(get_option('sysconfdir'), 'xdg', 'ximper-shell', 'notification-center')
 datadir = get_option('datadir')
 libdir = get_option('libdir')
 
@@ -37,14 +37,14 @@ conf_data.set('bindir', join_paths(get_option('prefix'), get_option('bindir')))
 # D-Bus Notification service
 configure_file(
   configuration: conf_data,
-  input: 'services/dbus/org.erikreider.swaync.service.in',
+  input: 'services/dbus/ru.ximperlinux.shell.NotificationCenter.service.in',
   output: '@BASENAME@',
   install_dir: datadir + '/dbus-1/services'
 )
 # D-Bus Control Center service
 configure_file(
   configuration: conf_data,
-  input: 'services/dbus/org.erikreider.swaync.cc.service.in',
+  input: 'services/dbus/ru.ximperlinux.shell.NotificationCenter.cc.service.in',
   output: '@BASENAME@',
   install_dir: datadir + '/dbus-1/services'
 )
@@ -60,7 +60,7 @@ if get_option('systemd-service')
 
   configure_file(
     configuration: conf_data,
-    input: 'services/systemd/swaync.service.in',
+    input: 'services/systemd/ximper-shell-notification-center.service.in',
     output: '@BASENAME@',
     install_dir: systemd_service_install_dir
   )
@@ -69,8 +69,8 @@ endif
 # Zsh completion
 if get_option('zsh-completions')
   zsh_files = files(
-    'completions/zsh/_swaync',
-    'completions/zsh/_swaync-client',
+    'completions/zsh/_ximper-shell-notification-center',
+    'completions/zsh/_ximper-shell-notification-center-client',
   )
   zsh_install_dir = join_paths(datadir, 'zsh', 'site-functions')
 
@@ -81,8 +81,8 @@ endif
 bash_comp = dependency('bash-completion', required: false)
 if get_option('bash-completions')
   bash_files = files(
-    'completions/bash/swaync',
-    'completions/bash/swaync-client',
+    'completions/bash/ximper-shell-notification-center',
+    'completions/bash/ximper-shell-notification-center-client',
   )
 
   if bash_comp.found()
@@ -101,8 +101,8 @@ endif
 fish_comp = dependency('fish', required: false)
 if get_option('fish-completions')
   fish_files = files(
-    'completions/fish/swaync.fish',
-    'completions/fish/swaync-client.fish',
+    'completions/fish/ximper-shell-notification-center.fish',
+    'completions/fish/ximper-shell-notification-center-client.fish',
   )
 
   if fish_comp.found()
@@ -138,9 +138,9 @@ if get_option('man-pages')
 
     mandir = get_option('mandir')
     man_files = [
-      'swaync.1.scd',
-      'swaync.5.scd',
-      'swaync-client.1.scd',
+      'ximper-shell-notification-center.1.scd',
+      'ximper-shell-notification-center.5.scd',
+      'ximper-shell-notification-center-client.1.scd',
     ]
 
     foreach filename : man_files

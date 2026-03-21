@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     class ToggleButton : Gtk.ToggleButton {
         private string command;
         private string update_command;
@@ -20,7 +20,7 @@ namespace SwayNotificationCenter.Widgets {
 
         private async void on_toggle () {
             string msg = "";
-            string[] env_additions = { "SWAYNC_TOGGLE_STATE=" + this.active.to_string () };
+            string[] env_additions = { "XSNC_TOGGLE_STATE=" + this.active.to_string () };
             yield Functions.execute_command (this.command, env_additions, out msg);
         }
 
@@ -29,7 +29,7 @@ namespace SwayNotificationCenter.Widgets {
                 return;
             }
             string msg = "";
-            string[] env_additions = { "SWAYNC_TOGGLE_STATE=" + this.active.to_string () };
+            string[] env_additions = { "XSNC_TOGGLE_STATE=" + this.active.to_string () };
             yield Functions.execute_command (this.update_command, env_additions, out msg);
 
             try {

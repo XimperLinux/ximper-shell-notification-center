@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     class BacklightUtil {
         [DBus (name = "org.freedesktop.login1.Session")]
         interface Login1 : Object {

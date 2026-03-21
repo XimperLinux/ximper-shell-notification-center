@@ -2,7 +2,7 @@
 using Gee;
 using PulseAudio;
 
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class PulseCardProfile : Object {
         public string name;
         public string description;

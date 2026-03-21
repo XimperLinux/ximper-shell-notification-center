@@ -1,7 +1,7 @@
 # GSchema
 compile_schemas = find_program('glib-compile-schemas', required: true)
 install_data(
-  'org.erikreider.swaync.gschema.xml',
+  'ru.ximperlinux.shell.NotificationCenter.gschema.xml',
   install_dir: join_paths(datadir, 'glib-2.0/schemas'),
 )
 
@@ -13,7 +13,7 @@ test(
 if get_option('buildtype') != 'release'
   app_resources += custom_target(
     'gschemas',
-    input: 'org.erikreider.swaync.gschema.xml',
+    input: 'ru.ximperlinux.shell.NotificationCenter.gschema.xml',
     output: 'gschemas.compiled',
     command: [
       compile_schemas,
@@ -42,8 +42,8 @@ blueprints = custom_target(
 )
 
 app_resources += gnome.compile_resources(
-  'sway_notification_center-resources',
-  'sway_notification_center.gresource.xml',
+  'ximper_shell_notification_center-resources',
+  'ximper_shell_notification_center.gresource.xml',
   dependencies: [style_files, blueprints],
-  c_name: 'sway_notification_center',
+  c_name: 'ximper_shell_notification_center',
 )

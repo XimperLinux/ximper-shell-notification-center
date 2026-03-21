@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.Notifications
+Exec=@bindir@/ximper-shell-notification-center
+SystemdService=ximper-shell-notification-center.service

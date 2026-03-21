@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter.Widgets {
+namespace XimperShellNotificationCenter.Widgets {
     public class Inhibitors : BaseWidget {
         public override string widget_name {
             get {
@@ -17,8 +17,8 @@ namespace SwayNotificationCenter.Widgets {
         public Inhibitors (string suffix) {
             base (suffix);
 
-            swaync_daemon.inhibited_changed.connect ((length) => {
-                if (!swaync_daemon.inhibited) {
+            ximper_shell_notification_center_daemon.inhibited_changed.connect ((length) => {
+                if (!ximper_shell_notification_center_daemon.inhibited) {
                     hide ();
                     return;
                 }
@@ -57,7 +57,7 @@ namespace SwayNotificationCenter.Widgets {
                 clear_all_button = new Gtk.Button.with_label (button_text);
                 clear_all_button.clicked.connect (() => {
                     try {
-                        swaync_daemon.clear_inhibitors ();
+                        ximper_shell_notification_center_daemon.clear_inhibitors ();
                     } catch (Error e) {
                         critical ("Error: %s\n", e.message);
                     }

@@ -1,4 +1,4 @@
-namespace SwayNotificationCenter {
+namespace XimperShellNotificationCenter {
     public class NotificationCloseButton : Adw.Bin {
         Gtk.Revealer revealer;
         Gtk.Button button;
@@ -17,7 +17,7 @@ namespace SwayNotificationCenter {
             });
             set_child (revealer);
 
-            button = new Gtk.Button.from_icon_name ("swaync-close-symbolic") {
+            button = new Gtk.Button.from_icon_name ("ximper-shell-notification-center-close-symbolic") {
                 has_frame = false,
                 halign = Gtk.Align.CENTER,
                 valign = Gtk.Align.CENTER,
