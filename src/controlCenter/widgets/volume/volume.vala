@@ -164,7 +164,15 @@ namespace XimperShellNotificationCenter.Widgets {
                 reveal_button.toggled.connect (() => {
                     set_button_icon ();
                     revealer.set_reveal_child (reveal_button.active);
+                    if (reveal_button.active) {
+                        add_css_class ("expanded");
+                    } else {
+                        remove_css_class ("expanded");
+                    }
                 });
+                if (expand_per_app) {
+                    add_css_class ("expanded");
+                }
                 main_volume_slider_container.append (reveal_button);
                 append (revealer);
             }
