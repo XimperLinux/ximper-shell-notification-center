@@ -7,7 +7,7 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         Gtk.Box main_volume_slider_container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-        Gtk.Label label_widget = new Gtk.Label (null);
+        Gtk.Image icon_widget = new Gtk.Image ();
         Gtk.Scale slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
 
         // Per app volume control
@@ -38,6 +38,8 @@ namespace XimperShellNotificationCenter.Widgets {
         construct {
             this.client.change_default_device.connect (default_device_changed);
 
+            icon_widget.set_from_icon_name ("audio-volume-high-symbolic");
+
             slider.value_changed.connect (() => {
                 if (default_sink != null) {
                     this.client.set_device_volume (
@@ -45,6 +47,7 @@ namespace XimperShellNotificationCenter.Widgets {
                         (float) slider.get_value ());
                     slider.tooltip_text = ((int) slider.get_value ()).to_string ();
                 }
+                update_volume_icon ((int) slider.get_value ());
             });
         }
 
@@ -54,9 +57,6 @@ namespace XimperShellNotificationCenter.Widgets {
 
             Json.Object ?config = get_config (this);
             if (config != null) {
-                string ?label = get_prop<string> (config, "label");
-                label_widget.set_label (label ?? _("Volume"));
-
                 bool show_per_app_found;
                 bool ?show_per_app = get_prop<bool> (config, "show-per-app",
                                                      out show_per_app_found);
@@ -131,7 +131,7 @@ namespace XimperShellNotificationCenter.Widgets {
             slider.draw_value = false;
             slider.set_hexpand (true);
 
-            main_volume_slider_container.append (label_widget);
+            main_volume_slider_container.append (icon_widget);
             main_volume_slider_container.append (slider);
             append (main_volume_slider_container);
 
@@ -175,6 +175,20 @@ namespace XimperShellNotificationCenter.Widgets {
                 main_volume_slider_container.append (reveal_button);
                 append (revealer);
             }
+        }
+
+        private void update_volume_icon (int volume) {
+            string icon_name;
+            if (volume <= 0) {
+                icon_name = "audio-volume-muted-symbolic";
+            } else if (volume <= 33) {
+                icon_name = "audio-volume-low-symbolic";
+            } else if (volume <= 66) {
+                icon_name = "audio-volume-medium-symbolic";
+            } else {
+                icon_name = "audio-volume-high-symbolic";
+            }
+            icon_widget.set_from_icon_name (icon_name);
         }
 
         private void set_button_icon () {

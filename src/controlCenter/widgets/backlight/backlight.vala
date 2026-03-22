@@ -14,7 +14,8 @@ namespace XimperShellNotificationCenter.Widgets {
         bool use_ddc = false;
 #endif
 
-        Gtk.Label label_widget = new Gtk.Label (null);
+        Gtk.Image icon_widget = new Gtk.Image.from_icon_name (
+            "display-brightness-symbolic");
         Gtk.Scale slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
 
         public Backlight (string suffix) {
@@ -22,8 +23,6 @@ namespace XimperShellNotificationCenter.Widgets {
 
             Json.Object ?config = get_config (this);
             if (config != null) {
-                string ?label = get_prop<string> (config, "label");
-                label_widget.set_label (label ?? _("Brightness"));
                 string device = (get_prop<string> (config, "device") ?? "intel_backlight");
                 string subsystem = (get_prop<string> (config, "subsystem") ?? "backlight");
                 int min = int.max (0, get_prop<int> (config, "min"));
@@ -76,11 +75,9 @@ namespace XimperShellNotificationCenter.Widgets {
 #if HAVE_DDC
             if (use_ddc) {
                 if (ddc_clients.length == 1) {
-                    // Single DDC display — use the existing label + slider
-                    if (label_widget.get_label () == "Brightness") {
-                        label_widget.set_label ("󰍹");
-                        label_widget.set_tooltip_text (ddc_clients[0].get_display_name ());
-                    }
+                    // Single DDC display — use the existing icon + slider
+                    icon_widget.set_tooltip_text (
+                        ddc_clients[0].get_display_name ());
                     ddc_clients[0].brightness_change.connect ((percent) => {
                         if (percent < 0) {
                             hide ();
@@ -95,15 +92,19 @@ namespace XimperShellNotificationCenter.Widgets {
                         ddc_clients[0].set_brightness.begin ((float) slider.get_value ());
                         slider.tooltip_text = ((int) slider.get_value ()).to_string ();
                     });
-                    append (label_widget);
+                    append (icon_widget);
                     append (slider);
                 } else {
                     // Multiple DDC displays — create a row per display
                     set_orientation (Gtk.Orientation.VERTICAL);
                     for (int i = 0; i < ddc_clients.length; i++) {
                         var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-                        var lbl = new Gtk.Label ("󰍹 %d".printf (i + 1));
-                        lbl.set_tooltip_text (ddc_clients[i].get_display_name ());
+                        var icon = new Gtk.Image.from_icon_name (
+                            "display-brightness-symbolic");
+                        var num_label = new Gtk.Label (
+                            (i + 1).to_string ());
+                        icon.set_tooltip_text (
+                            ddc_clients[i].get_display_name ());
                         var scl = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
                         scl.set_draw_value (false);
                         scl.set_round_digits (0);
@@ -122,7 +123,8 @@ namespace XimperShellNotificationCenter.Widgets {
                             scl.tooltip_text = ((int) scl.get_value ()).to_string ();
                         });
 
-                        row.append (lbl);
+                        row.append (icon);
+                        row.append (num_label);
                         row.append (scl);
                         append (row);
                     }
@@ -147,7 +149,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 slider.tooltip_text = ((int) slider.get_value ()).to_string ();
             });
 
-            append (label_widget);
+            append (icon_widget);
             append (slider);
         }
 

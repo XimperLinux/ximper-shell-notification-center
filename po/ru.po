@@ -79,14 +79,6 @@ msgstr "Блокировки"
 msgid "No active sink input"
 msgstr "Нет активного источника"
 
-#: src/controlCenter/widgets/volume/volume.vala:58
-msgid "Volume"
-msgstr "Громкость"
-
-#: src/controlCenter/widgets/backlight/backlight.vala:26
-msgid "Brightness"
-msgstr "Яркость"
-
 #: src/controlCenter/widgets/slider/slider.vala:28
 msgid "Slider"
 msgstr "Ползунок"

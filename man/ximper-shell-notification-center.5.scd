@@ -396,11 +396,6 @@ config file to be able to detect config errors
 					optional: true ++
 					default: true ++
 					description: Whether to display a "Clear All" button ++
-				button-text: ++
-					type: string ++
-					optional: true ++
-					default: "Clear All" ++
-					description: "Clear All" button text ++
 			description: The notification visibility state. ++
 		*dnd*++
 			type: object ++
@@ -659,11 +654,6 @@ config file to be able to detect config errors
 				widget-volume ++
 				per-app-volume ++
 			properties: ++
-				label: ++
-					type: string ++
-					optional: true ++
-					default: "Volume" ++
-					description: Text displayed in front of the volume slider ++
 				show-per-app: ++
 					type: bool ++
 					optional: true ++
@@ -716,11 +706,6 @@ config file to be able to detect config errors
 			type: object ++
 			css class: widget-backlight ++
 			properties: ++
-				label: ++
-					type: string ++
-					optional: true ++
-					default: "Brightness" ++
-					description: Text displayed in front of the backlight slider ++
 				device: ++
 					type: string ++
 					optional: true ++
@@ -752,11 +737,6 @@ config file to be able to detect config errors
 					optional: true ++
 					default: true ++
 					description: Whether to display a "Clear All" button ++
-				button-text: ++
-					type: string ++
-					optional: true ++
-					default: "Clear All" ++
-					description: "Clear All" button text ++
 			description: Displayed if notifications are inhibited.
 
 	example:
@@ -765,8 +745,7 @@ config file to be able to detect config errors
 	"widget-config": {
 		"title": {
 			"text": "Notifications",
-			"clear-all-button": true,
-			"button-text": "Clear All"
+			"clear-all-button": true
 		},
 		"dnd": {
 			"text": "Do Not Disturb"

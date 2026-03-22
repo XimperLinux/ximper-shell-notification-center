@@ -12,12 +12,10 @@ namespace XimperShellNotificationCenter.Widgets {
         // Default config values
         string title;
         bool has_clear_all_button = true;
-        string button_text;
 
         public Inhibitors (string suffix) {
             base (suffix);
             title = _("Inhibitors");
-            button_text = _("Clear All");
 
             ximper_shell_notification_center_daemon.inhibited_changed.connect ((length) => {
                 if (!ximper_shell_notification_center_daemon.inhibited) {
@@ -42,11 +40,6 @@ namespace XimperShellNotificationCenter.Widgets {
                 if (found_clear_all) {
                     this.has_clear_all_button = has_clear_all_button;
                 }
-                // Get button text
-                string ?button_text = get_prop<string> (config, "button-text");
-                if (button_text != null) {
-                    this.button_text = button_text;
-                }
             }
 
             title_widget = new Gtk.Label (title);
@@ -56,7 +49,12 @@ namespace XimperShellNotificationCenter.Widgets {
             append (title_widget);
 
             if (has_clear_all_button) {
-                clear_all_button = new Gtk.Button.with_label (button_text);
+                clear_all_button = new Gtk.Button ();
+                var btn_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
+                btn_box.append (new Gtk.Image.from_icon_name (
+                    "edit-clear-all-symbolic"));
+                btn_box.append (new Gtk.Label (_("Clear All")));
+                clear_all_button.set_child (btn_box);
                 clear_all_button.clicked.connect (() => {
                     try {
                         ximper_shell_notification_center_daemon.clear_inhibitors ();
