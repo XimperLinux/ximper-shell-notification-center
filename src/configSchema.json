@@ -697,29 +697,13 @@
     },
     "backlight": {
       "type": "object",
-      "description": "Slider to control monitor brightness",
+      "description": "Unified brightness control widget. Auto-detects display backlights (/sys/class/backlight), DDC/CI monitors, and keyboard backlights (/sys/class/leds/*kbd*).",
       "additionalProperties": false,
       "properties": {
-        "device": {
-          "type": "string",
-          "description": "Name of monitor (find possible devices using `ls /sys/class/backlight` or `ls /sys/class/leds`)",
-          "default": "intel_backlight"
-        },
-        "subsystem": {
-          "type": "string",
-          "description": "Kernel subsystem for brightness control. Use 'ddc' for external monitors via DDC/CI (requires build with -Dddc=true).",
-          "default": "backlight",
-          "enum": ["backlight", "leds", "ddc"]
-        },
         "min": {
           "type": "integer",
           "default": 0,
           "description": "Lowest possible value for brightness"
-        },
-        "display-number": {
-          "type": "integer",
-          "default": 0,
-          "description": "DDC display number (from ddcutil detect). 0 means first available. Only used with subsystem 'ddc'."
         }
       }
     },

@@ -2,7 +2,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
     public struct DdcDisplayInfo {
         int dispno;
-        string model_name;
+        string display_name;
     }
 
     class DdcUtil {
@@ -51,9 +51,13 @@ namespace XimperShellNotificationCenter.Widgets {
 
             DdcDisplayInfo[] result = {};
             for (int i = 0; i < dlist.ct; i++) {
+                string mfg = ((string) dlist.info[i].mfg_id).dup ().strip ();
+                string model = ((string) dlist.info[i].model_name).dup ().strip ();
+                string name = mfg.length > 0
+                    ? "%s %s".printf (mfg, model) : model;
                 result += DdcDisplayInfo () {
                     dispno = dlist.info[i].dispno,
-                    model_name = ((string) dlist.info[i].model_name).dup (),
+                    display_name = name,
                 };
             }
             return result;
