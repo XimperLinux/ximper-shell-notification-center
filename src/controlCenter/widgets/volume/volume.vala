@@ -21,8 +21,6 @@ namespace XimperShellNotificationCenter.Widgets {
         string ?expand_label = null;
         string ?collapse_label = null;
 
-        [Version (deprecated = true, replacement = "CSS root variable")]
-        int icon_size = -1;
 
         Gtk.RevealerTransitionType revealer_type = Gtk.RevealerTransitionType.SLIDE_DOWN;
         int revealer_duration = 250;
@@ -99,11 +97,6 @@ namespace XimperShellNotificationCenter.Widgets {
                     collapse_label = l2;
                 }
 
-                int i = int.max (get_prop<int> (config, "icon-size"), 0);
-                if (i != 0) {
-                    icon_size = i;
-                }
-
                 revealer_duration = int.max (0, get_prop<int> (config, "animation-duration"));
                 if (revealer_duration == 0) {
                     revealer_duration = 250;
@@ -154,7 +147,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
                 foreach (var item in this.client.active_sinks.values) {
                     SinkInputRow row = new SinkInputRow (item, client,
-                                                         icon_size, show_per_app_icon,
+                                                         show_per_app_icon,
                                                          show_per_app_label);
                     list_box_controller.append (row);
                 }
@@ -245,7 +238,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 list_box_controller.remove ((Gtk.Widget) label);
             }
             SinkInputRow row = new SinkInputRow (sink, client,
-                                                 icon_size, show_per_app_icon,
+                                                 show_per_app_icon,
                                                  show_per_app_label);
             list_box_controller.append (row);
         }

@@ -682,12 +682,6 @@
           "default": "⇩",
           "description": "Label displayed on button to hide per app volume control"
         },
-        "icon-size": {
-          "type": "integer",
-          "deprecated": true,
-          "default": -1,
-          "description": "deprecated (change the CSS root variable \"--widget-volume-row-icon-size\"): Size of the application icon in per app volume control"
-        },
         "animation-type": {
           "type": "string",
           "default": "slide_down",

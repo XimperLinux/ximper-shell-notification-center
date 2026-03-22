@@ -13,7 +13,7 @@ namespace XimperShellNotificationCenter.Widgets {
         private bool show_per_app_label;
 
         public SinkInputRow (PulseSinkInput sink_input, PulseDaemon client,
-                             int icon_size, bool show_per_app_icon, bool show_per_app_label) {
+                             bool show_per_app_icon, bool show_per_app_label) {
             this.client = client;
             this.show_per_app_icon = show_per_app_icon;
             this.show_per_app_label = show_per_app_label;
@@ -24,8 +24,6 @@ namespace XimperShellNotificationCenter.Widgets {
 
             scale.draw_value = false;
             scale.set_hexpand (true);
-
-            icon.set_pixel_size (icon_size);
 
             container = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
