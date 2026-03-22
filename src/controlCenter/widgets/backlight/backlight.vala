@@ -97,14 +97,22 @@ namespace XimperShellNotificationCenter.Widgets {
                 } else {
                     // Multiple DDC displays — create a row per display
                     set_orientation (Gtk.Orientation.VERTICAL);
+                    var size_group = new Gtk.SizeGroup (
+                        Gtk.SizeGroupMode.HORIZONTAL);
                     for (int i = 0; i < ddc_clients.length; i++) {
                         var row = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+                        var label_box = new Gtk.Box (
+                            Gtk.Orientation.HORIZONTAL, 6);
+                        label_box.set_halign (Gtk.Align.CENTER);
+                        size_group.add_widget (label_box);
                         var icon = new Gtk.Image.from_icon_name (
                             "display-brightness-symbolic");
                         var num_label = new Gtk.Label (
                             (i + 1).to_string ());
                         icon.set_tooltip_text (
                             ddc_clients[i].get_display_name ());
+                        label_box.append (icon);
+                        label_box.append (num_label);
                         var scl = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 0, 100, 1);
                         scl.set_draw_value (false);
                         scl.set_round_digits (0);
@@ -123,8 +131,7 @@ namespace XimperShellNotificationCenter.Widgets {
                             scl.tooltip_text = ((int) scl.get_value ()).to_string ();
                         });
 
-                        row.append (icon);
-                        row.append (num_label);
+                        row.append (label_box);
                         row.append (scl);
                         append (row);
                     }

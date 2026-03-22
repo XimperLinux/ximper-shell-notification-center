@@ -77,6 +77,10 @@ msgstr ""
 msgid "No active sink input"
 msgstr ""
 
+#: src/controlCenter/widgets/backlight/backlight.vala
+msgid "Brightness"
+msgstr ""
+
 #: src/controlCenter/widgets/slider/slider.vala:28
 msgid "Slider"
 msgstr ""

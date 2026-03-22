@@ -4,6 +4,7 @@ src/controlCenter/widgets/title/title.vala
 src/controlCenter/widgets/dnd/dnd.vala
 src/controlCenter/widgets/inhibitors/inhibitors.vala
 src/controlCenter/widgets/volume/volume.vala
+src/controlCenter/widgets/backlight/backlight.vala
 src/controlCenter/widgets/slider/slider.vala
 src/controlCenter/widgets/menubar/menubar.vala
 src/controlCenter/widgets/powerProfiles/powerProfiles.vala
