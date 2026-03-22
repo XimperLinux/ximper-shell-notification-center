@@ -10,12 +10,14 @@ namespace XimperShellNotificationCenter.Widgets {
         Gtk.Button clear_all_button;
 
         // Default config values
-        string title = "Inhibitors";
+        string title;
         bool has_clear_all_button = true;
-        string button_text = "Clear All";
+        string button_text;
 
         public Inhibitors (string suffix) {
             base (suffix);
+            title = _("Inhibitors");
+            button_text = _("Clear All");
 
             ximper_shell_notification_center_daemon.inhibited_changed.connect ((length) => {
                 if (!ximper_shell_notification_center_daemon.inhibited) {

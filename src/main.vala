@@ -268,6 +268,11 @@ namespace XimperShellNotificationCenter {
                 }
             }
 
+            Intl.setlocale (LocaleCategory.ALL, "");
+            Intl.bindtextdomain (Constants.GETTEXT_PACKAGE, Constants.LOCALEDIR);
+            Intl.bind_textdomain_codeset (Constants.GETTEXT_PACKAGE, "UTF-8");
+            Intl.textdomain (Constants.GETTEXT_PACKAGE);
+
             print_startup_info ();
 
             // Register custom Widgets so that they can be used in .ui template files

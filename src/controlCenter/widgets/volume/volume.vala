@@ -16,7 +16,7 @@ namespace XimperShellNotificationCenter.Widgets {
         Gtk.ToggleButton reveal_button;
         Gtk.Revealer revealer;
         Gtk.Label no_sink_inputs_label;
-        string empty_label = "No active sink input";
+        string empty_label;
 
         string ?expand_label = null;
         string ?collapse_label = null;
@@ -50,11 +50,12 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public Volume (string suffix) {
             base (suffix);
+            empty_label = _("No active sink input");
 
             Json.Object ?config = get_config (this);
             if (config != null) {
                 string ?label = get_prop<string> (config, "label");
-                label_widget.set_label (label ?? "Volume");
+                label_widget.set_label (label ?? _("Volume"));
 
                 bool show_per_app_found;
                 bool ?show_per_app = get_prop<bool> (config, "show-per-app",

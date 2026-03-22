@@ -10,12 +10,14 @@ namespace XimperShellNotificationCenter.Widgets {
         Gtk.Button clear_all_button;
 
         // Default config values
-        string title = "Notifications";
+        string title;
         bool has_clear_all_button = true;
-        string button_text = "Clear All";
+        string button_text;
 
         public Title (string suffix) {
             base (suffix);
+            title = _("Notifications");
+            button_text = _("Clear All");
 
             Json.Object ?config = get_config (this);
             if (config != null) {

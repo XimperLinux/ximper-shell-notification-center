@@ -536,7 +536,7 @@ namespace XimperShellNotificationCenter {
             inline_reply_box.set_visible (true);
 
             inline_reply_entry.set_placeholder_text (
-                param.inline_reply_placeholder ?? "Enter Text");
+                param.inline_reply_placeholder ?? _("Enter Text"));
             // Set reply Button sensitivity to disabled if Entry text is empty
             inline_reply_entry.bind_property (
                 "text",
@@ -548,7 +548,7 @@ namespace XimperShellNotificationCenter {
             },
                 null);
 
-            inline_reply_button.set_label (param.inline_reply.text ?? "Reply");
+            inline_reply_button.set_label (param.inline_reply.text ?? _("Reply"));
         }
 
         private void set_actions () {
@@ -576,7 +576,7 @@ namespace XimperShellNotificationCenter {
                     alt_actions_box.append (flowbox_child);
 
                     Gtk.Button action_button = new Gtk.Button.with_label (
-                        "COPY \"%s\"".printf (code));
+                        _("COPY \"%s\"").printf (code));
                     action_button.clicked.connect (() => {
                         // Copy to clipboard
                         get_clipboard ().set_text (code);
@@ -613,40 +613,25 @@ namespace XimperShellNotificationCenter {
         }
 
         private string get_relative_time () {
-            string value = "";
-
             double diff = (get_real_time () * 0.000001) - param.time;
-            double secs = diff / 60;
-            double hours = secs / 60;
+            double mins = diff / 60;
+            double hours = mins / 60;
             double days = hours / 24;
-            if (secs < 1) {
-                value = "Now";
-            } else if (secs >= 1 && hours < 1) {
-                // 1m - 1h
-                var val = Math.floor (secs);
-                value = val.to_string () + " min";
-                if (val > 1) {
-                    value += "s";
-                }
-                value += " ago";
-            } else if (hours >= 1 && hours < 24) {
-                // 1h - 24h
-                var val = Math.floor (hours);
-                value = val.to_string () + " hour";
-                if (val > 1) {
-                    value += "s";
-                }
-                value += " ago";
+            if (mins < 1) {
+                return _("Now");
+            } else if (hours < 1) {
+                int val = (int) Math.floor (mins);
+                return ngettext (
+                    "%d min ago", "%d mins ago", val).printf (val);
+            } else if (hours < 24) {
+                int val = (int) Math.floor (hours);
+                return ngettext (
+                    "%d hour ago", "%d hours ago", val).printf (val);
             } else {
-                // Days
-                var val = Math.floor (days);
-                value = val.to_string () + " day";
-                if (val > 1) {
-                    value += "s";
-                }
-                value += " ago";
+                int val = (int) Math.floor (days);
+                return ngettext (
+                    "%d day ago", "%d days ago", val).printf (val);
             }
-            return value;
         }
 
         private string get_iso8601_time () {

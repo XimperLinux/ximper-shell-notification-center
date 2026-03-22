@@ -16,6 +16,8 @@ version = 'ximper-shell-notification-center @0@'.format(version)
 const_config_data = configuration_data()
 const_config_data.set_quoted('VERSION', version)
 const_config_data.set_quoted('VERSION_NUM', meson.project_version())
+const_config_data.set_quoted('GETTEXT_PACKAGE', meson.project_name())
+const_config_data.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 constants = configure_file(
   input : 'constants.vala.in',
   output : 'constants.vala',

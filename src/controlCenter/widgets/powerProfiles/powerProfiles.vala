@@ -146,10 +146,10 @@ namespace XimperShellNotificationCenter.Widgets {
 
         private string get_default_label (string profile) {
             switch (profile) {
-                case "performance":  return "\xf0\x9f\x9a\x80 Performance";
-                case "balanced":     return "\xe2\x9a\x96 Balanced";
-                case "power-saver":  return "\xf0\x9f\x94\x8b Power Saver";
-                default:             return profile;
+                case "performance": return _("Performance");
+                case "balanced": return _("Balanced");
+                case "power-saver": return _("Power Saver");
+                default: return profile;
             }
         }
 

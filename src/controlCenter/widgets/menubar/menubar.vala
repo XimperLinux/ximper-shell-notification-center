@@ -261,7 +261,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
                 string ?label = get_prop<string> (obj, "label");
                 if (label == null) {
-                    label = "Menu";
+                    label = _("Menu");
                     info ("No label for menu-object given using default");
                 }
 

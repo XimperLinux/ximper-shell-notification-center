@@ -10,10 +10,11 @@ namespace XimperShellNotificationCenter.Widgets {
         Gtk.Switch dnd_button;
 
         // Default config values
-        string title = "Do Not Disturb";
+        string title;
 
         public Dnd (string suffix) {
             base (suffix);
+            title = _("Do Not Disturb");
 
             Json.Object ?config = get_config (this);
             if (config != null) {

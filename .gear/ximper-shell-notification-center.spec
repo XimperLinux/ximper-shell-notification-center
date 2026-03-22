@@ -48,8 +48,9 @@ A component of the Ximper Shell.
 
 %install
 %meson_install
+%find_lang %name
 
-%files
+%files -f %name.lang
 %_bindir/%name
 %_bindir/%name-client
 

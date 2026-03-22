@@ -23,7 +23,7 @@ namespace XimperShellNotificationCenter.Widgets {
             Json.Object ?config = get_config (this);
             if (config != null) {
                 string ?label = get_prop<string> (config, "label");
-                label_widget.set_label (label ?? "Brightness");
+                label_widget.set_label (label ?? _("Brightness"));
                 string device = (get_prop<string> (config, "device") ?? "intel_backlight");
                 string subsystem = (get_prop<string> (config, "subsystem") ?? "backlight");
                 int min = int.max (0, get_prop<int> (config, "min"));

@@ -25,7 +25,7 @@ namespace XimperShellNotificationCenter.Widgets {
             Json.Object ?config = get_config (this);
             if (config != null) {
                 string ?label = get_prop<string> (config, "label");
-                label_widget.set_label (label ?? "Slider");
+                label_widget.set_label (label ?? _("Slider"));
 
                 cmd_setter = get_prop<string> (config, "cmd_setter") ?? "";
                 cmd_getter = get_prop<string> (config, "cmd_getter") ?? "";

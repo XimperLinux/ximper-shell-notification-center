@@ -50,7 +50,10 @@ namespace XimperShellNotificationCenter.Widgets {
             notify["expanded-group"].connect (expanded_changed);
 
             // TODO: Move this into notifications config!
-            text_empty_label.set_text (ConfigModel.instance.text_empty);
+            string empty_text = ConfigModel.instance.text_empty;
+            text_empty_label.set_text (
+                empty_text == "No Notifications"
+                    ? _("No Notifications") : empty_text);
 
             stack.set_visible_child_name (STACK_PLACEHOLDER_PAGE);
 

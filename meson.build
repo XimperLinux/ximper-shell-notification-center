@@ -6,6 +6,7 @@ project('ximper-shell-notification-center', ['c', 'vala'],
 
 add_project_arguments(['-w'], language: 'c')
 add_project_arguments(['-Wno-error=int-conversion'], language: 'c')
+add_project_arguments(['-DGETTEXT_PACKAGE="' + meson.project_name() + '"'], language: 'c')
 add_project_arguments(['--enable-gobject-tracing'], language: 'vala')
 add_project_arguments(['--enable-checking'], language: 'vala')
 
@@ -15,6 +16,7 @@ cc = meson.get_compiler('c')
 vala = meson.get_compiler('vala')
 
 gnome = import('gnome')
+i18n = import('i18n')
 
 app_resources = []
 
@@ -26,6 +28,7 @@ libdir = get_option('libdir')
 protocol_dep = []
 subdir('protocols')
 
+subdir('po')
 subdir('data')
 subdir('src')
 
