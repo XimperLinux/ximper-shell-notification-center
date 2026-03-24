@@ -230,6 +230,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 // Single display — simple row
                 var row = create_slider_row (
                     ref display_sources[0], null, false);
+                row.set_margin_start (10);
+                row.set_margin_end (10);
                 append (row);
                 return;
             }
@@ -239,6 +241,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 add_css_class ("has-collapse");
                 var topbar = new Gtk.Box (
                     Gtk.Orientation.HORIZONTAL, 6);
+                topbar.set_margin_start (10);
+                topbar.set_margin_end (10);
                 var topbar_icon = new Gtk.Image.from_icon_name (
                     "display-brightness-symbolic");
                 var topbar_label = new Gtk.Label (
@@ -280,6 +284,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 if (display_sources.length > 0) {
                     displays_box = new Gtk.Box (
                         Gtk.Orientation.VERTICAL, 0);
+                    displays_box.set_margin_start (10);
+                    displays_box.set_margin_end (10);
                     var sg = new Gtk.SizeGroup (
                         Gtk.SizeGroupMode.HORIZONTAL);
                     for (int i = 0; i < display_sources.length; i++) {
@@ -304,6 +310,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 if (kbd_sources.length > 0) {
                     kbd_box = new Gtk.Box (
                         Gtk.Orientation.VERTICAL, 0);
+                    kbd_box.set_margin_start (10);
+                    kbd_box.set_margin_end (10);
                     var sg = new Gtk.SizeGroup (
                         Gtk.SizeGroupMode.HORIZONTAL);
                     for (int i = 0; i < kbd_sources.length; i++) {
