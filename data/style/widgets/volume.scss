@@ -1,5 +1,5 @@
 .widget-volume {
-  padding: 0px 10px;
+  padding: 0;
   margin: 5px 15px;
   border-radius: var(--window-radius);
 
@@ -8,30 +8,30 @@
     box-shadow: 0px 0px 10px var(--headerbar-shade-color);
     border: 1px solid var(--border-color);
   }
+
+  &>box {
+    padding: 0 10px;
+    margin: 0 0 0 3px;
+  }
 }
 
 .widget-volume .image-button {
   background: transparent;
 }
 
-.widget-volume>box {
-  margin: 0 0 0 3px;
-}
-
 .widget-volume>box>button {}
-
-.widget-volume revealer {
-  padding: 0;
-  margin: 0;
-}
 
 .per-app-volume {
   background: transparent;
-  padding: 0;
+  padding: 0 10px;
   margin: 0;
   border-radius: var(--border-radius);
 }
 
 .per-app-volume row {
   background: transparent;
+}
+
+.sink-selector {
+  padding: 0;
 }
