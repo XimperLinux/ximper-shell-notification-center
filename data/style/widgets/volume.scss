@@ -1,11 +1,37 @@
 .widget-volume {
+  padding: 0px 10px;
+  margin: 5px 15px;
+  border-radius: var(--window-radius);
+
+  &.expanded {
+    background: var(--dialog-bg-color);
+    box-shadow: 0px 0px 10px var(--headerbar-shade-color);
+    border: 1px solid var(--border-color);
+  }
+}
+
+.widget-volume .image-button {
+  background: transparent;
+}
+
+.widget-volume>box {
+  margin: 0 0 0 3px;
 }
 
 .widget-volume>box>button {}
 
+.widget-volume revealer {
+  padding: 0;
+  margin: 0;
+}
+
 .per-app-volume {
-  background-color: var(--noti-bg-alt);
-  margin: $margin;
-  margin-bottom: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
   border-radius: var(--border-radius);
+}
+
+.per-app-volume row {
+  background: transparent;
 }

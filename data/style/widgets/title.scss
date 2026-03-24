@@ -1,12 +1,22 @@
 .widget-title {
-  & > label {
-    margin-right: $margin;
+  background: transparent;
+  padding: 0px;
+  margin: 10px 15px;
+
+  &>label {
     font-size: 1.5rem;
+    margin-right: $margin;
   }
 
-  & > button {
+  &>button {
+    background: var(--dialog-bg-color);
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
     margin-left: $margin;
-    border-radius: var(--border-radius);
+
+    &:hover {
+      background: unquote("alpha(var(--dialog-bg-color), 0.5)");
+      border: 1px solid var(--accent-bg-color);
+    }
   }
 }
-

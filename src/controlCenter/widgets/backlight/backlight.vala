@@ -236,6 +236,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
             // Multiple sources — collapsible layout
             if (need_collapse) {
+                add_css_class ("has-collapse");
                 var topbar = new Gtk.Box (
                     Gtk.Orientation.HORIZONTAL, 6);
                 var topbar_icon = new Gtk.Image.from_icon_name (

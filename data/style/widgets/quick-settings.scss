@@ -1,5 +1,6 @@
 .widget-quick-settings {
   padding: 0;
+  margin: 5px 15px;
 }
 
 .quick-settings-row {
@@ -8,7 +9,30 @@
 
 .quick-settings-tile {
   border-radius: 999px;
-  overflow: hidden;
+  background: var(--dialog-bg-color);
+  box-shadow: 0px 0px 5px var(--headerbar-shade-color);
+  border: 1px solid var(--border-color);
+
+  &:hover {
+    background: unquote("alpha(var(--dialog-bg-color), 0.7)");
+  }
+
+  &.active {
+    background: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+
+    &:hover {
+      background: unquote("alpha(var(--accent-bg-color), 0.85)");
+    }
+
+    .tile-arrow {
+      background: unquote("alpha(currentColor, 0.15)");
+    }
+
+    .tile-separator {
+      background: unquote("alpha(currentColor, 0.3)");
+    }
+  }
 
   .tile-toggle {
     padding: 4px 12px;
@@ -17,17 +41,29 @@
     background: transparent;
   }
 
+  .tile-separator {
+    background: unquote("alpha(currentColor, 0.3)");
+  }
+
   .tile-arrow {
     padding: 4px;
     min-width: 24px;
     border: none;
     box-shadow: none;
-    background: transparent;
+    background: unquote("alpha(currentColor, 0.07)");
+    border-radius: 0 999px 999px 0;
+
+    &:hover {
+      background: unquote("alpha(currentColor, 0.2)");
+    }
   }
 }
 
 .quick-settings-submenu {
   border-radius: var(--border-radius);
-  margin: 4px 0;
+  margin: 5px 0;
   padding: 4px;
+  background: var(--dialog-bg-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0px 0px 10px var(--headerbar-shade-color);
 }

@@ -1,62 +1,59 @@
 :root {
-  --mpris-album-art-overlay: rgba(0, 0, 0, 0.55);
-  --mpris-button-hover: rgba(0, 0, 0, 0.5);
-  --mpris-album-art-icon-size: 96px;
-  --mpris-album-art-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+  --mpris-album-art-icon-size: 64px;
 }
 
 .widget-mpris {
   padding: 0;
+  margin: 5px 10px;
 
-  /* The parent to all players */
+  carouselindicatordots {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .flat.image-button {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .mpris-background {
+    background: transparent;
+  }
+
   .widget-mpris-player {
-    margin: 16px 20px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--mpris-album-art-shadow);
-
-    .mpris-background {
-      filter: blur(10px);
-    }
+    margin: 0 5px;
+    border-radius: var(--window-radius);
+    box-shadow: 0px 0px 10px var(--headerbar-shade-color);
+    border: 1px solid var(--border-color);
 
     .mpris-overlay {
-      padding: 16px;
-      background-color: var(--mpris-album-art-overlay);
-
-      button:hover {
-        /* The media player buttons (play, pause, next, etc...) */
-        background: var(--noti-bg-hover);
-      }
+      background: var(--dialog-bg-color);
+      padding: 5px;
 
       .widget-mpris-album-art {
-        border-radius: var(--border-radius);
-        box-shadow: var(--mpris-album-art-shadow);
+        border-radius: var(--window-radius);
+        margin: 3px;
+        box-shadow: none;
         -gtk-icon-size: var(--mpris-album-art-icon-size);
       }
 
       .widget-mpris-title {
         font-weight: bold;
-        font-size: 1.25rem;
-      }
-
-      .widget-mpris-subtitle {
         font-size: 1.1rem;
       }
 
-      &>box>button {
+      .widget-mpris-subtitle {
+        font-size: 0.9rem;
+      }
 
-        /* Change player control buttons */
+      .image-button {
+        padding: 0px 5px;
+
         &:hover {
-          background-color: var(--mpris-button-hover);
+          background: unquote("alpha(var(--window-bg-color), 0.3)");
+          border: 0.5px solid var(--border-color);
         }
       }
     }
-  }
-
-  &>box>button {
-    /* Change player side buttons */
-  }
-
-  &>box>button:disabled {
-    /* Change player side buttons insensitive */
   }
 }

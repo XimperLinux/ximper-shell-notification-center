@@ -1,2 +1,15 @@
 .widget-backlight {
+  padding: 0px 10px;
+  margin: 5px 15px;
+  border-radius: var(--window-radius);
+
+  &.expanded {
+    background: var(--dialog-bg-color);
+    box-shadow: 0px 0px 10px var(--headerbar-shade-color);
+    border: 1px solid var(--border-color);
+  }
+}
+
+.widget-backlight .image-button {
+  background: transparent;
 }
