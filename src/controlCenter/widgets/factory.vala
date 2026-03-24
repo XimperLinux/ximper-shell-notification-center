@@ -28,9 +28,6 @@ namespace XimperShellNotificationCenter.Widgets {
             case "quick-settings":
                 widget = new QuickSettings (suffix);
                 break;
-            case "slider":
-                widget = new Slider (suffix);
-                break;
 #if HAVE_PULSE_AUDIO
             case "volume":
                 widget = new Volume (suffix);

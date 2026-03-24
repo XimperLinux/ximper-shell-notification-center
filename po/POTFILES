@@ -4,7 +4,6 @@ src/controlCenter/widgets/title/title.vala
 src/controlCenter/widgets/inhibitors/inhibitors.vala
 src/controlCenter/widgets/volume/volume.vala
 src/controlCenter/widgets/backlight/backlight.vala
-src/controlCenter/widgets/slider/slider.vala
 src/controlCenter/widgets/quickSettings/quickSettings.vala
 src/controlCenter/widgets/quickSettings/tiles/dndTile.vala
 src/controlCenter/widgets/quickSettings/tiles/darkModeTile.vala

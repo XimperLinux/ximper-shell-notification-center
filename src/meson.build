@@ -38,8 +38,6 @@ widget_sources = [
   'controlCenter/widgets/mpris/mpris.vala',
   'controlCenter/widgets/mpris/interfaces.vala',
   'controlCenter/widgets/mpris/mpris_player.vala',
-  # Widget: Slider
-  'controlCenter/widgets/slider/slider.vala',
   # Widget: Backlight Slider
   'controlCenter/widgets/backlight/backlight.vala',
   'controlCenter/widgets/backlight/backlightUtil.vala',

@@ -81,10 +81,6 @@ msgstr ""
 msgid "Brightness"
 msgstr ""
 
-#: src/controlCenter/widgets/slider/slider.vala:28
-msgid "Slider"
-msgstr ""
-
 #: src/controlCenter/widgets/menubar/menubar.vala:264
 msgid "Menu"
 msgstr ""

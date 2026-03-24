@@ -83,10 +83,6 @@ msgstr "Нет активного источника"
 msgid "Brightness"
 msgstr "Яркость"
 
-#: src/controlCenter/widgets/slider/slider.vala:28
-msgid "Slider"
-msgstr "Ползунок"
-
 #: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:149
 msgid "Performance"
 msgstr "Производительность"
