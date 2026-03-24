@@ -54,6 +54,13 @@ widget_sources = [
   'controlCenter/widgets/inhibitors/inhibitors.vala',
   # Widget: Power Profiles (D-Bus PPD integration for menubar)
   'controlCenter/widgets/powerProfiles/powerProfiles.vala',
+  # Widget: Quick Settings
+  'controlCenter/widgets/quickSettings/quickSettings.vala',
+  'controlCenter/widgets/quickSettings/quickSettingsTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/dndTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/darkModeTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/commandTile.vala',
 ]
 
 app_sources = [
