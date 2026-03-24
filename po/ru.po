@@ -87,10 +87,6 @@ msgstr "Яркость"
 msgid "Slider"
 msgstr "Ползунок"
 
-#: src/controlCenter/widgets/menubar/menubar.vala:264
-msgid "Menu"
-msgstr "Меню"
-
 #: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:149
 msgid "Performance"
 msgstr "Производительность"

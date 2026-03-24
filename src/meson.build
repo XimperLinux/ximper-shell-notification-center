@@ -28,23 +28,16 @@ widget_sources = [
   # Helpers
   'controlCenter/widgets/baseWidget.vala',
   'controlCenter/widgets/factory.vala',
-  'controlCenter/widgets/shared/toggleButton.vala',
   # Widget: Notifications
   'controlCenter/widgets/notifications/notifications.vala',
   # Widget: Title
   'controlCenter/widgets/title/title.vala',
-  # Widget: Dnd
-  'controlCenter/widgets/dnd/dnd.vala',
   # Widget: Label
   'controlCenter/widgets/label/label.vala',
   # Widget: MPRIS
   'controlCenter/widgets/mpris/mpris.vala',
   'controlCenter/widgets/mpris/interfaces.vala',
   'controlCenter/widgets/mpris/mpris_player.vala',
-  # Widget: Menubar
-  'controlCenter/widgets/menubar/menubar.vala',
-  # Widget: Buttons Grid
-  'controlCenter/widgets/buttonsGrid/buttonsGrid.vala',
   # Widget: Slider
   'controlCenter/widgets/slider/slider.vala',
   # Widget: Backlight Slider
@@ -52,8 +45,6 @@ widget_sources = [
   'controlCenter/widgets/backlight/backlightUtil.vala',
   # Widget: Inhibitors
   'controlCenter/widgets/inhibitors/inhibitors.vala',
-  # Widget: Power Profiles (D-Bus PPD integration for menubar)
-  'controlCenter/widgets/powerProfiles/powerProfiles.vala',
   # Widget: Quick Settings
   'controlCenter/widgets/quickSettings/quickSettings.vala',
   'controlCenter/widgets/quickSettings/quickSettingsTile.vala',

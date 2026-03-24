@@ -329,9 +329,7 @@ config file to be able to detect config errors
 			optional: true ++
 		*mpris*++
 			optional: true ++
-		*menubar*++
-			optional: true ++
-		*buttons-grid*++
+		*quick-settings*++
 			optional: true ++
 		*slider*++
 			optional: true ++
@@ -397,16 +395,6 @@ config file to be able to detect config errors
 					default: true ++
 					description: Whether to display a "Clear All" button ++
 			description: The notification visibility state. ++
-		*dnd*++
-			type: object ++
-			css class: widget-dnd ++
-			properties: ++
-				text: ++
-					type: string ++
-					optional: true ++
-					default: "Do Not Disturb" ++
-					description: The title of the widget ++
-			description: Control Center Do Not Disturb Widget. ++
 		*label*++
 			type: object ++
 			css class: widget-label ++
@@ -459,147 +447,6 @@ config file to be able to detect config errors
 					default: false ++
 					description: Whether to loop through the mpris carousel. ++
 			description: A widget that displays multiple music players. ++
-		*menubar*++
-			type: object ++
-			css classes: ++
-				widget-menubar ++
-				.widget-menubar>box>.menu-button-bar ++
-				name of element given after menu or buttons with # ++
-			patternProperties: ++
-				menu#<name>: ++
-					type: object ++
-					properties: ++
-						label: ++
-							type: string ++
-							optional: true ++
-							default: "Menu" ++
-							description: Label of button to show/hide menu dropdown ++
-						position: ++
-							type: string ++
-							optional: true ++
-							default: "right" ++
-							description: Horizontal position of the button in the bar ++
-							enum: ["right", "left"] ++
-						animation-type: ++
-							type: string ++
-							optional: true ++
-							default: "slide_down" ++
-							description: Animation type for menu++
-							enum: ["slide_down", "slide_up", "none"] ++
-						animation-duration: ++
-							type: integer ++
-							optional: true ++
-							default: 250 ++
-							description: Duration of animation in milliseconds ++
-						actions: ++
-							type: array ++
-							Default values: [] ++
-							Valid array values: ++
-								type: object ++
-								properties: ++
-									label: ++
-										type: string ++
-										default: "label" ++
-										description: Text to be displayed in button ++
-									command: ++
-										type: string ++
-										default: "" ++
-										description: "Command to be executed on click" ++
-									type: ++
-										type: string ++
-										default: "normal" ++
-										description: Type of the button. ++
-											Toggle buttons receive the '.active' css class ++
-										enum: ["normal", "toggle"] ++
-									update-command: ++
-										type: string ++
-										default: "" ++
-										description: "Command to be executed on visibility change of ++
-											cc to update the active state of the toggle button (should ++
-											echo true or false)" ++
-									active: ++
-										type: bool ++
-										default: false ++
-										description: Wether the toggle button is active as default or not ++
-							description: A list of actions containing a label and a command ++
-					description: A button to reveal a dropdown with action-buttons ++
-				buttons#<name>: ++
-					type: object ++
-					properties: ++
-						position: ++
-							type: string ++
-							optional: true ++
-							default: "right" ++
-							description: Horizontal position of the buttons in the bar ++
-							enum: ["right", "left"] ++
-						actions: ++
-							type: array ++
-							Default values: [] ++
-							Valid array values: ++
-								type: object ++
-								properties: ++
-									label: ++
-										type: string ++
-										default: "label" ++
-										description: Text to be displayed in button ++
-									command: ++
-										type: string ++
-										default: "" ++
-										description: "Command to be executed on click" ++
-									type: ++
-										type: string ++
-										default: "normal" ++
-										description: Type of the button ++
-											Toggle buttons receive the '.active' css class and an env ++
-											variable "XSNC_TOGGLE_STATE" is set. See example usage in the ++
-											default config.json ++
-										enum: ["normal", "toggle"] ++
-									update-command: ++
-										type: string ++
-										default: "" ++
-										description: "Command to be executed on visibility change of ++
-											cc to update the active state of the toggle button (should ++
-											echo true or false)" ++
-									active: ++
-										type: bool ++
-										default: false ++
-										description: Wether the toggle button is active as default or not ++
-							description: A list of actions containing a label and a command ++
-					description: A list of buttons to be displayed in the menu-button-bar ++
-		*buttons-grid*++
-			type: object ++
-			css class: widget-buttons (access buttons with >flowbox>flowboxchild>button) ++
-			properties: ++
-				buttons-per-row: ++
-				    type: number ++
-				actions: ++
-					type: array ++
-					Default values: [] ++
-					Valid array values: ++
-						type: object ++
-						properties: ++
-							label: ++
-								type: string ++
-								default: "label" ++
-								description: Text to be displayed in button ++
-							command: ++
-								type: string ++
-								default: "" ++
-								description: "Command to be executed on click" ++
-							type: ++
-								type: string ++
-								default: "normal" ++
-								description: Type of the button ++
-									Toggle buttons receive the '.active' css class and an env ++
-									variable "XSNC_TOGGLE_STATE" is set. See example usage in the ++
-									default config.json ++
-								enum: ["normal", "toggle"] ++
-							active: ++
-								type: bool ++
-								default: false ++
-								description: Wether the toggle button is active as default or not ++
-					description: A list of actions containing a label and a command ++
-			description: A grid of buttons that execute shell commands ++
 		*slider*++
 			type: object ++
 			css class: widget-slider ++
@@ -760,38 +607,6 @@ config file to be able to detect config errors
 			"show-album-art": "always",
 			"loop-carousel": false
 		},
-		"menubar": {
-			"menu#power": {
-				"label": "Power",
-				"position": "right",
-				"actions": [
-					{
-						"label": "Shut down",
-						"command": "systemctl poweroff"
-					},
-					...
-				]
-			},
-			"buttons#screenshot": {
-				"position": "left",
-				"actions": [
-					{
-						"label": "Screenshot",
-						"command": "grim"
-					},
-					...
-				]
-			}
-		},
-		"buttons": {
-			"actions": [
-				{
-					"label": "wifi",
-					"command": "rofi-wifi-menu"
-				},
-				...
-			]
-		}
 	}
 }
 ```

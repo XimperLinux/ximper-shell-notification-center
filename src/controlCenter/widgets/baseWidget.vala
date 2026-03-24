@@ -11,20 +11,6 @@ namespace XimperShellNotificationCenter.Widgets {
         public string key { get; private set; }
         public string suffix { get; private set; }
 
-        public enum ButtonType {
-            TOGGLE,
-            NORMAL;
-
-            public static ButtonType parse (string value) {
-                switch (value) {
-                    case "toggle":
-                        return ButtonType.TOGGLE;
-                    default:
-                        return ButtonType.NORMAL;
-                }
-            }
-        }
-
         protected BaseWidget (string suffix) {
             this.suffix = suffix;
             this.key = widget_name + (suffix.length > 0 ? "#%s".printf (suffix) : "");
@@ -102,37 +88,5 @@ namespace XimperShellNotificationCenter.Widgets {
             return config.get_array_member (value_key);
         }
 
-        protected Action[] parse_actions (Json.Array actions) {
-            Action[] res = new Action[actions.get_length ()];
-            for (int i = 0; i < actions.get_length (); i++) {
-                string label =
-                    actions.get_object_element (i).get_string_member_with_default ("label",
-                                                                                   "label");
-                string command =
-                    actions.get_object_element (i).get_string_member_with_default ("command", "");
-                string t = actions.get_object_element (i).get_string_member_with_default ("type",
-                                                                                          "normal");
-                ButtonType type = ButtonType.parse (t);
-                string update_command =
-                    actions.get_object_element (i).get_string_member_with_default ("update-command",
-                                                                                   "");
-                bool active =
-                    actions.get_object_element (i).get_boolean_member_with_default ("active",
-                                                                                    false);
-                res[i] = Action () {
-                    label = label,
-                    command = command,
-                    type = type,
-                    update_command = update_command,
-                    active = active
-                };
-            }
-            return res;
-        }
-
-        protected async void execute_command (string cmd, string[] env_additions = {}) {
-            string msg = "";
-            yield Functions.execute_command (cmd, env_additions, out msg);
-        }
     }
 }

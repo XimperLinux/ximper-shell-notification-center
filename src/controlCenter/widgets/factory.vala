@@ -19,20 +19,11 @@ namespace XimperShellNotificationCenter.Widgets {
             case "title":
                 widget = new Title (suffix);
                 break;
-            case "dnd":
-                widget = new Dnd (suffix);
-                break;
             case "label":
                 widget = new Label (suffix);
                 break;
             case "mpris":
                 widget = new Mpris.Mpris (suffix);
-                break;
-            case "menubar":
-                widget = new Menubar (suffix);
-                break;
-            case "buttons-grid":
-                widget = new ButtonsGrid (suffix);
                 break;
             case "quick-settings":
                 widget = new QuickSettings (suffix);
