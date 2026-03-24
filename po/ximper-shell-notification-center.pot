@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-22 17:23+0300\n"
+"POT-Creation-Date: 2026-03-24 00:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,10 +65,6 @@ msgstr ""
 msgid "Clear All"
 msgstr ""
 
-#: src/controlCenter/widgets/dnd/dnd.vala:17
-msgid "Do Not Disturb"
-msgstr ""
-
 #: src/controlCenter/widgets/inhibitors/inhibitors.vala:19
 msgid "Inhibitors"
 msgstr ""
@@ -81,22 +77,42 @@ msgstr ""
 msgid "Brightness"
 msgstr ""
 
-#: src/controlCenter/widgets/menubar/menubar.vala:264
-msgid "Menu"
+#: src/controlCenter/widgets/notifications/notifications.vala:56
+msgid "No Notifications"
 msgstr ""
 
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:149
+#: src/controlCenter/widgets/quickSettings/tiles/dndTile.vala:5
+msgid "Do Not Disturb"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/darkModeTile.vala:7
+msgid "Dark Style"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:15
+msgid "Caffeine"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
+msgid "Caffeine mode"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:8
+msgid "Night Light"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:18
+msgid "Power Mode"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:95
 msgid "Performance"
 msgstr ""
 
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:150
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:97
 msgid "Balanced"
 msgstr ""
 
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:151
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:99
 msgid "Power Saver"
-msgstr ""
-
-#: src/controlCenter/widgets/notifications/notifications.vala:56
-msgid "No Notifications"
 msgstr ""

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-22 17:23+0300\n"
-"PO-Revision-Date: 2026-03-22 17:23+0300\n"
+"POT-Creation-Date: 2026-03-24 00:00+0300\n"
+"PO-Revision-Date: 2026-03-24 00:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -67,10 +67,6 @@ msgstr "Уведомления"
 msgid "Clear All"
 msgstr "Очистить"
 
-#: src/controlCenter/widgets/dnd/dnd.vala:17
-msgid "Do Not Disturb"
-msgstr "Не беспокоить"
-
 #: src/controlCenter/widgets/inhibitors/inhibitors.vala:19
 msgid "Inhibitors"
 msgstr "Блокировки"
@@ -83,18 +79,42 @@ msgstr "Нет активного источника"
 msgid "Brightness"
 msgstr "Яркость"
 
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:149
-msgid "Performance"
-msgstr "Производительность"
-
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:150
-msgid "Balanced"
-msgstr "Баланс"
-
-#: src/controlCenter/widgets/powerProfiles/powerProfiles.vala:151
-msgid "Power Saver"
-msgstr "Энергосбережение"
-
 #: src/controlCenter/widgets/notifications/notifications.vala:56
 msgid "No Notifications"
 msgstr "Нет уведомлений"
+
+#: src/controlCenter/widgets/quickSettings/tiles/dndTile.vala:5
+msgid "Do Not Disturb"
+msgstr "Не беспокоить"
+
+#: src/controlCenter/widgets/quickSettings/tiles/darkModeTile.vala:7
+msgid "Dark Style"
+msgstr "Тёмный стиль"
+
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:15
+msgid "Caffeine"
+msgstr "Кофеин"
+
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
+msgid "Caffeine mode"
+msgstr "Режим кофеина"
+
+#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:8
+msgid "Night Light"
+msgstr "Ночной свет"
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:18
+msgid "Power Mode"
+msgstr "Режим питания"
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:95
+msgid "Performance"
+msgstr "Производительность"
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:97
+msgid "Balanced"
+msgstr "Баланс"
+
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:99
+msgid "Power Saver"
+msgstr "Энергосбережение"

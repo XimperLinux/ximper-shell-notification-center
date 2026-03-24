@@ -316,14 +316,12 @@ config file to be able to detect config errors
 
 *widgets* ++
 	type: array ++
-	Default values: ["title", "dnd", "notifications"] ++
+	Default values: ["inhibitors", "title", "notifications"] ++
 	Valid array values (see *widget-config* for more information): ++
 		*notifications*++
 			required: true ++
 			optional: false ++
 		*title*++
-			optional: true ++
-		*dnd*++
 			optional: true ++
 		*label*++
 			optional: true ++
@@ -353,7 +351,6 @@ config file to be able to detect config errors
 	"widgets": [
 		"inhibitors",
 		"title",
-		"dnd",
 		"notifications"
 	]
 }
@@ -504,23 +501,14 @@ config file to be able to detect config errors
 			type: object ++
 			css class: widget-backlight ++
 			properties: ++
-				device: ++
-					type: string ++
-					optional: true ++
-					default: "intel_backlight" ++
-					description: Device in `/sys/class/backlight` or `/sys/class/leds` ++
-				subsystem: ++
-					type: string ++
-					optional: true ++
-					default: "backlight" ++
-					description: Kernel subsystem for brightness control ++
-					enum: ["backlight", "leds"] ++
 				min: ++
 					type: integer ++
 					optional: true ++
 					default: 0 ++
 					description: Lowest possible value for brightness ++
-			description: Slider to control screen brightness ++
+			description: Unified brightness control widget. Auto-detects display ++
+				backlights (/sys/class/backlight), DDC/CI monitors, and keyboard ++
+				backlights (/sys/class/leds/*kbd*). ++
 		*inhibitors*++
 			type: object ++
 			css class: widget-inhibitors ++
@@ -535,8 +523,22 @@ config file to be able to detect config errors
 					optional: true ++
 					default: true ++
 					description: Whether to display a "Clear All" button ++
-			description: Displayed if notifications are inhibited.
-
+			description: Displayed if notifications are inhibited. ++
+		*quick-settings*++
+			type: object ++
+			css class: widget-quick-settings ++
+			properties: ++
+				tiles: ++
+					type: array ++
+					optional: true ++
+					description: Array of tile objects. Each tile has a ++
+					"type" field and optional type-specific properties. ++
+					Tile types: dnd, dark-mode, power-profiles, ++
+					caffeine, night-light, command. ++
+					night-light accepts "temperature" (int, default 4500). ++
+					command accepts "label", "icon", "command", ++
+					"update-command", "active". ++
+			description: GNOME-style quick settings toggle tiles. ++
 	example:
 ```
 {
@@ -545,19 +547,23 @@ config file to be able to detect config errors
 			"text": "Notifications",
 			"clear-all-button": true
 		},
-		"dnd": {
-			"text": "Do Not Disturb"
-		},
 		"label": {
 			"max-lines": 5,
 			"text": "Label Text"
 		},
 		"mpris": {
-			"blacklist": ["playerctld"],
-			"autohide": true,
-			"show-album-art": "always",
-			"loop-carousel": false
+			"blacklist": ["playerctld"]
 		},
+		"quick-settings": {
+			"tiles": [
+				{ "type": "dnd" },
+				{ "type": "dark-mode" },
+				{ "type": "power-profiles" },
+				{ "type": "caffeine" },
+				{ "type": "night-light", "temperature": 4500 },
+				{ "type": "command", "label": "VPN", "icon": "network-vpn-symbolic", "command": "toggle-vpn.sh" }
+			]
+		}
 	}
 }
 ```

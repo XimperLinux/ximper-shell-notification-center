@@ -50,13 +50,19 @@ theme might require extra tweaks to the default CSS style file*
 These widgets can be customized, added, removed and even reordered
 
 - Title
-- Do Not Disturb
 - Notifications (Will always be visible)
 - Label
 - Mpris (Media player controls for Spotify, Firefox, Chrome, etc...)
 - Quick Settings (GNOME-style toggle tiles)
+  - Do Not Disturb
+  - Dark Style
+  - Power Profiles
+  - Caffeine (idle inhibitor)
+  - Night Light (hyprsunset)
+  - Custom command tiles
 - Volume slider using PulseAudio
-- Backlight slider
+- Backlight (auto-detect all brightness sources)
+- Inhibitors
 
 ## Build from source
 
