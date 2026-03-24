@@ -1,5 +1,6 @@
 namespace XimperShellNotificationCenter.Widgets {
     private struct TileRow {
+        Gtk.Box row_box;
         Gtk.Revealer revealer;
         QuickSettingsTile ?active_submenu_tile;
     }
@@ -24,14 +25,13 @@ namespace XimperShellNotificationCenter.Widgets {
             case "caffeine":
                 tile = new CaffeineTile (cfg);
                 break;
+            case "night-light":
+                tile = new NightLightTile (cfg);
+                break;
             default:
                 warning ("Unknown quick-settings tile: %s",
                          type_id);
                 return null;
-        }
-
-        if (!tile.is_available ()) {
-            return null;
         }
 
         return tile;
@@ -45,7 +45,9 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         List<QuickSettingsTile> tiles = new List<QuickSettingsTile> ();
+        List<Gtk.Widget> grid_children = new List<Gtk.Widget> ();
         TileRow[] rows = {};
+        Gtk.SizeGroup ?size_group = null;
         int columns = 2;
 
         public QuickSettings (string suffix) {
@@ -86,14 +88,70 @@ namespace XimperShellNotificationCenter.Widgets {
                 tiles.append (tile);
             }
 
+            // Connect signals once
+            foreach (unowned QuickSettingsTile tile in tiles) {
+                tile.submenu_requested.connect (() => {
+                    int row = find_tile_row (tile);
+                    if (row >= 0) {
+                        on_submenu_requested (tile, row);
+                    }
+                });
+                tile.submenu_update_requested.connect (() => {
+                    int row = find_tile_row (tile);
+                    if (row >= 0) {
+                        update_submenu (tile, row);
+                    }
+                });
+            }
+
             build_grid ();
         }
 
+        private int find_tile_row (QuickSettingsTile tile) {
+            for (int i = 0; i < rows.length; i++) {
+                for (var child = rows[i].row_box.get_first_child ();
+                     child != null;
+                     child = child.get_next_sibling ()) {
+                    if (child == tile) return i;
+                }
+            }
+            return -1;
+        }
+
+        private void clear_grid () {
+            // Unparent tiles from row boxes
+            foreach (unowned QuickSettingsTile tile in tiles) {
+                if (tile.get_parent () != null) {
+                    tile.unparent ();
+                }
+            }
+            // Remove row boxes and revealers
+            foreach (unowned Gtk.Widget child in grid_children) {
+                remove (child);
+            }
+            grid_children = new List<Gtk.Widget> ();
+            rows = {};
+            size_group = null;
+        }
+
         private void build_grid () {
+            clear_grid ();
+
             int row_index = 0;
-            unowned List<QuickSettingsTile> iter = tiles;
-            var size_group = new Gtk.SizeGroup (
+            size_group = new Gtk.SizeGroup (
                 Gtk.SizeGroupMode.VERTICAL);
+
+            // Collect available tiles
+            List<unowned QuickSettingsTile> visible_tiles =
+                new List<unowned QuickSettingsTile> ();
+            foreach (unowned QuickSettingsTile tile in tiles) {
+                if (tile.is_available ()) {
+                    visible_tiles.append (tile);
+                }
+            }
+
+            unowned List<unowned QuickSettingsTile> iter =
+                visible_tiles;
 
             while (iter != null) {
                 var row_box = new Gtk.Box (
@@ -107,15 +165,13 @@ namespace XimperShellNotificationCenter.Widgets {
                 revealer.set_transition_duration (200);
 
                 rows += TileRow () {
+                    row_box = row_box,
                     revealer = revealer,
                     active_submenu_tile = null,
                 };
 
-                int current_row = row_index;
-
                 for (int col = 0; col < columns; col++) {
                     if (iter == null) {
-                        // Pad with empty box for alignment
                         var spacer = new Gtk.Box (
                             Gtk.Orientation.HORIZONTAL, 0);
                         row_box.append (spacer);
@@ -125,20 +181,13 @@ namespace XimperShellNotificationCenter.Widgets {
                     unowned QuickSettingsTile tile = iter.data;
                     size_group.add_widget (tile);
                     row_box.append (tile);
-
-                    // Connect submenu signals
-                    tile.submenu_requested.connect (() => {
-                        on_submenu_requested (tile, current_row);
-                    });
-                    tile.submenu_update_requested.connect (() => {
-                        update_submenu (tile, current_row);
-                    });
-
                     iter = iter.next;
                 }
 
                 append (row_box);
                 append (revealer);
+                grid_children.append (row_box);
+                grid_children.append (revealer);
                 row_index++;
             }
         }
@@ -183,16 +232,20 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public override void on_cc_visibility_change (bool val) {
-            if (!val) {
+            // Let tiles update their visibility first
+            foreach (unowned QuickSettingsTile tile in tiles) {
+                tile.on_cc_visibility_change (val);
+            }
+
+            if (val) {
+                // Rebuild grid with updated visibility
+                build_grid ();
+            } else {
                 // Close all submenus
                 for (int i = 0; i < rows.length; i++) {
                     rows[i].revealer.set_reveal_child (false);
                     rows[i].active_submenu_tile = null;
                 }
-            }
-
-            foreach (unowned QuickSettingsTile tile in tiles) {
-                tile.on_cc_visibility_change (val);
             }
         }
     }
