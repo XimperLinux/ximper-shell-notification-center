@@ -1,0 +1,33 @@
+.widget-quick-settings {
+  padding: 0;
+}
+
+.quick-settings-row {
+  margin: 6px 0;
+}
+
+.quick-settings-tile {
+  border-radius: 999px;
+  overflow: hidden;
+
+  .tile-toggle {
+    padding: 4px 12px;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .tile-arrow {
+    padding: 4px;
+    min-width: 24px;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
+.quick-settings-submenu {
+  border-radius: var(--border-radius);
+  margin: 4px 0;
+  padding: 4px;
+}

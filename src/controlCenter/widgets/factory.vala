@@ -34,6 +34,9 @@ namespace XimperShellNotificationCenter.Widgets {
             case "buttons-grid":
                 widget = new ButtonsGrid (suffix);
                 break;
+            case "quick-settings":
+                widget = new QuickSettings (suffix);
+                break;
             case "slider":
                 widget = new Slider (suffix);
                 break;
