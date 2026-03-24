@@ -21,6 +21,9 @@ namespace XimperShellNotificationCenter.Widgets {
             case "command":
                 tile = new CommandTile (cfg);
                 break;
+            case "caffeine":
+                tile = new CaffeineTile (cfg);
+                break;
             default:
                 warning ("Unknown quick-settings tile: %s",
                          type_id);

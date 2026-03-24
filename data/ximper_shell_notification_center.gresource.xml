@@ -6,6 +6,8 @@
     <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-up-small-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/ximper-shell-notification-center-down-small-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/dark-mode-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/caffeine-on-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/caffeine-off-symbolic.svg</file>
 
     <file preprocess="xml-stripblanks">ui/notification_window.ui</file>
     <file preprocess="xml-stripblanks">ui/notification.ui</file>

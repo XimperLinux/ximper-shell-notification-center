@@ -61,6 +61,7 @@ widget_sources = [
   'controlCenter/widgets/quickSettings/tiles/darkModeTile.vala',
   'controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala',
   'controlCenter/widgets/quickSettings/tiles/commandTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/caffeineTile.vala',
 ]
 
 app_sources = [
