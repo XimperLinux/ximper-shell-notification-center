@@ -67,6 +67,46 @@ template $XimperShellNotificationCenterWidgetsMprisMprisPlayer: $Underlay {
       }
     }
 
+    Box progress_box {
+      orientation: horizontal;
+      spacing: 6;
+      visible: false;
+
+      styles [
+        "mpris-progress",
+      ]
+
+      Label position_label {
+        label: "0:00";
+        xalign: 0;
+
+        styles [
+          "caption",
+          "dim-label",
+        ]
+      }
+
+      Scale progress_scale {
+        hexpand: true;
+        draw-value: false;
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 100;
+          value: 0;
+        };
+      }
+
+      Label duration_label {
+        label: "0:00";
+        xalign: 1;
+
+        styles [
+          "caption",
+          "dim-label",
+        ]
+      }
+    }
+
     Box {
       spacing: 6;
       halign: center;

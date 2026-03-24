@@ -1,27 +1,6 @@
 namespace XimperShellNotificationCenter.Widgets.Mpris {
-    public enum AlbumArtState {
-        ALWAYS, WHEN_AVAILABLE, NEVER;
-
-        public static AlbumArtState parse (string value) {
-            switch (value) {
-                default:
-                case "always":
-                    return AlbumArtState.ALWAYS;
-                case "when-available":
-                    return AlbumArtState.WHEN_AVAILABLE;
-                case "never":
-                    return AlbumArtState.NEVER;
-            }
-        }
-    }
-
     public struct Config {
-        [Version (deprecated = true, replacement = "CSS root variable")]
-        int image_size;
-        AlbumArtState show_album_art;
-        bool autohide;
         string[] blacklist;
-        bool loop_carousel;
     }
 
     public class Mpris : BaseWidget {
@@ -45,10 +24,6 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
 
         // Default config values
         Config mpris_config = Config () {
-            image_size = -1,
-            show_album_art = AlbumArtState.ALWAYS,
-            autohide = false,
-            loop_carousel = false,
         };
 
         public Mpris (string suffix) {
@@ -83,9 +58,8 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                     button_next.sensitive = false;
                     return;
                 }
-                button_prev.sensitive = (index > 0) || mpris_config.loop_carousel;
-                button_next.sensitive = (index < carousel.n_pages - 1) ||
-                    mpris_config.loop_carousel;
+                button_prev.sensitive = true;
+                button_next.sensitive = true;
             });
 
             carousel_box.append (button_prev);
@@ -103,45 +77,20 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             // Config
             Json.Object ?config = get_config (this);
             if (config != null) {
-                // Get image-size
-                bool image_size_found;
-                int ?image_size = get_prop<int> (config, "image-size", out image_size_found);
-                if (image_size_found && image_size != null) {
-                    mpris_config.image_size = image_size;
-                }
-
-                bool show_art_found;
-                string ?show_album_art = get_prop<string> (config, "show-album-art",
-                                                           out show_art_found);
-                if (show_art_found && show_album_art != null) {
-                    mpris_config.show_album_art = AlbumArtState.parse (show_album_art);
-                }
-
-                Json.Array ?blacklist = get_prop_array (config, "blacklist");
+                Json.Array ?blacklist = get_prop_array (
+                    config, "blacklist");
                 if (blacklist != null) {
-                    mpris_config.blacklist = new string[blacklist.get_length ()];
+                    mpris_config.blacklist =
+                        new string[blacklist.get_length ()];
                     for (int i = 0; i < blacklist.get_length (); i++) {
-                        if (blacklist.get_element (i).get_node_type () != Json.NodeType.VALUE) {
+                        if (blacklist.get_element (i).get_node_type ()
+                            != Json.NodeType.VALUE) {
                             warning ("Blacklist entries should be strings");
                             continue;
                         }
-                        mpris_config.blacklist[i] = blacklist.get_string_element (i);
+                        mpris_config.blacklist[i] =
+                            blacklist.get_string_element (i);
                     }
-                }
-
-                // Get autohide
-                bool autohide_found;
-                bool ?autohide = get_prop<bool> (config, "autohide", out autohide_found);
-                if (autohide_found) {
-                    mpris_config.autohide = autohide;
-                }
-
-                // Get loop
-                bool loop_carousel_found;
-                bool ?loop_carousel = get_prop<bool> (config, "loop-carousel",
-                                                      out loop_carousel_found);
-                if (loop_carousel_found) {
-                    mpris_config.loop_carousel = loop_carousel;
                 }
             }
 
@@ -249,17 +198,15 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             player.add_css_class ("%s-player".printf (css_class_name));
             players.set (name, player);
 
-            if (mpris_config.autohide) {
-                player.content_updated.connect (() => {
-                    if (!check_player_metadata_empty (name)) {
-                        add_player_to_carousel (name);
-                    } else {
-                        remove_player_from_carousel (name);
-                    }
-                });
-                if (check_player_metadata_empty (name)) {
-                    return;
+            player.content_updated.connect (() => {
+                if (!check_player_metadata_empty (name)) {
+                    add_player_to_carousel (name);
+                } else {
+                    remove_player_from_carousel (name);
                 }
+            });
+            if (check_player_metadata_empty (name)) {
+                return;
             }
 
             add_player_to_carousel (name);
@@ -303,12 +250,8 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 return;
             }
             uint position;
-            if (mpris_config.loop_carousel) {
-                position = ((uint) carousel.position + delta) % children_length;
-            } else {
-                position = ((uint) carousel.position + delta)
-                     .clamp (0, (children_length - 1));
-            }
+            position = ((uint) carousel.position + delta)
+                % children_length;
             carousel.scroll_to (carousel.get_nth_page (position), true);
         }
 

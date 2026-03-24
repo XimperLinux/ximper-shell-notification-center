@@ -23,6 +23,18 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
         [GtkChild]
         unowned Gtk.Button button_repeat;
 
+        [GtkChild]
+        unowned Gtk.Box progress_box;
+        [GtkChild]
+        unowned Gtk.Scale progress_scale;
+        [GtkChild]
+        unowned Gtk.Label position_label;
+        [GtkChild]
+        unowned Gtk.Label duration_label;
+
+        private int64 track_length = 0;
+        private bool seeking = false;
+
         public MprisSource source { construct; get; }
 
         private const double UNSELECTED_OPACITY = 0.5;
@@ -94,12 +106,98 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                     update_buttons (source.media_player.metadata);
                 });
             });
-            album_art.set_pixel_size (mpris_config.image_size);
-            album_art.set_visible (mpris_config.show_album_art == AlbumArtState.ALWAYS);
+            album_art.set_visible (true);
+
+            // Progress bar
+            progress_scale.change_value.connect ((type, val) => {
+                if (track_length <= 0) return false;
+                seeking = true;
+                int64 pos = (int64) (val * track_length / 100);
+                position_label.set_text (
+                    format_time (pos));
+                return false;
+            });
+            progress_scale.value_changed.connect (() => {
+                if (!seeking || track_length <= 0) return;
+                seeking = false;
+                int64 pos = (int64) (
+                    progress_scale.get_value ()
+                    * track_length / 100);
+                seek_to.begin (pos);
+            });
+        }
+
+        private void update_position () {
+            if (seeking || track_length <= 0) return;
+            Variant ?pos_var = source.get_mpris_player_prop (
+                "Position");
+            if (pos_var == null
+                || !pos_var.is_of_type (VariantType.INT64)) {
+                return;
+            }
+            int64 pos = pos_var.get_int64 ();
+            double percent = (double) pos / track_length * 100;
+            progress_scale.set_value (
+                percent.clamp (0, 100));
+            position_label.set_text (format_time (pos));
+        }
+
+        private void update_track_length (
+                HashTable<string, Variant> metadata) {
+            Variant ?length = metadata.lookup ("mpris:length");
+            if (length != null) {
+                if (length.is_of_type (VariantType.INT64)) {
+                    track_length = length.get_int64 ();
+                } else if (length.is_of_type (VariantType.INT32)) {
+                    track_length = length.get_int32 ();
+                } else {
+                    track_length = 0;
+                }
+            } else {
+                track_length = 0;
+            }
+            bool show = track_length > 0;
+            progress_box.set_visible (show);
+            if (show) {
+                duration_label.set_text (
+                    format_time (track_length));
+                update_position ();
+            }
+        }
+
+        private async void seek_to (int64 position_us) {
+            try {
+                // SetPosition needs track id
+                var metadata = source.media_player.metadata;
+                Variant ?trackid = metadata.lookup (
+                    "mpris:trackid");
+                if (trackid != null) {
+                    // Use Seek with offset from current
+                    Variant ?cur = source.get_mpris_player_prop (
+                        "Position");
+                    if (cur != null
+                        && cur.is_of_type (VariantType.INT64)) {
+                        int64 offset = position_us
+                            - cur.get_int64 ();
+                        yield source.media_player.seek (offset);
+                    }
+                }
+            } catch (Error e) {
+                debug ("Seek failed: %s", e.message);
+            }
+        }
+
+        private static string format_time (int64 microseconds) {
+            int64 seconds = microseconds / 1000000;
+            int64 minutes = seconds / 60;
+            seconds = seconds % 60;
+            return "%d:%02d".printf (
+                (int) minutes, (int) seconds);
         }
 
         public void before_destroy () {
-            source.properties_changed.disconnect (properties_changed);
+            source.properties_changed.disconnect (
+                properties_changed);
         }
 
         private void properties_changed (string iface,
@@ -131,6 +229,9 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                     case "CanGoNext":
                         update_button_forward (metadata);
                         break;
+                    case "Position":
+                        update_position ();
+                        break;
                     case "CanControl":
                         update_buttons (metadata);
                         break;
@@ -153,6 +254,9 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
 
             // Subtitle
             update_sub_title (metadata);
+
+            // Progress bar
+            update_track_length (metadata);
 
             // Update the buttons
             update_buttons (metadata);
@@ -314,18 +418,17 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 }
                 if (album_art_texture != null) {
                     // Set album art
-                    int icon_size = mpris_config.image_size;
-                    if (icon_size < 0) {
-                        icon_size = album_art_texture.width > album_art_texture.height
-                            ? album_art_texture.height : album_art_texture.width;
-                    }
+                    int icon_size =
+                        album_art_texture.width > album_art_texture.height
+                        ? album_art_texture.height
+                        : album_art_texture.width;
                     Gtk.Snapshot snapshot = new Gtk.Snapshot ();
                     Functions.scale_texture (album_art_texture,
                                              icon_size, icon_size,
                                              get_scale_factor (), snapshot);
                     Graphene.Size size = Graphene.Size ().init (icon_size, icon_size);
                     album_art.set_from_paintable (snapshot.free_to_paintable (size));
-                    album_art.set_visible (mpris_config.show_album_art != AlbumArtState.NEVER);
+                    album_art.set_visible (true);
 
                     // Set background album art
                     background_picture.set_paintable (album_art_texture);
@@ -335,7 +438,7 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 }
             }
 
-            album_art.set_visible (mpris_config.show_album_art == AlbumArtState.ALWAYS);
+            album_art.set_visible (true);
 
             // Get the app icon
             Icon ?icon = null;

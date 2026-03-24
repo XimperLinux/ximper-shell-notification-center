@@ -76,6 +76,7 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
         public abstract async void play_pause () throws Error;
         public abstract async void stop () throws Error;
         public abstract async void play () throws Error;
+        public abstract async void seek (int64 offset) throws Error;
 
         public abstract string playback_status { owned get; }
         public abstract HashTable<string, Variant> metadata { owned get; }
