@@ -62,8 +62,17 @@
 .quick-settings-submenu {
   border-radius: var(--border-radius);
   margin: 5px 0;
-  padding: 4px;
+  padding: 4px 0;
   background: var(--dialog-bg-color);
   border: 1px solid var(--border-color);
   box-shadow: 0px 0px 10px var(--headerbar-shade-color);
+
+  button {
+    margin: 2px 4px;
+  }
+
+  separator {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
 }

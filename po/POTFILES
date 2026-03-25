@@ -11,4 +11,6 @@ src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala
 src/controlCenter/widgets/quickSettings/tiles/commandTile.vala
 src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala
 src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala
+src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
 data/ui/notifications_widget.blp

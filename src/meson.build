@@ -52,6 +52,9 @@ widget_sources = [
   'controlCenter/widgets/quickSettings/tiles/commandTile.vala',
   'controlCenter/widgets/quickSettings/tiles/caffeineTile.vala',
   'controlCenter/widgets/quickSettings/tiles/nightLightTile.vala',
+  'controlCenter/widgets/quickSettings/networkManagerProxy.vala',
+  'controlCenter/widgets/quickSettings/tiles/wifiTile.vala',
+  'controlCenter/widgets/quickSettings/tiles/vpnTile.vala',
 ]
 
 app_sources = [

@@ -28,6 +28,12 @@ namespace XimperShellNotificationCenter.Widgets {
             case "night-light":
                 tile = new NightLightTile (cfg);
                 break;
+            case "wifi":
+                tile = new WifiTile (cfg);
+                break;
+            case "vpn":
+                tile = new VpnTile (cfg);
+                break;
             default:
                 warning ("Unknown quick-settings tile: %s",
                          type_id);

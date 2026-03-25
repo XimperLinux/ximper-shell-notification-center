@@ -118,3 +118,43 @@ msgstr "Баланс"
 #: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:99
 msgid "Power Saver"
 msgstr "Энергосбережение"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Disabled"
+msgstr "Отключён"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Not Connected"
+msgstr "Не подключён"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Connecting…"
+msgstr "Подключение…"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Password"
+msgstr "Пароль"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Connect"
+msgstr "Подключить"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+msgid "Network Settings"
+msgstr "Настройки сети"
+
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+msgid "VPN"
+msgstr "VPN"
+
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+msgid "Disconnected"
+msgstr "Отключён"
+
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+msgid "VPN Settings"
+msgstr "Настройки VPN"

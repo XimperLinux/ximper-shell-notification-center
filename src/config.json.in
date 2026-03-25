@@ -37,6 +37,8 @@
   "widget-config": {
     "quick-settings": {
       "tiles": [
+        { "type": "wifi" },
+        { "type": "vpn" },
         { "type": "power-profiles" },
         { "type": "dnd" },
         { "type": "dark-mode" },
