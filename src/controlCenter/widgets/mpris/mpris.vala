@@ -32,47 +32,47 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             set_valign (Gtk.Align.START);
             set_vexpand (false);
 
-            carousel_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
-                visible = true,
-            };
+            carousel_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
             button_prev = new Gtk.Button.from_icon_name ("go-previous") {
                 has_frame = false,
                 visible = false,
+                valign = Gtk.Align.FILL,
+                vexpand = true,
             };
+            button_prev.add_css_class ("mpris-nav-prev");
             button_prev.clicked.connect (() => change_carousel_position (-1));
 
             button_next = new Gtk.Button.from_icon_name ("go-next") {
                 has_frame = false,
                 visible = false,
+                valign = Gtk.Align.FILL,
+                vexpand = true,
             };
+            button_next.add_css_class ("mpris-nav-next");
             button_next.clicked.connect (() => change_carousel_position (1));
 
-            carousel = new Adw.Carousel () {
-                visible = true,
-            };
+            carousel = new Adw.Carousel ();
             carousel.allow_scroll_wheel = true;
             carousel.page_changed.connect ((index) => {
-                if (carousel.n_pages <= 1) {
-                    button_prev.sensitive = false;
-                    button_next.sensitive = false;
-                    return;
-                }
-                button_prev.sensitive = true;
-                button_next.sensitive = true;
+                update_nav_buttons ();
             });
-
-            carousel_box.append (button_prev);
-            carousel_box.append (carousel);
-            carousel_box.append (button_next);
-            append (carousel_box);
 
             carousel_dots = new Adw.CarouselIndicatorDots ();
             carousel_dots.set_carousel (carousel);
             carousel_dots.set_halign (Gtk.Align.CENTER);
-            carousel_dots.set_valign (Gtk.Align.CENTER);
             carousel_dots.set_visible (false);
-            append (carousel_dots);
+
+            var center_box = new Gtk.Box (
+                Gtk.Orientation.VERTICAL, 0);
+            center_box.set_hexpand (true);
+            center_box.append (carousel);
+            center_box.append (carousel_dots);
+
+            carousel_box.append (button_prev);
+            carousel_box.append (center_box);
+            carousel_box.append (button_next);
+            append (carousel_box);
 
             // Config
             Json.Object ?config = get_config (this);
@@ -244,15 +244,25 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             players.remove (name);
         }
 
+        private void update_nav_buttons () {
+            uint n = carousel.n_pages;
+            uint pos = (uint) carousel.position;
+            button_prev.sensitive = pos > 0;
+            button_next.sensitive = pos < n - 1;
+        }
+
         private void change_carousel_position (int delta) {
             uint children_length = carousel.n_pages;
             if (children_length == 0) {
                 return;
             }
-            uint position;
-            position = ((uint) carousel.position + delta)
-                % children_length;
-            carousel.scroll_to (carousel.get_nth_page (position), true);
+            int position = (int) carousel.position + delta;
+            if (position < 0
+                    || position >= (int) children_length) {
+                return;
+            }
+            carousel.scroll_to (
+                carousel.get_nth_page (position), true);
         }
 
         private bool is_blacklisted (string name) {

@@ -4,7 +4,11 @@
 
 .widget-mpris {
   padding: 0;
-  margin: 5px 10px;
+  margin: 5px 15px;
+  border-radius: var(--window-radius);
+  box-shadow: 0px 0px 10px var(--headerbar-shade-color);
+  border: 1px solid var(--border-color);
+  background: var(--dialog-bg-color);
 
   carouselindicatordots {
     margin: 0px;
@@ -16,15 +20,20 @@
     padding: 0px;
   }
 
+  .mpris-nav-prev {
+    border-radius: var(--window-radius) 0 0 var(--window-radius);
+  }
+
+  .mpris-nav-next {
+    border-radius: 0 var(--window-radius) var(--window-radius) 0;
+  }
+
   .mpris-background {
     background: transparent;
   }
 
   .widget-mpris-player {
-    margin: 0 5px;
-    border-radius: var(--window-radius);
-    box-shadow: 0px 0px 10px var(--headerbar-shade-color);
-    border: 1px solid var(--border-color);
+    margin: 0;
 
     .mpris-overlay {
       background: var(--dialog-bg-color);
