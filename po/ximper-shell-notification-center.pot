@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-26 18:49+0300\n"
+"POT-Creation-Date: 2026-03-26 22:05+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,10 +105,12 @@ msgid "Wi-Fi"
 msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:94
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:58
 msgid "Disabled"
 msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:135
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:70
 msgid "Not Connected"
 msgstr ""
 
@@ -117,6 +119,7 @@ msgid "Password"
 msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:409
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:120
 msgid "Connect"
 msgstr ""
 
@@ -138,6 +141,18 @@ msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:344
 msgid "VPN Settings"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:10
+msgid "Bluetooth"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:119
+msgid "Disconnect"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:162
+msgid "Bluetooth Settings"
 msgstr ""
 
 #: data/ui/widgets/notifications.blp:57

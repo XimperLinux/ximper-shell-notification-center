@@ -505,15 +505,10 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private static string ?get_settings_command () {
-            try {
-                string output;
-                Process.spawn_command_line_sync (
-                    "which nm-connection-editor",
-                    out output, null, null);
-                if (output.strip ().length > 0) {
-                    return "nm-connection-editor";
-                }
-            } catch (SpawnError e) {}
+            if (Environment.find_program_in_path (
+                    "nm-connection-editor") != null) {
+                return "nm-connection-editor";
+            }
             return null;
         }
 

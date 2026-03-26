@@ -39,6 +39,7 @@
       "tiles": [
         { "type": "wifi" },
         { "type": "vpn" },
+        { "type": "bluetooth" },
         { "type": "power-profiles" },
         { "type": "dnd" },
         { "type": "dark-mode" },

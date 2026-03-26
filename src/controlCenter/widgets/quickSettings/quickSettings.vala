@@ -28,6 +28,9 @@ namespace XimperShellNotificationCenter.Widgets {
             case "night-light":
                 tile = new NightLightTile (cfg);
                 break;
+            case "bluetooth":
+                tile = new BluetoothTile (cfg);
+                break;
             case "wifi":
                 tile = new WifiTile (cfg);
                 break;

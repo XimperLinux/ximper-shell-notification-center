@@ -459,7 +459,7 @@
               "type": {
                 "type": "string",
                 "description": "The tile type",
-                "enum": ["dnd", "dark-mode", "power-profiles", "caffeine", "night-light", "command", "wifi", "vpn"]
+                "enum": ["dnd", "dark-mode", "power-profiles", "caffeine", "night-light", "command", "bluetooth", "wifi", "vpn"]
               },
               "label": {
                 "type": "string",
