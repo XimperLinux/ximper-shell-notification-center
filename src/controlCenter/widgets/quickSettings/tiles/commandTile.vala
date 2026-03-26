@@ -6,6 +6,9 @@ namespace XimperShellNotificationCenter.Widgets {
         public CommandTile (Json.Object ?cfg) {
             string icon_name = "application-x-executable-symbolic";
             string label = "";
+            string cmd = "";
+            string ucmd = "";
+            bool initial_active = false;
 
             if (cfg != null) {
                 string ?i = cfg.get_string_member_with_default (
@@ -18,15 +21,18 @@ namespace XimperShellNotificationCenter.Widgets {
                 } else {
                     warning ("Command tile missing 'label'");
                 }
-                command = cfg.get_string_member_with_default (
+                cmd = cfg.get_string_member_with_default (
                     "command", "");
-                update_command = cfg.get_string_member_with_default (
+                ucmd = cfg.get_string_member_with_default (
                     "update-command", "");
-                active = cfg.get_boolean_member_with_default (
+                initial_active = cfg.get_boolean_member_with_default (
                     "active", false);
             }
 
             base (icon_name, label);
+            command = cmd;
+            update_command = ucmd;
+            active = initial_active;
         }
 
         public override void on_toggle () {
