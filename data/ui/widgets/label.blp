@@ -1,0 +1,17 @@
+using Gtk 4.0;
+
+template $XimperShellNotificationCenterWidgetsLabel:
+    $XimperShellNotificationCenterWidgetsBaseWidget {
+
+  Label label_widget {
+    ellipsize: end;
+    wrap: true;
+    max-width-chars: 0;
+    wrap-mode: word_char;
+    justify: left;
+    xalign: 0;
+    yalign: 0;
+    halign: fill;
+    hexpand: true;
+  }
+}

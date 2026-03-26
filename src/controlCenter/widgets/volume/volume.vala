@@ -1,4 +1,5 @@
 namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/volume.ui")]
     public class Volume : BaseWidget {
         public override string widget_name {
             get {
@@ -6,24 +7,22 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        Gtk.Box main_volume_slider_container = new Gtk.Box (
-            Gtk.Orientation.HORIZONTAL, 0);
-        Gtk.Image icon_widget = new Gtk.Image ();
-        Gtk.Scale slider = new Gtk.Scale.with_range (
-            Gtk.Orientation.HORIZONTAL, 0, 100, 1);
+        [GtkChild]
+        unowned Gtk.Image icon_widget;
+        [GtkChild]
+        unowned Gtk.Scale slider;
+        [GtkChild]
+        unowned Gtk.ToggleButton reveal_button;
+        [GtkChild]
+        unowned Gtk.Revealer revealer;
+        [GtkChild]
+        unowned Gtk.ListBox levels_listbox;
+        [GtkChild]
+        unowned Gtk.Separator sink_separator;
+        [GtkChild]
+        unowned Gtk.Box sink_list_box;
 
-        // Expandable section
-        Gtk.ToggleButton reveal_button;
-        Gtk.Revealer revealer;
-        Gtk.Box revealer_content;
-
-        // Per app volume
-        Gtk.ListBox levels_listbox;
         IterListBoxController list_box_controller;
-
-        // Sink selector
-        Gtk.Separator sink_separator;
-        Gtk.Box sink_list_box;
         uint sink_rebuild_timeout = 0;
 
         private PulseDevice ?default_sink = null;
@@ -32,64 +31,11 @@ namespace XimperShellNotificationCenter.Widgets {
         construct {
             this.client.change_default_device.connect (
                 default_device_changed);
-
-            icon_widget.set_from_icon_name (
-                "audio-volume-high-symbolic");
-
-            slider.value_changed.connect (() => {
-                if (default_sink != null) {
-                    this.client.set_device_volume (
-                        default_sink,
-                        (float) slider.get_value ());
-                    slider.tooltip_text =
-                        ((int) slider.get_value ()).to_string ();
-                }
-                update_volume_icon ((int) slider.get_value ());
-            });
         }
 
         public Volume (string suffix) {
             base (suffix);
 
-            this.orientation = Gtk.Orientation.VERTICAL;
-
-            // Main slider
-            slider.draw_value = false;
-            slider.set_hexpand (true);
-            main_volume_slider_container.append (icon_widget);
-            main_volume_slider_container.append (slider);
-
-            // Reveal button
-            reveal_button = new Gtk.ToggleButton ();
-            set_button_icon ();
-            reveal_button.toggled.connect (() => {
-                set_button_icon ();
-                revealer.set_reveal_child (reveal_button.active);
-                if (reveal_button.active) {
-                    add_css_class ("expanded");
-                } else {
-                    remove_css_class ("expanded");
-                }
-            });
-            main_volume_slider_container.append (reveal_button);
-            append (main_volume_slider_container);
-
-            // Revealer with per-app + sink selector
-            revealer = new Gtk.Revealer ();
-            revealer.transition_type =
-                Gtk.RevealerTransitionType.SLIDE_DOWN;
-            revealer.transition_duration = 200;
-
-            revealer_content = new Gtk.Box (
-                Gtk.Orientation.VERTICAL, 0);
-            revealer.set_child (revealer_content);
-
-            // Per-app volume list
-            levels_listbox = new Gtk.ListBox ();
-            levels_listbox.add_css_class ("per-app-volume");
-            levels_listbox.set_activate_on_single_click (true);
-            levels_listbox.set_selection_mode (
-                Gtk.SelectionMode.NONE);
             list_box_controller = new IterListBoxController (
                 levels_listbox);
 
@@ -106,29 +52,6 @@ namespace XimperShellNotificationCenter.Widgets {
             this.client.remove_active_sink.connect (
                 active_sink_removed);
 
-            revealer_content.append (levels_listbox);
-
-            // Separator between per-app and sinks
-            sink_separator = new Gtk.Separator (
-                Gtk.Orientation.HORIZONTAL);
-            sink_separator.set_margin_top (8);
-            sink_separator.set_margin_bottom (8);
-            sink_separator.set_visible (false);
-            revealer_content.append (sink_separator);
-
-            // Sink selector
-            sink_list_box = new Gtk.Box (
-                Gtk.Orientation.VERTICAL, 0);
-            sink_list_box.add_css_class ("sink-selector");
-            sink_list_box.set_margin_start (4);
-            sink_list_box.set_margin_end (4);
-            sink_list_box.set_margin_top (4);
-            sink_list_box.set_margin_bottom (4);
-            sink_list_box.set_visible (false);
-            revealer_content.append (sink_list_box);
-
-            append (revealer);
-
             // Device signals
             this.client.new_device.connect (on_device_changed);
             this.client.change_device.connect (
@@ -137,6 +60,29 @@ namespace XimperShellNotificationCenter.Widgets {
                 on_device_changed);
 
             update_reveal_visibility ();
+        }
+
+        [GtkCallback]
+        private void on_slider_changed () {
+            if (default_sink != null) {
+                this.client.set_device_volume (
+                    default_sink,
+                    (float) slider.get_value ());
+                slider.tooltip_text =
+                    ((int) slider.get_value ()).to_string ();
+            }
+            update_volume_icon ((int) slider.get_value ());
+        }
+
+        [GtkCallback]
+        private void on_reveal_toggled () {
+            set_button_icon ();
+            revealer.set_reveal_child (reveal_button.active);
+            if (reveal_button.active) {
+                add_css_class ("expanded");
+            } else {
+                remove_css_class ("expanded");
+            }
         }
 
         private void update_volume_icon (int volume) {

@@ -1,4 +1,5 @@
 namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/title.ui")]
     public class Title : BaseWidget {
         public override string widget_name {
             get {
@@ -6,8 +7,10 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        Gtk.Label title_widget;
-        Gtk.Button clear_all_button;
+        [GtkChild]
+        unowned Gtk.Label title_widget;
+        [GtkChild]
+        unowned Gtk.Button clear_all_button;
 
         // Default config values
         string title;
@@ -33,32 +36,18 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
             }
 
-            title_widget = new Gtk.Label (title);
-            title_widget.set_hexpand (true);
-            title_widget.set_halign (Gtk.Align.START);
-            append (title_widget);
+            title_widget.set_text (title);
+            clear_all_button.set_visible (has_clear_all_button);
+            clear_all_button.set_sensitive (!notifications_widget.is_empty ());
 
-            if (has_clear_all_button) {
-                clear_all_button = new Gtk.Button ();
-                var btn_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
-                btn_box.append (new Gtk.Image.from_icon_name (
-                    "edit-clear-all-symbolic"));
-                btn_box.append (new Gtk.Label (_("Clear All")));
-                clear_all_button.set_child (btn_box);
-                clear_all_button.clicked.connect (() => {
-                    noti_daemon.request_dismiss_all_notifications (ClosedReasons.DISMISSED);
-                });
-                clear_all_button.set_sensitive (!notifications_widget.is_empty ());
+            ximper_shell_notification_center_daemon.subscribe_v2.connect ((count) => {
+                clear_all_button.set_sensitive (count > 0);
+            });
+        }
 
-                ximper_shell_notification_center_daemon.subscribe_v2.connect ((count) => {
-                    clear_all_button.set_sensitive (count > 0);
-                });
-                clear_all_button.set_can_focus (false);
-                clear_all_button.valign = Gtk.Align.CENTER;
-                // Backwards compatible towards older CSS stylesheets
-                clear_all_button.add_css_class ("control-center-clear-all");
-                append (clear_all_button);
-            }
+        [GtkCallback]
+        private void on_clear_all_clicked () {
+            noti_daemon.request_dismiss_all_notifications (ClosedReasons.DISMISSED);
         }
     }
 }

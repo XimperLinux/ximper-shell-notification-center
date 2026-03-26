@@ -1,0 +1,66 @@
+using Gtk 4.0;
+
+template $XimperShellNotificationCenterWidgetsVolume:
+    $XimperShellNotificationCenterWidgetsBaseWidget {
+  orientation: vertical;
+
+  Box main_volume_slider_container {
+    orientation: horizontal;
+
+    Image icon_widget {
+      icon-name: "audio-volume-high-symbolic";
+    }
+
+    Scale slider {
+      orientation: horizontal;
+      hexpand: true;
+      draw-value: false;
+
+      adjustment: Adjustment {
+        lower: 0;
+        upper: 100;
+        step-increment: 1;
+      };
+
+      value-changed => $on_slider_changed();
+    }
+
+    ToggleButton reveal_button {
+      icon-name: "ximper-shell-notification-center-up-small-symbolic";
+      toggled => $on_reveal_toggled();
+    }
+  }
+
+  Revealer revealer {
+    transition-type: slide_down;
+    transition-duration: 200;
+
+    child: Box revealer_content {
+      orientation: vertical;
+
+      ListBox levels_listbox {
+        activate-on-single-click: true;
+        selection-mode: none;
+
+        styles ["per-app-volume"]
+      }
+
+      Separator sink_separator {
+        visible: false;
+        margin-top: 8;
+        margin-bottom: 8;
+      }
+
+      Box sink_list_box {
+        orientation: vertical;
+        visible: false;
+        margin-start: 4;
+        margin-end: 4;
+        margin-top: 4;
+        margin-bottom: 4;
+
+        styles ["sink-selector"]
+      }
+    };
+  }
+}

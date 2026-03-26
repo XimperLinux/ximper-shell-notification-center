@@ -1,0 +1,29 @@
+using Gtk 4.0;
+
+template $XimperShellNotificationCenterWidgetsInhibitors:
+    $XimperShellNotificationCenterWidgetsBaseWidget {
+
+  Label title_widget {
+    hexpand: true;
+    halign: start;
+  }
+
+  Button clear_all_button {
+    can-focus: false;
+    valign: center;
+    clicked => $on_clear_inhibitors_clicked();
+
+    Box {
+      orientation: horizontal;
+      spacing: 10;
+
+      Image {
+        icon-name: "edit-clear-all-symbolic";
+      }
+
+      Label {
+        label: _("Clear All");
+      }
+    }
+  }
+}

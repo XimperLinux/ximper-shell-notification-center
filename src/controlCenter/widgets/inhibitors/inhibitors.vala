@@ -1,4 +1,5 @@
 namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/inhibitors.ui")]
     public class Inhibitors : BaseWidget {
         public override string widget_name {
             get {
@@ -6,8 +7,10 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        Gtk.Label title_widget;
-        Gtk.Button clear_all_button;
+        [GtkChild]
+        unowned Gtk.Label title_widget;
+        [GtkChild]
+        unowned Gtk.Button clear_all_button;
 
         // Default config values
         string title;
@@ -42,33 +45,19 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
             }
 
-            title_widget = new Gtk.Label (title);
-            title_widget.set_halign (Gtk.Align.START);
-            title_widget.set_hexpand (true);
-            title_widget.set_visible (true);
-            append (title_widget);
-
-            if (has_clear_all_button) {
-                clear_all_button = new Gtk.Button ();
-                var btn_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
-                btn_box.append (new Gtk.Image.from_icon_name (
-                    "edit-clear-all-symbolic"));
-                btn_box.append (new Gtk.Label (_("Clear All")));
-                clear_all_button.set_child (btn_box);
-                clear_all_button.clicked.connect (() => {
-                    try {
-                        ximper_shell_notification_center_daemon.clear_inhibitors ();
-                    } catch (Error e) {
-                        critical ("Error: %s\n", e.message);
-                    }
-                });
-                clear_all_button.set_can_focus (false);
-                clear_all_button.valign = Gtk.Align.CENTER;
-                clear_all_button.set_visible (true);
-                append (clear_all_button);
-            }
+            title_widget.set_text (title);
+            clear_all_button.set_visible (has_clear_all_button);
 
             hide ();
+        }
+
+        [GtkCallback]
+        private void on_clear_inhibitors_clicked () {
+            try {
+                ximper_shell_notification_center_daemon.clear_inhibitors ();
+            } catch (Error e) {
+                critical ("Error: %s\n", e.message);
+            }
         }
     }
 }

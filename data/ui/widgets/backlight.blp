@@ -1,0 +1,61 @@
+using Gtk 4.0;
+
+template $XimperShellNotificationCenterWidgetsBacklight:
+    $XimperShellNotificationCenterWidgetsBaseWidget {
+  orientation: vertical;
+
+  Box topbar {
+    orientation: horizontal;
+    spacing: 6;
+    margin-start: 10;
+    margin-end: 10;
+
+    Image topbar_icon {
+      icon-name: "display-brightness-symbolic";
+    }
+
+    Label topbar_label {
+      label: _("Brightness");
+      hexpand: true;
+      halign: start;
+    }
+
+    ToggleButton reveal_btn {
+      icon-name: "ximper-shell-notification-center-up-small-symbolic";
+      toggled => $on_reveal_toggled();
+    }
+  }
+
+  Revealer revealer {
+    transition-type: slide_down;
+    transition-duration: 200;
+
+    child: Box content {
+      orientation: vertical;
+
+      Box displays_box {
+        orientation: vertical;
+        margin-start: 10;
+        margin-end: 10;
+      }
+
+      Separator separator {
+        margin-top: 8;
+        margin-bottom: 8;
+      }
+
+      Box kbd_box {
+        orientation: vertical;
+        margin-start: 10;
+        margin-end: 10;
+      }
+    };
+  }
+
+  Box single_source_box {
+    orientation: vertical;
+    visible: false;
+    margin-start: 10;
+    margin-end: 10;
+  }
+}

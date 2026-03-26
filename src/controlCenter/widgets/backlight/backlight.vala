@@ -1,6 +1,7 @@
 using GLib;
 
 namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/backlight.ui")]
     public class Backlight : BaseWidget {
         public override string widget_name {
             get {
@@ -22,17 +23,25 @@ namespace XimperShellNotificationCenter.Widgets {
         BrightnessSource[] display_sources = {};
         BrightnessSource[] kbd_sources = {};
 
-        Gtk.Box ?displays_box = null;
-        Gtk.Box ?kbd_box = null;
-        Gtk.Separator ?separator = null;
-        Gtk.Revealer ?revealer = null;
-        Gtk.ToggleButton ?reveal_btn = null;
+        [GtkChild]
+        unowned Gtk.Box topbar;
+        [GtkChild]
+        unowned Gtk.ToggleButton reveal_btn;
+        [GtkChild]
+        unowned Gtk.Revealer revealer;
+        [GtkChild]
+        unowned Gtk.Box displays_box;
+        [GtkChild]
+        unowned Gtk.Separator separator;
+        [GtkChild]
+        unowned Gtk.Box kbd_box;
+        [GtkChild]
+        unowned Gtk.Box single_source_box;
 
         int min_brightness = 0;
 
         public Backlight (string suffix) {
             base (suffix);
-            set_orientation (Gtk.Orientation.VERTICAL);
 
             Json.Object ?config = get_config (this);
             if (config != null) {
@@ -108,9 +117,6 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private static string prettify_source_name (string name) {
-            // DDC names are already nice (e.g. "DELL U2723QE")
-            // Sysfs backlight: "amdgpu_bl1" → "AMDGPU BL1"
-            // Kbd: "asus::kbd_backlight" → "Asus Keyboard"
             string result = name;
 
             // Keyboard backlight cleanup
@@ -222,70 +228,42 @@ namespace XimperShellNotificationCenter.Widgets {
             return outer;
         }
 
+        [GtkCallback]
+        private void on_reveal_toggled () {
+            revealer.set_reveal_child (reveal_btn.active);
+            if (reveal_btn.active) {
+                reveal_btn.set_icon_name (
+                    "ximper-shell-notification-center-down-small-symbolic");
+                add_css_class ("expanded");
+            } else {
+                reveal_btn.set_icon_name (
+                    "ximper-shell-notification-center-up-small-symbolic");
+                remove_css_class ("expanded");
+            }
+        }
+
         private void build_ui () {
             bool need_collapse = display_sources.length > 1
                                  || kbd_sources.length > 0;
 
             if (!need_collapse && display_sources.length == 1) {
-                // Single display — simple row
+                // Single display — simple row, hide multi-source UI
+                topbar.set_visible (false);
+                revealer.set_visible (false);
+                single_source_box.set_visible (true);
                 var row = create_slider_row (
                     ref display_sources[0], null, false);
-                row.set_margin_start (10);
-                row.set_margin_end (10);
-                append (row);
+                single_source_box.append (row);
                 return;
             }
 
             // Multiple sources — collapsible layout
             if (need_collapse) {
+                single_source_box.set_visible (false);
                 add_css_class ("has-collapse");
-                var topbar = new Gtk.Box (
-                    Gtk.Orientation.HORIZONTAL, 6);
-                topbar.set_margin_start (10);
-                topbar.set_margin_end (10);
-                var topbar_icon = new Gtk.Image.from_icon_name (
-                    "display-brightness-symbolic");
-                var topbar_label = new Gtk.Label (
-                    _("Brightness"));
-                topbar_label.set_hexpand (true);
-                topbar_label.set_halign (Gtk.Align.START);
-                reveal_btn = new Gtk.ToggleButton ();
-                reveal_btn.set_icon_name (
-                    "ximper-shell-notification-center-up-small-symbolic");
-                topbar.append (topbar_icon);
-                topbar.append (topbar_label);
-                topbar.append (reveal_btn);
-                append (topbar);
-
-                revealer = new Gtk.Revealer ();
-                revealer.set_transition_type (
-                    Gtk.RevealerTransitionType.SLIDE_DOWN);
-                revealer.set_transition_duration (200);
-
-                var content = new Gtk.Box (
-                    Gtk.Orientation.VERTICAL, 0);
-                revealer.set_child (content);
-                append (revealer);
-
-                reveal_btn.toggled.connect (() => {
-                    revealer.set_reveal_child (reveal_btn.active);
-                    if (reveal_btn.active) {
-                        reveal_btn.set_icon_name (
-                            "ximper-shell-notification-center-down-small-symbolic");
-                        add_css_class ("expanded");
-                    } else {
-                        reveal_btn.set_icon_name (
-                            "ximper-shell-notification-center-up-small-symbolic");
-                        remove_css_class ("expanded");
-                    }
-                });
 
                 // Display sources
                 if (display_sources.length > 0) {
-                    displays_box = new Gtk.Box (
-                        Gtk.Orientation.VERTICAL, 0);
-                    displays_box.set_margin_start (10);
-                    displays_box.set_margin_end (10);
                     var sg = new Gtk.SizeGroup (
                         Gtk.SizeGroupMode.HORIZONTAL);
                     for (int i = 0; i < display_sources.length; i++) {
@@ -293,25 +271,17 @@ namespace XimperShellNotificationCenter.Widgets {
                             ref display_sources[i], sg, true);
                         displays_box.append (row);
                     }
-                    content.append (displays_box);
+                } else {
+                    displays_box.set_visible (false);
                 }
 
                 // Separator
-                if (display_sources.length > 0
-                    && kbd_sources.length > 0) {
-                    separator = new Gtk.Separator (
-                        Gtk.Orientation.HORIZONTAL);
-                    separator.set_margin_top (8);
-                    separator.set_margin_bottom (8);
-                    content.append (separator);
-                }
+                separator.set_visible (
+                    display_sources.length > 0
+                    && kbd_sources.length > 0);
 
                 // Keyboard sources
                 if (kbd_sources.length > 0) {
-                    kbd_box = new Gtk.Box (
-                        Gtk.Orientation.VERTICAL, 0);
-                    kbd_box.set_margin_start (10);
-                    kbd_box.set_margin_end (10);
                     var sg = new Gtk.SizeGroup (
                         Gtk.SizeGroupMode.HORIZONTAL);
                     for (int i = 0; i < kbd_sources.length; i++) {
@@ -319,7 +289,8 @@ namespace XimperShellNotificationCenter.Widgets {
                             ref kbd_sources[i], sg, true);
                         kbd_box.append (row);
                     }
-                    content.append (kbd_box);
+                } else {
+                    kbd_box.set_visible (false);
                 }
             }
         }
@@ -353,7 +324,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
             }
 
-            if (val && reveal_btn != null) {
+            if (val) {
                 reveal_btn.set_active (false);
             }
         }

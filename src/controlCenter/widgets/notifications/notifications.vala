@@ -1,5 +1,5 @@
 namespace XimperShellNotificationCenter.Widgets {
-    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/notifications_widget.ui")]
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/notifications.ui")]
     public class Notifications : BaseWidget {
         public override string widget_name {
             get {

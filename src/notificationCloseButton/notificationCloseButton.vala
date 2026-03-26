@@ -1,38 +1,19 @@
 namespace XimperShellNotificationCenter {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/notification_close_button.ui")]
     public class NotificationCloseButton : Adw.Bin {
-        Gtk.Revealer revealer;
-        Gtk.Button button;
+        [GtkChild]
+        unowned Gtk.Revealer revealer;
+        public signal void clicked ();
 
-        construct {
-            valign = Gtk.Align.START;
-            // TODO: Configurable
-            halign = Gtk.Align.END;
-
-            revealer = new Gtk.Revealer () {
-                transition_type = Gtk.RevealerTransitionType.CROSSFADE,
-                reveal_child = false,
-            };
-            revealer.notify["child-revealed"].connect (() => {
-                set_visible (revealer.reveal_child);
-            });
-            set_child (revealer);
-
-            button = new Gtk.Button.from_icon_name ("ximper-shell-notification-center-close-symbolic") {
-                has_frame = false,
-                halign = Gtk.Align.CENTER,
-                valign = Gtk.Align.CENTER,
-            };
-            button.add_css_class ("close-button");
-            button.add_css_class ("circular");
-            button.clicked.connect (click_cb);
-            revealer.set_child (button);
+        [GtkCallback]
+        private void on_child_revealed () {
+            set_visible (revealer.reveal_child);
         }
 
-        private void click_cb () {
+        [GtkCallback]
+        private void on_clicked () {
             clicked ();
         }
-
-        public signal void clicked ();
 
         public void set_reveal (bool state) {
             if (state == revealer.reveal_child) {

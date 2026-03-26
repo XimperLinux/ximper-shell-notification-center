@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-24 00:00+0300\n"
+"POT-Creation-Date: 2026-03-26 18:49+0300\n"
 "PO-Revision-Date: 2026-03-24 00:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -15,7 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: src/notification/notification.vala:539
 msgid "Enter Text"
@@ -58,30 +59,13 @@ msgstr[0] "%d д. назад"
 msgstr[1] "%d д. назад"
 msgstr[2] "%d д. назад"
 
-#: src/controlCenter/widgets/title/title.vala:19
+#: src/controlCenter/widgets/title/title.vala:21
 msgid "Notifications"
 msgstr "Уведомления"
 
-#: src/controlCenter/widgets/title/title.vala:20
-#: src/controlCenter/widgets/inhibitors/inhibitors.vala:20
-msgid "Clear All"
-msgstr "Очистить"
-
-#: src/controlCenter/widgets/inhibitors/inhibitors.vala:19
+#: src/controlCenter/widgets/inhibitors/inhibitors.vala:21
 msgid "Inhibitors"
 msgstr "Блокировки"
-
-#: src/controlCenter/widgets/volume/volume.vala:53
-msgid "No active sink input"
-msgstr "Нет активного источника"
-
-#: src/controlCenter/widgets/backlight/backlight.vala
-msgid "Brightness"
-msgstr "Яркость"
-
-#: src/controlCenter/widgets/notifications/notifications.vala:56
-msgid "No Notifications"
-msgstr "Нет уведомлений"
 
 #: src/controlCenter/widgets/quickSettings/tiles/dndTile.vala:5
 msgid "Do Not Disturb"
@@ -90,18 +74,6 @@ msgstr "Не беспокоить"
 #: src/controlCenter/widgets/quickSettings/tiles/darkModeTile.vala:7
 msgid "Dark Style"
 msgstr "Тёмный стиль"
-
-#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:15
-msgid "Caffeine"
-msgstr "Кофеин"
-
-#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
-msgid "Caffeine mode"
-msgstr "Режим кофеина"
-
-#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:8
-msgid "Night Light"
-msgstr "Ночной свет"
 
 #: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:18
 msgid "Power Mode"
@@ -119,42 +91,69 @@ msgstr "Баланс"
 msgid "Power Saver"
 msgstr "Энергосбережение"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:15
+msgid "Caffeine"
+msgstr "Кофеин"
+
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
+msgid "Caffeine mode"
+msgstr "Режим кофеина"
+
+#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:8
+msgid "Night Light"
+msgstr "Ночной свет"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:27
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:94
 msgid "Disabled"
 msgstr "Отключён"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:135
 msgid "Not Connected"
 msgstr "Не подключён"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
-msgid "Connecting…"
-msgstr "Подключение…"
-
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:405
 msgid "Password"
 msgstr "Пароль"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:409
 msgid "Connect"
 msgstr "Подключить"
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:469
+msgid "Connecting…"
+msgstr "Подключение…"
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:485
 msgid "Network Settings"
 msgstr "Настройки сети"
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:20
 msgid "VPN"
 msgstr "VPN"
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:88
 msgid "Disconnected"
 msgstr "Отключён"
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:344
 msgid "VPN Settings"
 msgstr "Настройки VPN"
+
+#: data/ui/widgets/notifications.blp:57
+msgid "No Notifications"
+msgstr "Нет уведомлений"
+
+#: data/ui/widgets/title.blp:27 data/ui/widgets/inhibitors.blp:25
+msgid "Clear All"
+msgstr "Очистить"
+
+#: data/ui/widgets/backlight.blp:18
+msgid "Brightness"
+msgstr "Яркость"
+
+#~ msgid "No active sink input"
+#~ msgstr "Нет активного источника"

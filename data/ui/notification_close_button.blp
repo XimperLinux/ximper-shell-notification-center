@@ -1,0 +1,24 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $XimperShellNotificationCenterNotificationCloseButton: Adw.Bin {
+  valign: start;
+  halign: end;
+
+  Revealer revealer {
+    transition-type: crossfade;
+    reveal-child: false;
+
+    notify::child-revealed => $on_child_revealed();
+
+    child: Button button {
+      icon-name: "ximper-shell-notification-center-close-symbolic";
+      has-frame: false;
+      halign: center;
+      valign: center;
+      clicked => $on_clicked();
+
+      styles ["close-button", "circular"]
+    };
+  }
+}

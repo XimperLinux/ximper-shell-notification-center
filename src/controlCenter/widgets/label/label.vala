@@ -1,4 +1,5 @@
 namespace XimperShellNotificationCenter.Widgets {
+    [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/label.ui")]
     public class Label : BaseWidget {
         public override string widget_name {
             get {
@@ -6,7 +7,8 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        Gtk.Label label_widget;
+        [GtkChild]
+        unowned Gtk.Label label_widget;
 
         // Default config values
         string text = "Label Text";
@@ -29,23 +31,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
             }
 
-            label_widget = new Gtk.Label (null);
             label_widget.set_text (text);
-
-            label_widget.set_ellipsize (Pango.EllipsizeMode.END);
-            label_widget.set_wrap (true);
             label_widget.set_lines (max_lines);
-            // Without this and pack_start fill, the label would expand to
-            // the monitors full width... GTK bug!...
-            label_widget.set_max_width_chars (0);
-            label_widget.set_wrap_mode (Pango.WrapMode.WORD_CHAR);
-            label_widget.set_justify (Gtk.Justification.LEFT);
-            label_widget.set_xalign (0.0f);
-            label_widget.set_yalign (0.0f);
-            label_widget.set_halign (Gtk.Align.FILL);
-            label_widget.set_hexpand (true);
-
-            append (label_widget);
         }
     }
 }
