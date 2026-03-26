@@ -28,11 +28,11 @@
 
     .mpris-overlay {
       background: var(--dialog-bg-color);
-      padding: 5px;
+      padding: 10px;
 
       .widget-mpris-album-art {
         border-radius: var(--window-radius);
-        margin: 3px;
+        margin: 0px;
         box-shadow: none;
         -gtk-icon-size: var(--mpris-album-art-icon-size);
       }
@@ -47,7 +47,8 @@
       }
 
       .image-button {
-        padding: 0px 5px;
+        padding: 0;
+        margin: 0;
 
         &:hover {
           background: unquote("alpha(var(--window-bg-color), 0.3)");
