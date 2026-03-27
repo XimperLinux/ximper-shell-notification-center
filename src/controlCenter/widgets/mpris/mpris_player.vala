@@ -34,6 +34,7 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
 
         private int64 track_length = 0;
         private bool seeking = false;
+        private uint position_timer_id = 0;
 
         public MprisSource source { construct; get; }
 
@@ -163,6 +164,7 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                     format_time (track_length));
                 update_position ();
             }
+            sync_playback_timer ();
         }
 
         private async void seek_to (int64 position_us) {
@@ -195,7 +197,32 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 (int) minutes, (int) seconds);
         }
 
+        private void start_position_timer () {
+            stop_position_timer ();
+            position_timer_id = Timeout.add (1000, () => {
+                update_position ();
+                return Source.CONTINUE;
+            });
+        }
+
+        private void stop_position_timer () {
+            if (position_timer_id != 0) {
+                Source.remove (position_timer_id);
+                position_timer_id = 0;
+            }
+        }
+
+        private void sync_playback_timer () {
+            if (source.media_player.playback_status
+                    == "Playing" && track_length > 0) {
+                start_position_timer ();
+            } else {
+                stop_position_timer ();
+            }
+        }
+
         public void before_destroy () {
+            stop_position_timer ();
             source.properties_changed.disconnect (
                 properties_changed);
         }
@@ -210,6 +237,9 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                         update_desktop_entry ();
                         break;
                     case "PlaybackStatus":
+                        update_button_play_pause (metadata);
+                        sync_playback_timer ();
+                        break;
                     case "CanPause":
                     case "CanPlay":
                         update_button_play_pause (metadata);
