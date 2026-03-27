@@ -153,9 +153,14 @@
     },
     "control-center-height": {
       "type": "integer",
-      "description": "Height of the control center in pixels. A value of -1 means that it will fit to the content. Ignored when 'fit-to-screen' is set to 'true'. Also limited to the height of the monitor, unless 'layer-shell-cover-screen' is set to false.",
+      "description": "Height of the control center in pixels. When 'control-center-dynamic-height' is true, this acts as maximum height. A value of -1 means that it will fit to the content. Ignored when 'fit-to-screen' is set to 'true'.",
       "default": 500,
       "minimum": -1
+    },
+    "control-center-dynamic-height": {
+      "type": "boolean",
+      "description": "If true, the control center height adjusts to its content, up to 'control-center-height' as maximum. If false, height is fixed.",
+      "default": true
     },
     "control-center-width": {
       "type": "integer",

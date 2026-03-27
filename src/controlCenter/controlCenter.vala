@@ -365,14 +365,28 @@ namespace XimperShellNotificationCenter {
             window.set_halign (align_x);
             window.set_valign (align_y);
 
-            // Re-set the minimum size
-            window.set_propagate_natural_height (
-                ConfigModel.instance.control_center_height < 1
-                || ConfigModel.instance.fit_to_screen);
-            window.set_size_request (ConfigModel.instance.control_center_width,
-                                     ConfigModel.instance.control_center_height);
-            box.set_size_request (ConfigModel.instance.control_center_width,
-                                  ConfigModel.instance.control_center_height);
+            // Re-set the size
+            int cc_width =
+                ConfigModel.instance.control_center_width;
+            int cc_height =
+                ConfigModel.instance.control_center_height;
+            bool dynamic =
+                ConfigModel.instance
+                    .control_center_dynamic_height;
+
+            if (dynamic && cc_height > 0) {
+                window.set_propagate_natural_height (true);
+                window.set_max_content_height (cc_height);
+                window.set_size_request (cc_width, -1);
+                box.set_size_request (cc_width, -1);
+            } else {
+                window.set_propagate_natural_height (
+                    cc_height < 1
+                    || ConfigModel.instance.fit_to_screen);
+                window.set_max_content_height (-1);
+                window.set_size_request (cc_width, cc_height);
+                box.set_size_request (cc_width, cc_height);
+            }
         }
 
         public bool toggle_visibility () {

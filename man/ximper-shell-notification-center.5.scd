@@ -186,10 +186,17 @@ config file to be able to detect config errors
 	type: integer ++
 	default: 500 ++
 	description: Height of the control center in pixels. ++
+		When 'control-center-dynamic-height' is true, ++
+		this acts as maximum height. ++
 		A value of -1 means that it will fit to the content. ++
-		Ignored when 'fit-to-screen' is set to 'true'. ++
-		Also limited to the height of the monitor, unless ++
-		'layer-shell-cover-screen' is set to false.
+		Ignored when 'fit-to-screen' is set to 'true'.
+
+*control-center-dynamic-height* ++
+	type: bool ++
+	default: true ++
+	description: If true, the control center height adjusts ++
+		to its content, up to 'control-center-height' as ++
+		maximum. If false, height is fixed.
 
 *control-center-width* ++
 	type: integer ++

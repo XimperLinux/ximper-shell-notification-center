@@ -669,6 +669,14 @@ namespace XimperShellNotificationCenter {
         }
 
         /**
+         * If true, the control center height adjusts to content,
+         * up to control-center-height as maximum.
+         */
+        public bool control_center_dynamic_height {
+            get; set; default = true;
+        }
+
+        /**
          * Notification center's width, in pixels.
          */
         private const int CONTROL_CENTER_MINIMUM_WIDTH = 300;
