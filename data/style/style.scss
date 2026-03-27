@@ -39,6 +39,17 @@ scrollbar {
   padding: 0;
 }
 
+/* Dual layout */
+.dual-layout {
+  & > separator {
+    margin: 0 15px;
+  }
+}
+
+.notifications-placeholder {
+  opacity: 0.5;
+}
+
 /* Notifications widget */
 @import "widgets/notifications";
 /* Label widget */

@@ -18,6 +18,8 @@ namespace XimperShellNotificationCenter.Widgets {
         [GtkChild]
         unowned Gtk.Button clear_all_button;
         [GtkChild]
+        unowned Gtk.Box placeholder_box;
+        [GtkChild]
         unowned Gtk.ScrolledWindow scrolled_window;
         [GtkChild]
         unowned Gtk.Viewport viewport;
@@ -99,28 +101,44 @@ namespace XimperShellNotificationCenter.Widgets {
             bool dynamic =
                 ConfigModel.instance
                     .control_center_dynamic_height;
-            set_vexpand (!dynamic);
+            bool is_dual =
+                ConfigModel.instance.control_center_layout
+                    == "dual";
+            set_vexpand (is_dual || !dynamic);
             scrolled_window.set_propagate_natural_height (
-                dynamic);
+                dynamic && !is_dual);
             update_header_visibility ();
         }
 
         private void update_header_visibility () {
             bool has_notis = !is_empty ();
-            scrolled_window.set_visible (has_notis);
+            bool is_dual =
+                ConfigModel.instance.control_center_layout
+                    == "dual";
+
+            // Placeholder only in dual mode when empty
+            bool show_placeholder = is_dual && !has_notis;
+            placeholder_box.set_visible (show_placeholder);
+            scrolled_window.set_visible (!show_placeholder
+                && (is_dual || has_notis));
+
             switch (show_title) {
                 case "true":
                     header_box.set_visible (true);
                     title_label.set_visible (true);
-                    clear_all_button.set_sensitive (has_notis);
+                    clear_all_button.set_sensitive (
+                        has_notis);
                     break;
                 case "false":
                     header_box.set_visible (has_notis);
                     title_label.set_visible (false);
                     break;
                 default: // auto
-                    header_box.set_visible (has_notis);
+                    header_box.set_visible (
+                        is_dual || has_notis);
                     title_label.set_visible (true);
+                    clear_all_button.set_sensitive (
+                        has_notis);
                     break;
             }
         }

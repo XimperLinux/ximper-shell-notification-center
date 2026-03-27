@@ -16,6 +16,10 @@ namespace XimperShellNotificationCenter {
         private List<unowned Widgets.BaseWidget> widgets;
         private const string[] DEFAULT_WIDGETS = { "notifications" };
 
+            private Gtk.Box ?dual_container = null;
+        private Gtk.Box ?left_column = null;
+        private Gtk.SizeGroup ?dual_size_group = null;
+
         private string ?monitor_name = null;
 
         public ControlCenter () {
@@ -177,58 +181,123 @@ namespace XimperShellNotificationCenter {
             return true;
         }
 
+        private void remove_from_parent (Gtk.Widget child) {
+            var parent = child.get_parent ();
+            if (parent != null && parent is Gtk.Box) {
+                ((Gtk.Box) parent).remove (child);
+            }
+        }
+
         /** Adds all custom widgets. Removes previous widgets */
         public void add_widgets () {
-            // Remove all widgets
-            widgets.foreach ((widget) => {
-                if (widget.get_parent () == box) {
-                    box.remove (widget);
-                }
-                // Except for notifications. Otherwise we'd lose notifications
-                if (widget is Widgets.Notifications) {
-                    return;
-                }
-                widgets.remove (widget);
-            });
+            // Detach all widgets from parents first
+            foreach (unowned Widgets.BaseWidget widget
+                     in widgets) {
+                remove_from_parent (widget);
+            }
+            if (notifications_widget != null) {
+                remove_from_parent (notifications_widget);
+            }
+
+            // Remove dual layout container
+            if (dual_container != null) {
+                box.remove (dual_container);
+                dual_container = null;
+                left_column = null;
+                dual_size_group = null;
+            }
+
+            // Reset widgets list, keep notifications
+            widgets = new List<unowned Widgets.BaseWidget> ();
+            if (notifications_widget != null) {
+                widgets.append (notifications_widget);
+            }
 
             string[] w = ConfigModel.instance.widgets.data;
             if (w.length == 0) {
                 w = DEFAULT_WIDGETS;
             }
 
-            bool has_notifications = false;
-            foreach (string key in w) {
-                // Add the widget if it is valid
-                bool is_notifications;
-                Widgets.BaseWidget ?widget = Widgets.get_widget_from_key (
-                    key, out is_notifications);
+            bool is_dual =
+                ConfigModel.instance.control_center_layout
+                    == "dual"
+                && notifications_widget != null;
 
-                if (is_notifications) {
-                    if (notifications_widget == null) {
-                        continue;
-                    }
-                    if (has_notifications) {
-                        warning ("Cannot have multiple " +
-                                 "\"notifications\" widgets! " +
-                                 "Skipping \"%s\"", key);
+            // Prepare target containers
+            Gtk.Box widgets_target;
+            if (is_dual) {
+                setup_dual_container ();
+                widgets_target = left_column;
+            } else {
+                widgets_target = box;
+            }
+
+            bool has_notifications = false;
+
+            foreach (string key in w) {
+                bool is_notif;
+                Widgets.BaseWidget ?widget =
+                    Widgets.get_widget_from_key (
+                        key, out is_notif);
+
+                if (is_notif) {
+                    if (notifications_widget == null
+                            || has_notifications) {
                         continue;
                     }
                     has_notifications = true;
-
-                    notifications_widget.reload_config ();
-                    box.append (notifications_widget);
                     continue;
                 }
                 if (widget == null) {
                     continue;
                 }
 
-                // Note: Copies the value into the linked list
                 widgets.append (widget);
-
-                unowned Widgets.BaseWidget cloned_widget = widgets.last ().data;
-                box.append (cloned_widget);
+                widgets_target.append (widget);
             }
+
+            // Add notifications
+            if (has_notifications) {
+                if (is_dual) {
+                    var right = new Gtk.Box (
+                        Gtk.Orientation.VERTICAL, 0);
+                    right.add_css_class (
+                        "notifications-column");
+                    right.set_hexpand (true);
+                    dual_size_group.add_widget (right);
+                    right.append (notifications_widget);
+                    dual_container.append (right);
+                } else {
+                    box.append (notifications_widget);
+                }
+                notifications_widget.reload_config ();
+            }
+
+            if (is_dual) {
+                box.append (dual_container);
+            }
+        }
+
+        private void setup_dual_container () {
+            dual_container = new Gtk.Box (
+                Gtk.Orientation.HORIZONTAL, 0);
+            dual_container.add_css_class ("dual-layout");
+            dual_container.set_vexpand (true);
+
+            dual_size_group = new Gtk.SizeGroup (
+                Gtk.SizeGroupMode.HORIZONTAL);
+
+            left_column = new Gtk.Box (
+                Gtk.Orientation.VERTICAL, 0);
+            left_column.add_css_class ("widgets-column");
+            left_column.set_hexpand (true);
+            dual_size_group.add_widget (left_column);
+
+            var separator = new Gtk.Separator (
+                Gtk.Orientation.VERTICAL);
+
+            dual_container.append (left_column);
+            dual_container.append (separator);
         }
 
         /** Resets the UI positions */

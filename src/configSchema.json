@@ -146,6 +146,12 @@
       "type": "string",
       "description": "The preferred output to open the control center. Can either be the monitor connector name (ex: \"DP-1\"), or the full name, manufacturer model serial (ex: \"Acer Technologies XV272U V 503023B314202\"). If the output is not found, the currently focused one is picked"
     },
+    "control-center-layout": {
+      "type": "string",
+      "description": "Panel layout: single (vertical column) or dual (widgets and notifications side by side)",
+      "default": "single",
+      "enum": ["single", "dual"]
+    },
     "transition-time": {
       "type": "integer",
       "description": "The notification animation duration. 0 to disable",

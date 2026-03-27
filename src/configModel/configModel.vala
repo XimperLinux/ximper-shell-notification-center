@@ -652,6 +652,12 @@ namespace XimperShellNotificationCenter {
          */
         public string control_center_preferred_output { get; set; default = ""; }
 
+        /**
+         * Panel layout: "single" (vertical) or "dual" (two columns).
+         */
+        public string control_center_layout {
+            get; set; default = "single";
+        }
 
         /**
          * Notification icon size, in pixels.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 20:18+0300\n"
+"POT-Creation-Date: 2026-03-27 23:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,38 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/notification/notification.vala:539
+#: src/notification/notification.vala:536
 msgid "Enter Text"
 msgstr ""
 
-#: src/notification/notification.vala:551
+#: src/notification/notification.vala:548
 msgid "Reply"
 msgstr ""
 
-#: src/notification/notification.vala:579
+#: src/notification/notification.vala:576
 #, c-format
 msgid "COPY \"%s\""
 msgstr ""
 
-#: src/notification/notification.vala:621
+#: src/notification/notification.vala:618
 msgid "Now"
 msgstr ""
 
-#: src/notification/notification.vala:625
+#: src/notification/notification.vala:622
 #, c-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:629
+#: src/notification/notification.vala:626
 #, c-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:633
+#: src/notification/notification.vala:630
 #, c-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -157,6 +157,10 @@ msgstr ""
 
 #: data/ui/widgets/notifications.blp:34 data/ui/widgets/inhibitors.blp:25
 msgid "Clear All"
+msgstr ""
+
+#: data/ui/widgets/notifications.blp:58
+msgid "No Notifications"
 msgstr ""
 
 #: data/ui/widgets/backlight.blp:18

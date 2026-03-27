@@ -156,6 +156,13 @@ config file to be able to detect config errors
 		to its content, up to 'control-center-height' as ++
 		maximum. If false, height is fixed.
 
+*control-center-layout* ++
+	type: string ++
+	default: single ++
+	values: single, dual ++
+	description: Panel layout. "single" is a vertical column. ++
+		"dual" places widgets and notifications side by side.
+
 *control-center-width* ++
 	type: integer ++
 	default: 500 ++

@@ -37,6 +37,28 @@ template $XimperShellNotificationCenterWidgetsNotifications: $XimperShellNotific
     }
   }
 
+  Box placeholder_box {
+    visible: false;
+    halign: center;
+    valign: center;
+    hexpand: true;
+    vexpand: true;
+    orientation: vertical;
+    spacing: 12;
+
+    styles ["notifications-placeholder"]
+
+    Image {
+      pixel-size: 96;
+      icon-name: "preferences-system-notifications-symbolic";
+      use-fallback: true;
+    }
+
+    Label {
+      label: _("No Notifications");
+    }
+  }
+
   ScrolledWindow scrolled_window {
     hscrollbar-policy: never;
     has-frame: false;

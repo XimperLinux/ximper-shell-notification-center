@@ -7,6 +7,7 @@
   "control-center-width": 400,
   "control-center-height": 740,
   "control-center-dynamic-height": true,
+  "control-center-layout": "single",
   "control-center-margin-top": 8,
   "control-center-margin-bottom": 8,
   "control-center-margin-right": 8,
