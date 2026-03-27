@@ -166,10 +166,6 @@ config file to be able to detect config errors
 	default: true ++
 	description: Hides the control center when clicking on notification action
 
-*text-empty* ++
-	type: string ++
-	default: "No Notifications" ++
-	description: Text that appears when there are no notifications to show
 
 *fit-to-screen* ++
 	type: bool ++
@@ -323,12 +319,9 @@ config file to be able to detect config errors
 
 *widgets* ++
 	type: array ++
-	Default values: ["inhibitors", "title", "notifications"] ++
+	Default values: ["notifications"] ++
 	Valid array values (see *widget-config* for more information): ++
 		*notifications*++
-			required: true ++
-			optional: false ++
-		*title*++
 			optional: true ++
 		*label*++
 			optional: true ++
@@ -350,14 +343,13 @@ config file to be able to detect config errors
 		will be placed at the bottom. ++
 	multiple of same widget: ++
 		Append a # with any value to the end of the widget name. ++
-		Example: "title#TheMainTitle" ++
-		To address this widget specifically in the css file use the css class .TheMainTitle ++
+		Example: "label#MyLabel" ++
+		To address this widget specifically in the css file use the css class .MyLabel ++
 	example:
 ```
 {
 	"widgets": [
 		"inhibitors",
-		"title",
 		"notifications"
 	]
 }
@@ -368,35 +360,24 @@ config file to be able to detect config errors
 	description: Configure specific widget properties. ++
 	multiple of same widget: ++
 		Append a # with any value to the end of the widget name. ++
-		Example: "title#TheMainTitle" ++
-		To address this widget specifically in the css file use the css class .TheMainTitle ++
+		Example: "label#MyLabel" ++
+		To address this widget specifically in the css file use the css class .MyLabel ++
 	Widgets to customize: ++
 		*notifications*++
 			type: object ++
 			css class: widget-notifications ++
 			properties: ++
-				vexpand: ++
-					type: bool ++
-					optional: true ++
-					default: true ++
-					description: Whether or not the notifications widget ++
-								 should vertically expand or not ++
-			description: The Notifications Widget. ++
-		*title*++
-			type: object ++
-			css class: widget-title ++
-			properties: ++
-				text: ++
+				show-title: ++
 					type: string ++
 					optional: true ++
-					default: "Notifications" ++
-					description: The title of the widget ++
-				clear-all-button: ++
-					type: bool ++
-					optional: true ++
-					default: true ++
-					description: Whether to display a "Clear All" button ++
-			description: The notification visibility state. ++
+					default: "auto" ++
+					enum: auto, true, false ++
+					description: Title bar visibility. ++
+						auto: show when notifications exist. ++
+						true: always visible. ++
+						false: hidden, only clear button ++
+						shown when notifications exist. ++
+			description: The Notifications Widget. ++
 		*label*++
 			type: object ++
 			css class: widget-label ++
@@ -550,9 +531,8 @@ config file to be able to detect config errors
 ```
 {
 	"widget-config": {
-		"title": {
-			"text": "Notifications",
-			"clear-all-button": true
+		"notifications": {
+			"show-title": "auto"
 		},
 		"label": {
 			"max-lines": 5,

@@ -4,59 +4,54 @@ template $XimperShellNotificationCenterWidgetsNotifications: $XimperShellNotific
   orientation: vertical;
   overflow: hidden;
 
-  Stack stack {
-    hhomogeneous: true;
-    vhomogeneous: true;
-    transition-type: crossfade;
-    transition-duration: 200;
-    vexpand: true;
+  Box header_box {
+    visible: false;
 
-    StackPage {
-      name: "notifications-list";
+    styles ["notifications-header"]
 
-      child: ScrolledWindow scrolled_window {
-        hscrollbar-policy: never;
-        has-frame: false;
-
-        child: Viewport viewport {
-          vexpand: true;
-
-          child: ListBox list_box {
-            valign: fill;
-
-            styles [
-              "control-center-list",
-            ]
-          };
-        };
-      };
+    Label title_label {
+      label: _("Notifications");
+      hexpand: true;
+      halign: start;
     }
 
-    StackPage {
-      name: "notifications-placeholder";
+    Button clear_all_button {
+      can-focus: false;
+      valign: center;
+      clicked => $on_clear_all_clicked();
 
-      child: Box {
-        halign: center;
-        valign: center;
-        hexpand: true;
-        vexpand: true;
-        orientation: vertical;
-        spacing: 12;
+      styles ["control-center-clear-all"]
 
-        styles [
-          "control-center-list-placeholder",
-        ]
+      Box {
+        orientation: horizontal;
+        spacing: 10;
 
         Image {
-          pixel-size: 96;
-          icon-name: "preferences-system-notifications-symbolic";
-          use-fallback: true;
+          icon-name: "edit-clear-all-symbolic";
         }
 
-        Label text_empty_label {
-          label: _("No Notifications");
+        Label {
+          label: _("Clear All");
         }
-      };
+      }
     }
+  }
+
+  ScrolledWindow scrolled_window {
+    hscrollbar-policy: never;
+    has-frame: false;
+    vexpand: true;
+
+    child: Viewport viewport {
+      vexpand: true;
+
+      child: ListBox list_box {
+        valign: fill;
+
+        styles [
+          "control-center-list",
+        ]
+      };
+    };
   }
 }

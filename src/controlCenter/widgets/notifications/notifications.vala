@@ -10,13 +10,13 @@ namespace XimperShellNotificationCenter.Widgets {
         public uint n_notifications { get; private set; default = 0; }
         public uint n_groups { get; private set; default = 0; }
 
-        const string STACK_NOTIFICATIONS_PAGE = "notifications-list";
-        const string STACK_PLACEHOLDER_PAGE = "notifications-placeholder";
 
         [GtkChild]
-        unowned Gtk.Label text_empty_label;
+        unowned Gtk.Box header_box;
         [GtkChild]
-        unowned Gtk.Stack stack;
+        unowned Gtk.Label title_label;
+        [GtkChild]
+        unowned Gtk.Button clear_all_button;
         [GtkChild]
         unowned Gtk.ScrolledWindow scrolled_window;
         [GtkChild]
@@ -31,16 +31,19 @@ namespace XimperShellNotificationCenter.Widgets {
         }
         private uint scroll_timer_id = 0;
 
-        private Gee.HashMap<uint32, unowned NotificationGroup> noti_groups_id =
-            new Gee.HashMap<uint32, unowned NotificationGroup> ();
-        /** NOTE: Only includes groups with ids with length of > 0 */
-        private Gee.HashMap<string, unowned NotificationGroup> noti_groups_name =
-            new Gee.HashMap<string, unowned NotificationGroup> ();
+        private Gee.HashMap<uint32, unowned NotificationGroup>
+            noti_groups_id =
+            new Gee.HashMap<uint32,
+                unowned NotificationGroup> ();
+        /** Only includes groups with ids with length > 0 */
+        private Gee.HashMap<string, unowned NotificationGroup>
+            noti_groups_name =
+            new Gee.HashMap<string,
+                unowned NotificationGroup> ();
 
         private bool list_reverse = false;
 
-        // Default config values
-        bool vertical_expand = true;
+        string show_title = "auto";
 
         public Notifications () {
             base ("");
@@ -48,14 +51,6 @@ namespace XimperShellNotificationCenter.Widgets {
             list_box_controller = new IterListBoxController (list_box);
 
             notify["expanded-group"].connect (expanded_changed);
-
-            // TODO: Move this into notifications config!
-            string empty_text = ConfigModel.instance.text_empty;
-            text_empty_label.set_text (
-                empty_text == "No Notifications"
-                    ? _("No Notifications") : empty_text);
-
-            stack.set_visible_child_name (STACK_PLACEHOLDER_PAGE);
 
             list_box.set_valign (Gtk.Align.START);
 
@@ -94,17 +89,47 @@ namespace XimperShellNotificationCenter.Widgets {
         public void reload_config () {
             Json.Object ?config = get_config (this);
             if (config != null) {
-                // Get vexpand
-                bool found_vexpand;
-                bool ?vexpand = get_prop<bool> (config, "vexpand", out found_vexpand);
-                if (found_vexpand) {
-                    this.vertical_expand = vexpand;
+                string ?st = get_prop<string> (
+                    config, "show-title");
+                if (st != null) {
+                    this.show_title = st;
                 }
             }
 
-            set_vexpand (this.vertical_expand);
-            scrolled_window.set_propagate_natural_height (!this.vertical_expand);
-            stack.set_vhomogeneous (this.vertical_expand);
+            bool dynamic =
+                ConfigModel.instance
+                    .control_center_dynamic_height;
+            set_vexpand (!dynamic);
+            scrolled_window.set_propagate_natural_height (
+                dynamic);
+            update_header_visibility ();
+        }
+
+        private void update_header_visibility () {
+            bool has_notis = !is_empty ();
+            scrolled_window.set_visible (has_notis);
+            switch (show_title) {
+                case "true":
+                    header_box.set_visible (true);
+                    title_label.set_visible (true);
+                    clear_all_button.set_sensitive (has_notis);
+                    break;
+                case "false":
+                    header_box.set_visible (has_notis);
+                    title_label.set_visible (false);
+                    break;
+                default: // auto
+                    header_box.set_visible (has_notis);
+                    title_label.set_visible (true);
+                    break;
+            }
+        }
+
+        [GtkCallback]
+        private void on_clear_all_clicked () {
+            noti_daemon
+                .request_dismiss_all_notifications (
+                ClosedReasons.DISMISSED);
         }
 
         public inline bool is_empty () {
@@ -144,7 +169,7 @@ namespace XimperShellNotificationCenter.Widgets {
             if (list_box_controller.length < 1) {
                 n_notifications = 0;
                 n_groups = 0;
-                stack.set_visible_child_name (STACK_PLACEHOLDER_PAGE);
+                update_header_visibility ();
             }
         }
 
@@ -262,8 +287,6 @@ namespace XimperShellNotificationCenter.Widgets {
                     noti_groups_name.set (param.name_id, group);
                 }
 
-                stack.set_visible_child_name (STACK_NOTIFICATIONS_PAGE);
-
                 list_box_controller.append (group);
                 n_groups++;
             }
@@ -279,6 +302,7 @@ namespace XimperShellNotificationCenter.Widgets {
             n_notifications++;
 
             list_box.invalidate_sort ();
+            update_header_visibility ();
 
             scroll_to_start ();
         }

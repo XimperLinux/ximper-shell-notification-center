@@ -1,6 +1,6 @@
 .widget-backlight {
   padding: 0;
-  margin: 5px 15px;
+  margin: 5px 0px;
   border-radius: var(--window-radius);
 
   &.expanded {
@@ -8,8 +8,8 @@
     box-shadow: 0px 0px 10px var(--headerbar-shade-color);
     border: 1px solid var(--border-color);
   }
-}
 
-.widget-backlight .image-button {
-  background: transparent;
+  .image-button {
+    background: transparent;
+  }
 }

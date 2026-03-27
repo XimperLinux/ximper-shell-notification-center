@@ -14,7 +14,7 @@ namespace XimperShellNotificationCenter {
 
         /** Unsorted list of copies of all notifications */
         private List<unowned Widgets.BaseWidget> widgets;
-        private const string[] DEFAULT_WIDGETS = { "title", "dnd", "notifications" };
+        private const string[] DEFAULT_WIDGETS = { "notifications" };
 
         private string ?monitor_name = null;
 

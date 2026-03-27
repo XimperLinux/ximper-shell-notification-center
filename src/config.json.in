@@ -32,7 +32,6 @@
     "quick-settings",
     "inhibitors",
     "mpris",
-    "title",
     "notifications"
   ],
   "widget-config": {

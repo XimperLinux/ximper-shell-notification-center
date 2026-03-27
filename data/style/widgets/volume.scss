@@ -1,6 +1,6 @@
 .widget-volume {
   padding: 0;
-  margin: 5px 15px;
+  margin: 5px 0px;
   border-radius: var(--window-radius);
 
   &.expanded {
@@ -9,27 +9,25 @@
     border: 1px solid var(--border-color);
   }
 
-  &>box {
+  & > box {
     padding: 0 10px;
     margin: 0 0 0 3px;
   }
-}
 
-.widget-volume .image-button {
-  background: transparent;
+  .image-button {
+    background: transparent;
+  }
 }
-
-.widget-volume>box>button {}
 
 .per-app-volume {
   background: transparent;
   padding: 0 10px;
   margin: 0;
-  border-radius: var(--border-radius);
-}
+  border-radius: var(--window-radius);
 
-.per-app-volume row {
-  background: transparent;
+  row {
+    background: transparent;
+  }
 }
 
 .sink-selector {

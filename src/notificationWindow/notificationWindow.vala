@@ -139,6 +139,23 @@ namespace XimperShellNotificationCenter {
                         break;
                 }
 
+                GtkLayerShell.set_margin (this,
+                    GtkLayerShell.Edge.TOP,
+                    ConfigModel.instance
+                        .control_center_margin_top);
+                GtkLayerShell.set_margin (this,
+                    GtkLayerShell.Edge.BOTTOM,
+                    ConfigModel.instance
+                        .control_center_margin_bottom);
+                GtkLayerShell.set_margin (this,
+                    GtkLayerShell.Edge.LEFT,
+                    ConfigModel.instance
+                        .control_center_margin_left);
+                GtkLayerShell.set_margin (this,
+                    GtkLayerShell.Edge.RIGHT,
+                    ConfigModel.instance
+                        .control_center_margin_right);
+
                 // Set the preferred monitor
                 string ?monitor_name = ConfigModel.instance.notification_window_preferred_output;
                 if (NotificationWindow.monitor_name != null) {

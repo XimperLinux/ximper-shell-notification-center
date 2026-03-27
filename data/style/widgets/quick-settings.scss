@@ -1,6 +1,6 @@
 .widget-quick-settings {
   padding: 0;
-  margin: 5px 15px;
+  margin: 5px 0px;
 }
 
 .quick-settings-row {
@@ -60,7 +60,7 @@
 }
 
 .quick-settings-submenu {
-  border-radius: var(--border-radius);
+  border-radius: var(--window-radius);
   margin: 5px 0;
   padding: 4px 0;
   background: var(--dialog-bg-color);

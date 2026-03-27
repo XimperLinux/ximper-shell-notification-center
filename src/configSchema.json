@@ -203,11 +203,6 @@
       "description": "Hides the control center when clicking on notification action",
       "default": true
     },
-    "text-empty": {
-      "type": "string",
-      "description": "Text that appears when there are no notifications to show",
-      "default": "No Notifications"
-    },
     "notification-action-filter": {
       "type": "object",
       "description": "Hides matching action(s) of matching notifications. If the notification doesn't include one of the properties, that property will be ignored. If all properties match the given notification, the matching actions will be hidden.",
@@ -325,10 +320,6 @@
           "$comment": "References the widget structure from \"widgets\" below",
           "$ref": "#/widgets/notifications"
         },
-        "^title(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
-          "$comment": "References the widget structure from \"widgets\" below",
-          "$ref": "#/widgets/title"
-        },
         "^label(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
           "$ref": "#/widgets/label"
         },
@@ -355,30 +346,14 @@
     "$comment": "New widgets go here",
     "notifications": {
       "type": "object",
-      "description": "Control Center Title Widget",
+      "description": "Notifications widget with title and clear button",
       "additionalProperties": false,
       "properties": {
-        "vexpand": {
-          "type": "boolean",
-          "description": "Whether or not the notifications widget should vertically expand or not",
-          "default": true
-        }
-      }
-    },
-    "title": {
-      "type": "object",
-      "description": "Control Center Title Widget",
-      "additionalProperties": false,
-      "properties": {
-        "text": {
+        "show-title": {
           "type": "string",
-          "description": "The title of the widget",
-          "default": "Notifications"
-        },
-        "clear-all-button": {
-          "type": "boolean",
-          "description": "Whether to display a \"Clear All\" button",
-          "default": true
+          "description": "Title bar visibility: auto (show when notifications exist), true (always visible), false (hidden, only clear button shown when notifications exist)",
+          "default": "auto",
+          "enum": ["auto", "true", "false"]
         }
       }
     },

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-26 22:05+0300\n"
+"POT-Creation-Date: 2026-03-27 20:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,10 +55,6 @@ msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
-
-#: src/controlCenter/widgets/title/title.vala:21
-msgid "Notifications"
-msgstr ""
 
 #: src/controlCenter/widgets/inhibitors/inhibitors.vala:21
 msgid "Inhibitors"
@@ -155,11 +151,11 @@ msgstr ""
 msgid "Bluetooth Settings"
 msgstr ""
 
-#: data/ui/widgets/notifications.blp:57
-msgid "No Notifications"
+#: data/ui/widgets/notifications.blp:13
+msgid "Notifications"
 msgstr ""
 
-#: data/ui/widgets/title.blp:27 data/ui/widgets/inhibitors.blp:25
+#: data/ui/widgets/notifications.blp:34 data/ui/widgets/inhibitors.blp:25
 msgid "Clear All"
 msgstr ""
 

@@ -1,6 +1,5 @@
 src/main.vala
 src/notification/notification.vala
-src/controlCenter/widgets/title/title.vala
 src/controlCenter/widgets/inhibitors/inhibitors.vala
 src/controlCenter/widgets/volume/volume.vala
 src/controlCenter/widgets/backlight/backlight.vala
@@ -15,6 +14,5 @@ src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala
 src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala
 src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala
 data/ui/widgets/notifications.blp
-data/ui/widgets/title.blp
 data/ui/widgets/inhibitors.blp
 data/ui/widgets/backlight.blp
