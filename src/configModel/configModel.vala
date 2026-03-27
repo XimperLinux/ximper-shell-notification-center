@@ -659,13 +659,6 @@ namespace XimperShellNotificationCenter {
             get; set; default = "single";
         }
 
-        /**
-         * Notification icon size, in pixels.
-         */
-        [Version (deprecated = true, replacement = "CSS root variable")]
-        public int notification_icon_size {
-            get; set; default = -1;
-        }
 
         /**
          * Notification body image height, in pixels.
