@@ -7,20 +7,6 @@ namespace XimperShellNotificationCenter {
         TOP, BOTTOM, CENTER, NONE;
     }
 
-    public enum ImageVisibility {
-        ALWAYS, WHEN_AVAILABLE, NEVER;
-
-        public string parse () {
-            switch (this) {
-                default:
-                    return "always";
-                case WHEN_AVAILABLE:
-                    return "when_available";
-                case NEVER:
-                    return "never";
-            }
-        }
-    }
 
     public enum Layer {
         BACKGROUND, BOTTOM, TOP, OVERLAY;
@@ -54,19 +40,6 @@ namespace XimperShellNotificationCenter {
         }
     }
 
-    public enum CssPriority {
-        APPLICATION, USER;
-
-        public int get_priority () {
-            switch (this) {
-                case APPLICATION:
-                    return Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION;
-                default:
-                case USER:
-                    return Gtk.STYLE_PROVIDER_PRIORITY_USER;
-            }
-        }
-    }
 
     public class Category : Object {
         public string ?sound { get; set; default = null; }
@@ -461,10 +434,6 @@ namespace XimperShellNotificationCenter {
          */
         public bool layer_shell_cover_screen { get; set; default = true; }
 
-        /** The CSS loading priority */
-        public CssPriority cssPriority { // vala-lint=naming-convention
-            get; set; default = CssPriority.USER;
-        }
 
         /** The timeout for notifications with NORMAL priority */
         private const int TIMEOUT_DEFAULT = 10;
@@ -518,26 +487,15 @@ namespace XimperShellNotificationCenter {
          * Specifies if the control center should use keyboard shortcuts
          * and block keyboard input for other applications while open
          */
-        public bool keyboard_shortcuts { get; set; default = true; }
 
         /**
-         * If notifications should be grouped by app name
-         */
-        public bool notification_grouping { get; set; default = true; }
 
-        /** Specifies if the notification image should be shown or not */
-        public ImageVisibility image_visibility {
-            get;
-            set;
-            default = ImageVisibility.WHEN_AVAILABLE;
-        }
+
 
         /**
          * Notification window's width, in pixels.
          */
         public int notification_window_width { get; set; default = 500; }
-        /** Max height of the notification in pixels */
-        public int notification_window_height { get; set; default = -1; }
 
         /**
          * The preferred output to open the notification window (popup notifications).
@@ -623,12 +581,7 @@ namespace XimperShellNotificationCenter {
             default = new OrderedHashTable<Category> ();
         }
 
-        /** Filter Notification Actions */
-        public OrderedHashTable<ActionMatching> notification_action_filter {
-            get;
-            set;
-            default = new OrderedHashTable<ActionMatching> ();
-        }
+
 
         /** Notification Status */
         public OrderedHashTable<NotificationVisibility> notification_visibility {
@@ -637,8 +590,6 @@ namespace XimperShellNotificationCenter {
             default = new OrderedHashTable<NotificationVisibility> ();
         }
 
-        /** Whether to expand the notification center across both edges of the screen */
-        public bool fit_to_screen { get; set; default = true; }
 
         /**
          * Display notification timestamp relative to now e.g. "26 minutes ago".
@@ -701,16 +652,6 @@ namespace XimperShellNotificationCenter {
          */
         public string control_center_preferred_output { get; set; default = ""; }
 
-        /**
-         * If each notification should display a 'COPY \"1234\"' action
-         */
-        public bool notification_2fa_action { get; set; default = true; }
-
-        /**
-         * If notifications should display a text field to reply if the
-         * sender requests it.
-         */
-        public bool notification_inline_replies { get; set; default = false; }
 
         /**
          * Notification icon size, in pixels.
@@ -790,15 +731,6 @@ namespace XimperShellNotificationCenter {
                             out status);
                     value = result;
                     return status;
-                case "notification-action-filter" :
-                    bool status;
-                    OrderedHashTable<ActionMatching> result =
-                        extract_hashtable<ActionMatching> (
-                            property_name,
-                            property_node,
-                            out status);
-                    value = result;
-                    return status;
                 case "notification-visibility" :
                     bool status;
                     OrderedHashTable<NotificationVisibility> result =
@@ -871,11 +803,6 @@ namespace XimperShellNotificationCenter {
                     node = new Json.Node (Json.NodeType.OBJECT);
                     var table = (OrderedHashTable<Category>) value;
                     node.set_object (serialize_hashtable<Category> (table));
-                    break;
-                case "notification-action-filter" :
-                    node = new Json.Node (Json.NodeType.OBJECT);
-                    var table = (OrderedHashTable<ActionMatching>) value;
-                    node.set_object (serialize_hashtable<ActionMatching> (table));
                     break;
                 case "notification-visibility":
                     node = new Json.Node (Json.NodeType.OBJECT);

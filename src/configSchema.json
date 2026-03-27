@@ -35,12 +35,6 @@
       "description": "Whether or not the windows should cover the whole screen when layer-shell is used. May exceed the height of the monitor if the value is too large. Fixes animations in compositors like Hyprland.",
       "default": true
     },
-    "cssPriority": {
-      "type": "string",
-      "description": "Which GTK priority to use when loading the default and user CSS files. Pick \"user\" to override XDG_CONFIG_HOME/gtk-4.0/gtk.css",
-      "default": "highest",
-      "enum": ["application", "user"]
-    },
     "positionY": {
       "type": "string",
       "description": "Vertical position of control center and notification window",
@@ -90,16 +84,6 @@
       "description": "Whether or not the control center should follow the compositors exclusive zones. An example would be setting it to \"false\" to cover your panel/dock.",
       "default": true
     },
-    "notification-2fa-action": {
-      "type": "boolean",
-      "description": "If each notification should display a 'COPY \"1234\"' action",
-      "default": true
-    },
-    "notification-inline-replies": {
-      "type": "boolean",
-      "description": "If notifications should display a text field to reply if the sender requests it. NOTE: Replying in popup notifications is only available if the compositor supports GTK Layer-Shell ON_DEMAND keyboard interactivity.",
-      "default": false
-    },
     "notification-body-image-height": {
       "type": "integer",
       "description": "The notification body image height (in pixels)",
@@ -132,19 +116,9 @@
       "description": "Width of the notification in pixels",
       "default": 500
     },
-    "notification-window-height": {
-      "type": "integer",
-      "description": "Max height of the notification in pixels. -1 to use the full amount of space given by the compositor.",
-      "default": -1
-    },
     "notification-window-preferred-output": {
       "type": "string",
       "description": "The preferred output to open the notification window (popup notifications). Can either be the monitor connector name (ex: \"DP-1\"), or the full name, manufacturer model serial (ex: \"Acer Technologies XV272U V 503023B314202\"). If the output is not found, the currently focused one is picked"
-    },
-    "fit-to-screen": {
-      "type": "boolean",
-      "description": "If the control center should expand to both edges of the screen",
-      "default": true
     },
     "relative-timestamps": {
       "type": "boolean",
@@ -172,22 +146,6 @@
       "type": "string",
       "description": "The preferred output to open the control center. Can either be the monitor connector name (ex: \"DP-1\"), or the full name, manufacturer model serial (ex: \"Acer Technologies XV272U V 503023B314202\"). If the output is not found, the currently focused one is picked"
     },
-    "keyboard-shortcuts": {
-      "type": "boolean",
-      "description": "If control center should use keyboard shortcuts",
-      "default": true
-    },
-    "notification-grouping": {
-      "type": "boolean",
-      "description": "If notifications should be grouped by app name",
-      "default": true
-    },
-    "image-visibility": {
-      "type": "string",
-      "description": "The notification image visibility when no icon is available.",
-      "default": "when-available",
-      "enum": ["always", "when-available", "never"]
-    },
     "transition-time": {
       "type": "integer",
       "description": "The notification animation duration. 0 to disable",
@@ -202,47 +160,6 @@
       "type": "boolean",
       "description": "Hides the control center when clicking on notification action",
       "default": true
-    },
-    "notification-action-filter": {
-      "type": "object",
-      "description": "Hides matching action(s) of matching notifications. If the notification doesn't include one of the properties, that property will be ignored. If all properties match the given notification, the matching actions will be hidden.",
-      "minProperties": 1,
-      "additionalProperties": false,
-      "patternProperties": {
-        "^.{1,}$": {
-          "type": "object",
-          "description": "Your script object.",
-          "minProperties": 1,
-          "anyOf": [
-            { "required": ["id-matcher"] },
-            { "required": ["text-matcher"] }
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "use-regex": {
-              "type": "boolean",
-              "default": false,
-              "description": "Indicates if all the below fields should use regex or not."
-            },
-            "app-name": {
-              "type": "string",
-              "description": "The app-name."
-            },
-            "desktop-entry": {
-              "type": "string",
-              "description": "The desktop-entry."
-            },
-            "id-matcher": {
-              "type": "string",
-              "description": "Matches the action identifier. Can be found by reading the output of ximper-shell-notification-center when run with the `G_MESSAGES_DEBUG=all` environment variable."
-            },
-            "text-matcher": {
-              "type": "string",
-              "description": "Matches the actions text visible in the notification."
-            }
-          }
-        }
-      }
     },
     "notification-visibility": {
       "type": "object",

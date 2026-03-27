@@ -247,12 +247,8 @@ namespace XimperShellNotificationCenter {
                 // Set the exlusive zone
                 int exclusive_zone = ConfigModel.instance.control_center_exclusive_zone ? 0 : 100;
                 GtkLayerShell.set_exclusive_zone (this, exclusive_zone);
-                // Grabs the keyboard input until closed
-                bool keyboard_shortcuts = ConfigModel.instance.keyboard_shortcuts;
-                var mode = keyboard_shortcuts ?
-                    GtkLayerShell.KeyboardMode.EXCLUSIVE :
-                    GtkLayerShell.KeyboardMode.NONE;
-                GtkLayerShell.set_keyboard_mode (this, mode);
+                GtkLayerShell.set_keyboard_mode (this,
+                    GtkLayerShell.KeyboardMode.EXCLUSIVE);
 
                 // Set layer
                 GtkLayerShell.set_layer (
@@ -282,25 +278,38 @@ namespace XimperShellNotificationCenter {
                             GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
                             break;
                     }
-                    if (ConfigModel.instance.fit_to_screen) {
-                        GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.TOP, true);
-                        GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-                    } else {
-                        switch (pos_y) {
-                            default:
-                            case PositionY.TOP:
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.TOP, true);
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, false);
-                                break;
-                            case PositionY.CENTER:
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.TOP, true);
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-                                break;
-                            case PositionY.BOTTOM:
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.TOP, false);
-                                GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
-                                break;
-                        }
+                    switch (pos_y) {
+                        default:
+                        case PositionY.TOP:
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.TOP,
+                                true);
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.BOTTOM,
+                                false);
+                            break;
+                        case PositionY.CENTER:
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.TOP,
+                                true);
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.BOTTOM,
+                                true);
+                            break;
+                        case PositionY.BOTTOM:
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.TOP,
+                                false);
+                            GtkLayerShell.set_anchor (
+                                this,
+                                GtkLayerShell.Edge.BOTTOM,
+                                true);
+                            break;
                     }
                 }
 
@@ -357,10 +366,6 @@ namespace XimperShellNotificationCenter {
                     }
                     break;
             }
-            // Fit the ControlCenter to the monitor height
-            if (ConfigModel.instance.fit_to_screen) {
-                align_y = Gtk.Align.FILL;
-            }
             // Set the ControlCenter alignment
             window.set_halign (align_x);
             window.set_valign (align_y);
@@ -381,8 +386,7 @@ namespace XimperShellNotificationCenter {
                 box.set_size_request (cc_width, -1);
             } else {
                 window.set_propagate_natural_height (
-                    cc_height < 1
-                    || ConfigModel.instance.fit_to_screen);
+                    cc_height < 1);
                 window.set_max_content_height (-1);
                 window.set_size_request (cc_width, cc_height);
                 box.set_size_request (cc_width, cc_height);

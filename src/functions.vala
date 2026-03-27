@@ -90,7 +90,7 @@ namespace XimperShellNotificationCenter {
          * with default GTK style properties
          */
         public static bool load_css (string ?style_path) {
-            int css_priority = ConfigModel.instance.cssPriority.get_priority ();
+            int css_priority = Gtk.STYLE_PROVIDER_PRIORITY_USER;
 
             // Load packaged CSS as backup
             string system_css = get_style_path (null, true);

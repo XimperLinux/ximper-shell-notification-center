@@ -357,31 +357,8 @@ namespace XimperShellNotificationCenter {
                 return;
             }
 
-            // Find all the matching filters
-            List<unowned ActionMatching> valid_matchers = new List<unowned ActionMatching> ();
-            unowned OrderedHashTable<ActionMatching> filters =
-                ConfigModel.instance.notification_action_filter;
-            foreach (string key in filters.get_keys ()) {
-                unowned ActionMatching matcher = filters[key];
-                if (matcher.matches_notification (this)) {
-                    valid_matchers.append (matcher);
-                }
-            }
-
             for (int i = 0; i < actions.length; i += 2) {
                 Action action = new Action (actions[i], actions[i + 1]);
-
-                // Filtering
-                bool matches = false;
-                foreach (unowned ActionMatching matcher in valid_matchers) {
-                    if (matcher.matches_action (action)) {
-                        matches = true;
-                        break;
-                    }
-                }
-                if (matches) {
-                    continue;
-                }
 
                 if (action.text != null && action.identifier != null) {
                     string id = action.identifier.down ();

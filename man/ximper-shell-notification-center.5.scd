@@ -40,13 +40,6 @@ config file to be able to detect config errors
 	description: Wether or not the windows should be opened as layer-shell ++
 		surfaces. Note: Requires ximper-shell-notification-center restart to apply
 
-*cssPriority* ++
-	type: string ++
-	default: application ++
-	values: application, user ++
-	description: Which GTK priority to use when loading the default and user ++
-		CSS files. Pick "user" to override *XDG_CONFIG_HOME/gtk-3.0/gtk.css*
-
 *control-center-positionX* ++
 	type: string ++
 	default: right ++
@@ -95,11 +88,6 @@ config file to be able to detect config errors
 		compositors exclusive zones. An example would be setting it to ++
 		*false* to cover your panel/dock.
 
-*notification-2fa-action* ++
-	type: bool ++
-	default: true ++
-	description: If each notification should display a 'COPY \"1234\"' action
-
 *timeout* ++
 	type: integer ++
 	default: 10 ++
@@ -120,11 +108,6 @@ config file to be able to detect config errors
 	default: 500 ++
 	description: Width of the notification in pixels
 
-*notification-window-height* ++
-	type: integer ++
-	default: -1 ++
-	description: Max height of the notification in pixels. -1 to use ++
-				 the full amount of space given by the compositor.
 
 *notification-window-preferred-output* ++
 	type: string ++
@@ -135,21 +118,6 @@ config file to be able to detect config errors
 				 (ex: "Acer Technologies XV272U V 503023B314202"). ++
 				 If the output is not found, the currently focused one is picked.
 
-*keyboard-shortcuts* ++
-	type: bool ++
-	default: true ++
-	description: If control center should use keyboard shortcuts
-
-*notification-grouping* ++
-	type: bool ++
-	default: true ++
-	description: If notifications should be grouped by app name
-
-*image-visibility* ++
-	type: string ++
-	default: always ++
-	values: always, when-available, never ++
-	description: An explanation about the purpose of this instance.
 
 *transition-time* ++
 	type: integer ++
@@ -167,11 +135,6 @@ config file to be able to detect config errors
 	description: Hides the control center when clicking on notification action
 
 
-*fit-to-screen* ++
-	type: bool ++
-	default: true ++
-	description: Whether the control center should expand vertically to fill the screen
-
 *relative-timestamps* ++
 	type: bool ++
 	default: true ++
@@ -184,8 +147,7 @@ config file to be able to detect config errors
 	description: Height of the control center in pixels. ++
 		When 'control-center-dynamic-height' is true, ++
 		this acts as maximum height. ++
-		A value of -1 means that it will fit to the content. ++
-		Ignored when 'fit-to-screen' is set to 'true'.
+		A value of -1 means that it will fit to the content.
 
 *control-center-dynamic-height* ++
 	type: bool ++
@@ -207,51 +169,6 @@ config file to be able to detect config errors
 				 the full name, manufacturer model serial ++
 				 (ex: "Acer Technologies XV272U V 503023B314202"). If the ++
 				 output is not found, the currently focused one is picked.
-
-*notification-action-filter* ++
-	type: object ++
-	visibility object properties: ++
-		*use-regex*++
-			type: bool ++
-			optional: true ++
-			default: false ++
-			description: Indicates if all the below fields should use ++
-				regex or not.++
-		*app-name*++
-			type: string ++
-			optional: true ++
-			description: The app-name.++
-		*desktop-entry*++
-			type: string ++
-			optional: true ++
-			description: The desktop-entry.++
-		*id-matcher*++
-			type: string ++
-			optional: true (needs at least one *matcher*) ++
-			description: Matches the actions identifier. Can be found by ++
-				reading the output of ximper-shell-notification-center when run with the ++
-				*G_MESSAGES_DEBUG=all* environment variable.++
-		*text-matcher*++
-			type: string ++
-			optional: true (needs at least one *matcher*) ++
-			description: Matches the actions text visible in the notification. ++
-	description: Hides matching action(s) of matching notifications. ++
-		If the notification doesn't include one of the properties, that ++
-		property will be ignored. If all properties match the given ++
-		notification, the matching actions will be hidden. ++
-	example:
-```
-{
-	"notification-action-filter": {
-		"hide-chromium-settings": {
-			"desktop-entry": "chromium-browser",
-			"use-regex": false,
-			"id-matcher": "settings",
-			"text-matcher": "Settings"
-		}
-	},
-}
-```
 
 *notification-visibility* ++
 	type: object ++

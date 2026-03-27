@@ -192,10 +192,8 @@ namespace XimperShellNotificationCenter {
                     break;
             }
 
-            // -1 should set it to the content size unless it exceeds max_height
             scrolled_window.set_min_content_height (-1);
-            scrolled_window.set_max_content_height (
-                int.max (ConfigModel.instance.notification_window_height, -1));
+            scrolled_window.set_max_content_height (-1);
             scrolled_window.set_propagate_natural_height (true);
 
             set_input_region ();

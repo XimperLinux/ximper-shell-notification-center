@@ -417,9 +417,6 @@ namespace XimperShellNotificationCenter {
 
         /** Returns the first code found, else null */
         private string ?parse_body_codes () {
-            if (!ConfigModel.instance.notification_2fa_action) {
-                return null;
-            }
             string body = this.body.get_text ().strip ();
             if (body.length == 0) {
                 return null;
@@ -521,10 +518,10 @@ namespace XimperShellNotificationCenter {
             inline_reply_box.set_visible (false);
             // Only show inline replies in popup notifications if the compositor
             // supports ON_DEMAND layer shell keyboard interactivity
-            if (!ConfigModel.instance.notification_inline_replies
-                || (ConfigModel.instance.layer_shell
+            if (ConfigModel.instance.layer_shell
                     && !app.has_layer_on_demand
-                    && notification_type == NotificationType.FLOATING)) {
+                    && notification_type
+                        == NotificationType.FLOATING) {
                 return;
             }
             if (param.inline_reply == null) {
@@ -695,12 +692,6 @@ namespace XimperShellNotificationCenter {
                 app_icon_uri = param.app_icon;
             }
 
-            var image_visibility = ConfigModel.instance.image_visibility;
-            if (image_visibility == ImageVisibility.NEVER) {
-                img.set_visible (false);
-                img_app_icon.set_visible (false);
-                return;
-            }
 
             int notification_icon_size =
                 ConfigModel.instance.notification_icon_size.clamp (-1, int.MAX);
@@ -757,9 +748,6 @@ namespace XimperShellNotificationCenter {
                                              app_icon_exists);
                 } else if (app_icon_name != null) {
                     img.set_from_gicon (app_icon_name);
-                } else if (image_visibility == ImageVisibility.ALWAYS) {
-                    // Default icon
-                    img.set_from_icon_name ("image-missing");
                 } else {
                     img.set_visible (false);
                 }

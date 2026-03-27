@@ -267,8 +267,7 @@ namespace XimperShellNotificationCenter.Widgets {
             if (param.name_id.length > 0) {
                 group = noti_groups_name.get (param.name_id);
             }
-            if (group == null || group.dismissed
-                || ConfigModel.instance.notification_grouping == false) {
+            if (group == null || group.dismissed) {
                 group = new NotificationGroup (param.name_id, param.display_name, viewport);
                 // Collapse other groups on expand
                 group.on_expand_change.connect ((expanded) => {
