@@ -37,12 +37,19 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             title_widget.set_text (title);
-            clear_all_button.set_visible (has_clear_all_button);
-            clear_all_button.set_sensitive (!notifications_widget.is_empty ());
 
-            ximper_shell_notification_center_daemon.subscribe_v2.connect ((count) => {
-                clear_all_button.set_sensitive (count > 0);
-            });
+            clear_all_button.set_visible (
+                has_clear_all_button
+                && notifications_widget != null);
+
+            if (notifications_widget != null) {
+                clear_all_button.set_sensitive (
+                    !notifications_widget.is_empty ());
+                ximper_shell_notification_center_daemon
+                    .subscribe_v2.connect ((count) => {
+                    clear_all_button.set_sensitive (count > 0);
+                });
+            }
         }
 
         [GtkCallback]

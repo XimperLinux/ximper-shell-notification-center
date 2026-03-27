@@ -12,6 +12,10 @@ namespace XimperShellNotificationCenter.Widgets {
             });
         }
 
+        public override bool is_available () {
+            return notifications_widget != null;
+        }
+
         private void update_icon () {
             icon.set_from_icon_name (active
                 ? "notifications-disabled-symbolic"

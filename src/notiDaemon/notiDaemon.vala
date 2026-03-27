@@ -23,6 +23,7 @@ namespace XimperShellNotificationCenter {
 
         internal uint n_notifications {
             get {
+                if (notifications_widget == null) return 0;
                 return notifications_widget.n_notifications;
             }
         }
@@ -85,6 +86,7 @@ namespace XimperShellNotificationCenter {
         /** Hides all floating notifications (closes transient) */
         internal inline void remove_all_floating_notifications (bool transition,
                                                                 notification_filter_func ?func) {
+            if (floating_notifications == null) return;
             debug ("Hiding all floating notifications");
             floating_notifications.remove_all_notifications (transition, (notification) => {
                 if (func == null || func (notification)) {
@@ -104,6 +106,7 @@ namespace XimperShellNotificationCenter {
 
         /** Hides/closes latest floating notification */
         internal void hide_latest_floating_notification (bool close) {
+            if (floating_notifications == null) return;
             NotifyParams ?param = floating_notifications.get_latest_notification ();
             if (param == null) {
                 return;
@@ -119,6 +122,7 @@ namespace XimperShellNotificationCenter {
 
         /** Activates the `action_index` action of the latest notification */
         internal void invoke_latest_floating_action (uint32 action_index) {
+            if (floating_notifications == null) return;
             floating_notifications.latest_notification_action (action_index);
         }
 

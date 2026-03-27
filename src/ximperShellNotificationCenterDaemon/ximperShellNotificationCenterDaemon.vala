@@ -237,7 +237,9 @@ namespace XimperShellNotificationCenter {
                 return false;
             }
 
-            floating_notifications.set_monitor (monitor);
+            if (floating_notifications != null) {
+                floating_notifications.set_monitor (monitor);
+            }
             return true;
         }
     }

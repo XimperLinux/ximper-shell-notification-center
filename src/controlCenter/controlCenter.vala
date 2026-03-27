@@ -22,7 +22,9 @@ namespace XimperShellNotificationCenter {
             Object (css_name: "blankwindow");
 
             widgets = new List<unowned Widgets.BaseWidget> ();
-            widgets.append (notifications_widget);
+            if (notifications_widget != null) {
+                widgets.append (notifications_widget);
+            }
 
             if (app.use_layer_shell) {
                 if (!GtkLayerShell.is_supported ()) {
@@ -164,7 +166,12 @@ namespace XimperShellNotificationCenter {
                     }
                     break;
                 default:
-                    return notifications_widget.key_press_event_cb (keyval, keycode, state);
+                    if (notifications_widget != null) {
+                        return notifications_widget
+                            .key_press_event_cb (
+                            keyval, keycode, state);
+                    }
+                    return false;
             }
             // Override the builtin list navigation
             return true;
@@ -189,12 +196,6 @@ namespace XimperShellNotificationCenter {
                 w = DEFAULT_WIDGETS;
             }
 
-            // Add the notifications widget if not found in the list
-            if (!("notifications" in w)) {
-                warning ("Notification widget not included in \"widgets\" config. " +
-                         "Using default bottom position");
-                w += "notifications";
-            }
             bool has_notifications = false;
             foreach (string key in w) {
                 // Add the widget if it is valid
@@ -203,16 +204,18 @@ namespace XimperShellNotificationCenter {
                     key, out is_notifications);
 
                 if (is_notifications) {
+                    if (notifications_widget == null) {
+                        continue;
+                    }
                     if (has_notifications) {
-                        warning ("Cannot have multiple \"notifications\" widgets! Skipping\"%s\"",
-                                 key);
+                        warning ("Cannot have multiple " +
+                                 "\"notifications\" widgets! " +
+                                 "Skipping \"%s\"", key);
                         continue;
                     }
                     has_notifications = true;
 
                     notifications_widget.reload_config ();
-
-                    // Append the notifications widget to the box in the order of the provided list
                     box.append (notifications_widget);
                     continue;
                 }
@@ -334,18 +337,24 @@ namespace XimperShellNotificationCenter {
                 default:
                 case PositionY.TOP:
                     align_y = Gtk.Align.START;
-                    // Set cc widget position
-                    notifications_widget.set_list_is_reversed (false);
+                    if (notifications_widget != null) {
+                        notifications_widget
+                            .set_list_is_reversed (false);
+                    }
                     break;
                 case PositionY.CENTER:
                     align_y = Gtk.Align.CENTER;
-                    // Set cc widget position
-                    notifications_widget.set_list_is_reversed (false);
+                    if (notifications_widget != null) {
+                        notifications_widget
+                            .set_list_is_reversed (false);
+                    }
                     break;
                 case PositionY.BOTTOM:
                     align_y = Gtk.Align.END;
-                    // Set cc widget position
-                    notifications_widget.set_list_is_reversed (true);
+                    if (notifications_widget != null) {
+                        notifications_widget
+                            .set_list_is_reversed (true);
+                    }
                     break;
             }
             // Fit the ControlCenter to the monitor height

@@ -110,26 +110,37 @@ namespace XimperShellNotificationCenter {
 
             noti_daemon = new NotiDaemon ();
             ximper_shell_notification_center_daemon = new XimperShellNotificationCenterDaemon ();
-            // Notification Daemon
-            Bus.own_name_on_connection (conn,
-                                        "org.freedesktop.Notifications",
-                                        bus_name_flags,
-                                        () => {
-                try {
-                    conn.register_object ("/org/freedesktop/Notifications", noti_daemon);
-                    init.callback ();
-                } catch (Error e) {
-                    error ("Could not register notification service: \"%s\"", e.message);
+
+            // Register notification daemon only if notifications widget is enabled
+            bool has_notifications = false;
+            foreach (string w in ConfigModel.instance.widgets.data) {
+                if (w.has_prefix ("notifications")) {
+                    has_notifications = true;
+                    break;
                 }
-            },
-                                        () => {
-                stderr.printf (
-                    "Could not acquire notification name. " +
-                    "Please close any other notification daemon " +
-                    "like mako or dunst\n");
-                Process.exit (1);
-            });
-            yield;
+            }
+
+            if (has_notifications) {
+                Bus.own_name_on_connection (conn,
+                                            "org.freedesktop.Notifications",
+                                            bus_name_flags,
+                                            () => {
+                    try {
+                        conn.register_object ("/org/freedesktop/Notifications", noti_daemon);
+                        init.callback ();
+                    } catch (Error e) {
+                        error ("Could not register notification service: \"%s\"", e.message);
+                    }
+                },
+                                            () => {
+                    stderr.printf (
+                        "Could not acquire notification name. " +
+                        "Please close any other notification daemon " +
+                        "like mako or dunst\n");
+                    Process.exit (1);
+                });
+                yield;
+            }
 
             // Ximper Shell Notification Center Daemon
             // Name is already owned by GApplication via register()
@@ -143,23 +154,26 @@ namespace XimperShellNotificationCenter {
 
             xdg_activation = new XdgActivationHelper ();
 
-            floating_notifications = new NotificationWindow ();
-            notifications_widget = new Widgets.Notifications ();
+            if (has_notifications) {
+                notifications_widget = new Widgets.Notifications ();
+                floating_notifications = new NotificationWindow ();
+                add_window (floating_notifications);
+
+                noti_daemon.on_dnd_toggle.connect ((dnd) => {
+                    if (dnd && floating_notifications.visible) {
+                        noti_daemon
+                            .remove_all_floating_notifications (
+                            true, (noti) => {
+                            return noti.param.urgency
+                                != UrgencyLevels.CRITICAL;
+                        });
+                    }
+                    ximper_shell_notification_center_daemon
+                        .emit_subscribe ();
+                });
+            }
+
             control_center = new ControlCenter ();
-
-            add_window (floating_notifications);
-            add_window (control_center);
-
-            noti_daemon.on_dnd_toggle.connect ((dnd) => {
-                // Hide all non-critical notifications on toggle
-                if (dnd && floating_notifications.visible) {
-                    noti_daemon.remove_all_floating_notifications (true, (noti) => {
-                        return noti.param.urgency != UrgencyLevels.CRITICAL;
-                    });
-                }
-
-                ximper_shell_notification_center_daemon.emit_subscribe ();
-            });
             // Update on start
             ximper_shell_notification_center_daemon.emit_subscribe ();
 
