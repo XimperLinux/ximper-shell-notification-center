@@ -1,6 +1,12 @@
 using GLib;
 
 namespace XimperShellNotificationCenter.Widgets {
+
+    [DBus (name = "ru.ximperlinux.shell.OSD")]
+    interface OsdService : Object {
+        public abstract void show_brightness_osd (double percent) throws DBusError, IOError;
+    }
+
     [GtkTemplate (ui = "/ru/ximperlinux/shell/NotificationCenter/ui/widgets/backlight.ui")]
     public class Backlight : BaseWidget {
         public override string widget_name {
@@ -39,6 +45,7 @@ namespace XimperShellNotificationCenter.Widgets {
         unowned Gtk.Box single_source_box;
 
         int min_brightness = 0;
+        OsdService? osd_proxy = null;
 
         public Backlight (string suffix) {
             base (suffix);
@@ -46,6 +53,14 @@ namespace XimperShellNotificationCenter.Widgets {
             Json.Object ?config = get_config (this);
             if (config != null) {
                 min_brightness = int.max (0, get_prop<int> (config, "min"));
+            }
+
+            try {
+                osd_proxy = Bus.get_proxy_sync (BusType.SESSION,
+                    "ru.ximperlinux.shell.OSD",
+                    "/ru/ximperlinux/shell/OSD");
+            } catch (Error e) {
+                debug ("OSD service not available: %s", e.message);
             }
 
             detect_sources ();
@@ -203,6 +218,7 @@ namespace XimperShellNotificationCenter.Widgets {
                         (float) scl.get_value ());
                     scl.tooltip_text =
                         ((int) scl.get_value ()).to_string ();
+                    notify_osd (scl.get_value ());
                 });
             }
 #if HAVE_DDC
@@ -221,6 +237,7 @@ namespace XimperShellNotificationCenter.Widgets {
                         (float) scl.get_value ());
                     scl.tooltip_text =
                         ((int) scl.get_value ()).to_string ();
+                    notify_osd (scl.get_value ());
                 });
             }
 #endif
@@ -292,6 +309,15 @@ namespace XimperShellNotificationCenter.Widgets {
                 } else {
                     kbd_box.set_visible (false);
                 }
+            }
+        }
+
+        private void notify_osd (double percent) {
+            if (osd_proxy == null) return;
+            try {
+                osd_proxy.show_brightness_osd (percent);
+            } catch (Error e) {
+                debug ("OSD call failed: %s", e.message);
             }
         }
 
