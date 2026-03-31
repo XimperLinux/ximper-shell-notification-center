@@ -2,6 +2,7 @@ namespace XimperShellNotificationCenter.Widgets {
     public class NightLightTile : QuickSettingsTile {
         private const int NEUTRAL_TEMP = 6000;
         private int temperature = 4500;
+        private bool _is_available = false;
 
         public NightLightTile (Json.Object ?cfg) {
             base ("night-light-disabled-symbolic",
@@ -14,40 +15,31 @@ namespace XimperShellNotificationCenter.Widgets {
                     temperature = temp;
                 }
             }
+
+            _is_available =
+                Environment.find_program_in_path (
+                    "hyprsunset") != null;
         }
 
         public override bool is_available () {
-            try {
-                string output;
-                Process.spawn_command_line_sync (
-                    "pgrep -x hyprsunset",
-                    out output, null, null);
-                return output.strip ().length > 0;
-            } catch (SpawnError e) {
-                return false;
-            }
+            return _is_available;
         }
 
         public override void on_cc_visibility_change (
                 bool visible) {
-            if (visible && is_available ()) {
-                sync_state ();
+            if (visible && _is_available) {
+                sync_state.begin ();
             }
         }
 
-        private void sync_state () {
-            try {
-                string output;
-                Process.spawn_command_line_sync (
-                    "hyprctl hyprsunset temperature",
-                    out output, null, null);
-                int current = int.parse (output.strip ());
-                active = (current < NEUTRAL_TEMP);
-                update_icon ();
-            } catch (SpawnError e) {
-                debug ("Failed to get temperature: %s",
-                       e.message);
-            }
+        private async void sync_state () {
+            string msg;
+            yield Functions.execute_command (
+                "hyprctl hyprsunset temperature",
+                {}, out msg);
+            int current = int.parse (msg.strip ());
+            active = (current < NEUTRAL_TEMP);
+            update_icon ();
         }
 
         public override void on_toggle () {
