@@ -526,6 +526,8 @@ namespace XimperShellNotificationCenter.Widgets {
                 return;
             }
             bool is_input = device.direction == Direction.INPUT;
+            // Snapshot target names before async operations
+            string target_port = device.port_name;
 
             // Only set port and card profile if the device is attached to a card
             if (device.has_card) {
@@ -542,13 +544,13 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
 
                 if (profile_name != device.card_active_profile) {
+                    string old_name = device.device_name;
                     yield set_card_profile_by_index (profile_name, device);
-                    yield wait_for_update<string> (device, "device-name");
+                    yield wait_for_name_change (device, old_name);
                 }
 
                 if (!is_input) {
-                    if (device.port_name != device.card_sink_port_name) {
-                        debug ("Setting port to: %s", device.port_name);
+                    if (target_port != device.card_sink_port_name) {
                         yield set_sink_port_by_name (device);
                     }
                 }
@@ -559,43 +561,86 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             if (!is_input) {
-                if (device.device_name != default_sink_name) {
-                    debug ("Setting default sink to: %s", device.device_name);
-                    yield set_default_sink (device);
-                }
+                yield set_default_sink (device);
             }
+        }
+
+        private async void wait_for_name_change (
+                PulseDevice device, string ?old_name) {
+            if (device.device_name != null
+                    && device.device_name != old_name) {
+                return;
+            }
+
+            SourceFunc callback = wait_for_name_change.callback;
+            ulong handler_id = 0;
+            uint timeout_id = 0;
+
+            handler_id = device.notify["device-name"].connect ((s, p) => {
+                if (device.device_name != null
+                        && device.device_name != old_name) {
+                    if (timeout_id != 0) {
+                        Source.remove (timeout_id);
+                    }
+                    device.disconnect (handler_id);
+                    Idle.add ((owned) callback);
+                }
+            });
+
+            timeout_id = Timeout.add (200, () => {
+                timeout_id = 0;
+                device.disconnect (handler_id);
+                Idle.add ((owned) callback);
+                return Source.REMOVE;
+            });
+            yield;
         }
 
         private async void wait_for_update<T> (PulseDevice device,
                                                string prop_name) {
+            T current_value;
+            device.get (prop_name, out current_value);
+            if (current_value != null) return;
+
             SourceFunc callback = wait_for_update.callback;
             ulong handler_id = 0;
+            uint timeout_id = 0;
+
             handler_id = device.notify[prop_name].connect ((s, p) => {
                 T prop_value;
                 device.get (prop_name, out prop_value);
                 if (prop_value != null) {
+                    if (timeout_id != 0) {
+                        Source.remove (timeout_id);
+                    }
                     device.disconnect (handler_id);
                     Idle.add ((owned) callback);
                 }
+            });
+
+            timeout_id = Timeout.add (2000, () => {
+                timeout_id = 0;
+                device.disconnect (handler_id);
+                Idle.add ((owned) callback);
+                return Source.REMOVE;
             });
             yield;
         }
 
         public async void set_bluetooth_card_profile (PulseCardProfile profile,
                                                       PulseDevice device) {
+            string old_name = device.device_name;
             context.set_card_profile_by_index (device.card_index,
                                                profile.name,
                                                (c, success) => {
-                if (success == 1) {
-                    set_bluetooth_card_profile.callback ();
-                } else {
-                    stderr.printf ("setting the card %s profile to %s failed\n",
-                                   device.card_name, profile.name);
+                if (success != 1) {
+                    warning ("setting the card %s profile to %s failed",
+                             device.card_name, profile.name);
                 }
+                set_bluetooth_card_profile.callback ();
             });
             yield;
-            // Wait until the device has been updated
-            yield wait_for_update<string> (device, "device-name");
+            yield wait_for_name_change (device, old_name);
         }
 
         private async void set_card_profile_by_index (string profile_name,
@@ -603,12 +648,11 @@ namespace XimperShellNotificationCenter.Widgets {
             context.set_card_profile_by_index (device.card_index,
                                                profile_name,
                                                (c, success) => {
-                if (success == 1) {
-                    set_card_profile_by_index.callback ();
-                } else {
-                    stderr.printf ("setting the card %s profile to %s failed\n",
-                                   device.card_name, profile_name);
+                if (success != 1) {
+                    warning ("setting the card %s profile to %s failed",
+                             device.card_name, profile_name);
                 }
+                set_card_profile_by_index.callback ();
             });
             yield;
         }
@@ -617,24 +661,22 @@ namespace XimperShellNotificationCenter.Widgets {
             context.set_sink_port_by_name (device.device_name,
                                            device.port_name,
                                            (c, success) => {
-                if (success == 1) {
-                    set_sink_port_by_name.callback ();
-                } else {
-                    stderr.printf ("setting sink port to %s failed\n",
-                                   device.port_name);
+                if (success != 1) {
+                    warning ("setting sink port to %s failed",
+                             device.port_name);
                 }
+                set_sink_port_by_name.callback ();
             });
             yield;
         }
 
         private async void set_default_sink (PulseDevice device) {
             context.set_default_sink (device.device_name, (c, success) => {
-                if (success == 1) {
-                    set_default_sink.callback ();
-                } else {
-                    stderr.printf ("setting default sink to %s failed\n",
-                                   device.device_name);
+                if (success != 1) {
+                    warning ("setting default sink to %s failed",
+                             device.device_name);
                 }
+                set_default_sink.callback ();
             });
             yield;
         }
