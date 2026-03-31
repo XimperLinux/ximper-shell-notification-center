@@ -211,9 +211,8 @@ namespace XimperShellNotificationCenter {
 
         public bool set_cc_monitor (string name) throws DBusError, IOError {
             if (!app.use_layer_shell) {
-                critical (
-                    "Setting Control Center monitor isn't supported "
-                    + "when layer shell is disabled!");
+                debug ("Setting Control Center monitor isn't supported "
+                    + "when layer shell is disabled");
                 return false;
             }
             unowned Gdk.Monitor ?monitor = Functions.try_get_monitor (name);
@@ -227,9 +226,8 @@ namespace XimperShellNotificationCenter {
 
         public bool set_noti_window_monitor (string name) throws DBusError, IOError {
             if (!app.use_layer_shell) {
-                critical (
-                    "Setting Notification Window monitor isn't supported "
-                    + "when layer shell is disabled!");
+                debug ("Setting Notification Window monitor isn't supported "
+                    + "when layer shell is disabled");
                 return false;
             }
             unowned Gdk.Monitor ?monitor = Functions.try_get_monitor (name);

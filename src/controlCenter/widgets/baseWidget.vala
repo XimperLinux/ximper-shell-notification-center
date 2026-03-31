@@ -30,7 +30,7 @@ namespace XimperShellNotificationCenter.Widgets {
             Json.Object ?props = null;
             bool result = config.lookup_extended (key, out orig_key, out props);
             if (!result || orig_key == null || props == null) {
-                warning ("%s: Config not found! Using default config...\n", key);
+                debug ("%s: Config not found, using defaults", key);
                 return null;
             }
             return props;
