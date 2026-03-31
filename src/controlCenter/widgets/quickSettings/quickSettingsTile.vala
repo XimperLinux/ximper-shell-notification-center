@@ -115,5 +115,51 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public virtual void on_cc_visibility_change (bool visible) {
         }
+
+        protected void build_submenu_header (
+                Gtk.Box submenu_box,
+                Gtk.Button ?action_button = null) {
+            var header = new Gtk.Box (
+                Gtk.Orientation.HORIZONTAL, 8);
+            header.add_css_class ("submenu-header");
+
+            var header_icon =
+                new Gtk.Image.from_icon_name (
+                    icon.icon_name);
+            header_icon.set_valign (Gtk.Align.CENTER);
+            header_icon.add_css_class (
+                "submenu-header-icon");
+            var header_label =
+                new Gtk.Label (title_label.get_text ());
+            header_label.add_css_class (
+                "submenu-header-label");
+            header_label.set_hexpand (true);
+            header_label.set_halign (Gtk.Align.START);
+
+            header.append (header_icon);
+            header.append (header_label);
+
+            if (action_button != null) {
+                action_button.add_css_class ("flat");
+                action_button.add_css_class ("circular");
+                header.append (action_button);
+            }
+
+            submenu_box.prepend (header);
+        }
+
+        protected void clear_submenu_content (
+                Gtk.Box submenu_box) {
+            for (var child =
+                     submenu_box.get_first_child ();
+                 child != null;) {
+                var next = child.get_next_sibling ();
+                if (!child.has_css_class (
+                        "submenu-header")) {
+                    submenu_box.remove (child);
+                }
+                child = next;
+            }
+        }
     }
 }

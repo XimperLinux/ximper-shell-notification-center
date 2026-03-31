@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 23:10+0300\n"
+"POT-Creation-Date: 2026-03-31 19:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,20 +110,24 @@ msgstr ""
 msgid "Not Connected"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:405
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:349
+msgid "No networks found"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:440
 msgid "Password"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:409
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:120
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:444
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:130
 msgid "Connect"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:469
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:504
 msgid "Connecting…"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:485
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:520
 msgid "Network Settings"
 msgstr ""
 
@@ -135,7 +139,11 @@ msgstr ""
 msgid "Disconnected"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:344
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:274
+msgid "No VPN connections"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:348
 msgid "VPN Settings"
 msgstr ""
 
@@ -143,11 +151,15 @@ msgstr ""
 msgid "Bluetooth"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:119
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:91
+msgid "Searching for devices…"
+msgstr ""
+
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:129
 msgid "Disconnect"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:162
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:172
 msgid "Bluetooth Settings"
 msgstr ""
 

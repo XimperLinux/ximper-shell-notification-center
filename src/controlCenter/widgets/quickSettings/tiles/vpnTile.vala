@@ -79,12 +79,8 @@ namespace XimperShellNotificationCenter.Widgets {
 
             active = any_active;
             if (any_active && active_name != null) {
-                icon.set_from_icon_name (
-                    "network-vpn-symbolic");
                 set_subtitle (active_name);
             } else {
-                icon.set_from_icon_name (
-                    "network-vpn-symbolic");
                 set_subtitle (_("Disconnected"));
             }
         }
@@ -248,6 +244,7 @@ namespace XimperShellNotificationCenter.Widgets {
             box.add_css_class ("quick-settings-submenu");
             current_submenu = box;
 
+            build_submenu_header (box);
             refresh_submenu.begin ();
 
             return box;
@@ -261,19 +258,22 @@ namespace XimperShellNotificationCenter.Widgets {
             yield load_vpn_list ();
 
             if (current_submenu != null) {
-                for (var child =
-                         current_submenu.get_first_child ();
-                     child != null;) {
-                    var next = child.get_next_sibling ();
-                    current_submenu.remove (child);
-                    child = next;
-                }
+                clear_submenu_content (current_submenu);
                 build_vpn_list (current_submenu);
             }
             updating_submenu = false;
         }
 
         private void build_vpn_list (Gtk.Box box) {
+            if (vpn_list.size == 0) {
+                var empty = new Gtk.Label (
+                    _("No VPN connections"));
+                empty.add_css_class ("dim-label");
+                empty.set_margin_top (8);
+                empty.set_margin_bottom (8);
+                box.append (empty);
+            }
+
             foreach (var vpn in vpn_list) {
                 var row = new Gtk.Box (
                     Gtk.Orientation.HORIZONTAL, 8);
@@ -363,12 +363,17 @@ namespace XimperShellNotificationCenter.Widgets {
             box.append (btn);
         }
 
+        private static string ?_settings_cmd = null;
+        private static bool _settings_checked = false;
+
         private static string ?get_settings_command () {
+            if (_settings_checked) return _settings_cmd;
+            _settings_checked = true;
             if (Environment.find_program_in_path (
                     "nm-connection-editor") != null) {
-                return "nm-connection-editor";
+                _settings_cmd = "nm-connection-editor";
             }
-            return null;
+            return _settings_cmd;
         }
     }
 }

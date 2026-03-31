@@ -138,8 +138,11 @@ namespace XimperShellNotificationCenter.Widgets {
         public override Gtk.Widget ?create_submenu () {
             if (proxy == null) return null;
 
-            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            var box = new Gtk.Box (
+                Gtk.Orientation.VERTICAL, 0);
             box.add_css_class ("quick-settings-submenu");
+
+            build_submenu_header (box);
 
             string current = proxy.active_profile;
 

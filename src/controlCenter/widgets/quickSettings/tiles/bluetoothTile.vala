@@ -78,6 +78,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 Gtk.Orientation.VERTICAL, 0);
             box.add_css_class ("quick-settings-submenu");
 
+            build_submenu_header (box);
             bt_proxy.start_discovery ();
             build_device_list (box);
 
@@ -85,6 +86,15 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private void build_device_list (Gtk.Box box) {
+            if (bt_proxy.devices.size == 0) {
+                var empty = new Gtk.Label (
+                    _("Searching for devices…"));
+                empty.add_css_class ("dim-label");
+                empty.set_margin_top (8);
+                empty.set_margin_bottom (8);
+                box.append (empty);
+            }
+
             foreach (var dev in bt_proxy.devices) {
                 var row = new Gtk.Box (
                     Gtk.Orientation.HORIZONTAL, 8);

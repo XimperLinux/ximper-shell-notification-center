@@ -136,6 +136,30 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
+        private Gtk.Button ?scan_button = null;
+
+        private async void rescan () {
+            if (scan_button != null) {
+                var spinner = new Gtk.Spinner ();
+                spinner.start ();
+                scan_button.set_child (spinner);
+                scan_button.set_sensitive (false);
+            }
+            wifi_dev_path =
+                yield nm_proxy.get_wifi_device ();
+            yield scan ();
+            Timeout.add (1000, () => {
+                if (scan_button != null) {
+                    scan_button.set_child (
+                        new Gtk.Image.from_icon_name (
+                            "view-refresh-symbolic"));
+                    scan_button.set_sensitive (true);
+                }
+                refresh_submenu.begin ();
+                return Source.REMOVE;
+            });
+        }
+
         private async void scan () {
             if (wifi_dev_path == null) return;
             try {
@@ -291,6 +315,14 @@ namespace XimperShellNotificationCenter.Widgets {
             box.add_css_class ("quick-settings-submenu");
             current_submenu = box;
 
+            scan_button =
+                new Gtk.Button.from_icon_name (
+                    "view-refresh-symbolic");
+            scan_button.clicked.connect (() => {
+                rescan.begin ();
+            });
+            build_submenu_header (box, scan_button);
+
             refresh_submenu.begin ();
 
             return box;
@@ -304,13 +336,7 @@ namespace XimperShellNotificationCenter.Widgets {
             var aps = yield get_access_points ();
 
             if (current_submenu != null) {
-                for (var child =
-                         current_submenu.get_first_child ();
-                     child != null;) {
-                    var next = child.get_next_sibling ();
-                    current_submenu.remove (child);
-                    child = next;
-                }
+                clear_submenu_content (current_submenu);
                 build_ap_list (current_submenu, aps);
             }
             updating_submenu = false;
@@ -318,6 +344,15 @@ namespace XimperShellNotificationCenter.Widgets {
 
         private void build_ap_list (
                 Gtk.Box box, ApInfo[] aps) {
+            if (aps.length == 0) {
+                var empty = new Gtk.Label (
+                    _("No networks found"));
+                empty.add_css_class ("dim-label");
+                empty.set_margin_top (8);
+                empty.set_margin_bottom (8);
+                box.append (empty);
+            }
+
             foreach (var ap in aps) {
                 var row = new Gtk.Box (
                     Gtk.Orientation.HORIZONTAL, 8);
@@ -504,12 +539,17 @@ namespace XimperShellNotificationCenter.Widgets {
             box.append (btn);
         }
 
+        private static string ?_settings_cmd = null;
+        private static bool _settings_checked = false;
+
         private static string ?get_settings_command () {
+            if (_settings_checked) return _settings_cmd;
+            _settings_checked = true;
             if (Environment.find_program_in_path (
                     "nm-connection-editor") != null) {
-                return "nm-connection-editor";
+                _settings_cmd = "nm-connection-editor";
             }
-            return null;
+            return _settings_cmd;
         }
 
         // Connection methods
