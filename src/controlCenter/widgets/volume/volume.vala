@@ -33,6 +33,12 @@ namespace XimperShellNotificationCenter.Widgets {
                 default_device_changed);
         }
 
+        ~Volume () {
+            if (sink_rebuild_timeout != 0) {
+                Source.remove (sink_rebuild_timeout);
+            }
+        }
+
         public Volume (string suffix) {
             base (suffix);
 

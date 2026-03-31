@@ -22,6 +22,12 @@ namespace XimperShellNotificationCenter.Widgets {
         private bool connecting = false;
         private bool updating_submenu = false;
 
+        ~WifiTile () {
+            if (sync_timeout != 0) {
+                Source.remove (sync_timeout);
+            }
+        }
+
         public WifiTile (Json.Object ?cfg) {
             base ("network-wireless-offline-symbolic",
                   _("Wi-Fi"));

@@ -5,6 +5,12 @@ namespace XimperShellNotificationCenter.Widgets {
         private static string ?settings_cmd = null;
         private static bool settings_cmd_checked = false;
 
+        ~BluetoothTile () {
+            if (sync_timeout != 0) {
+                Source.remove (sync_timeout);
+            }
+        }
+
         public BluetoothTile (Json.Object ?cfg) {
             base ("bluetooth-active-symbolic",
                   _("Bluetooth"));

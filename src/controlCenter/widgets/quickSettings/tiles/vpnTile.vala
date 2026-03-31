@@ -16,6 +16,12 @@ namespace XimperShellNotificationCenter.Widgets {
         private bool updating_submenu = false;
         private bool connecting = false;
 
+        ~VpnTile () {
+            if (sync_timeout != 0) {
+                Source.remove (sync_timeout);
+            }
+        }
+
         public VpnTile (Json.Object ?cfg) {
             base ("network-vpn-symbolic", _("VPN"));
             setup_arrow ();
