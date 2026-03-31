@@ -52,7 +52,10 @@ namespace XimperShellNotificationCenter.Widgets {
 
             Json.Object ?config = get_config (this);
             if (config != null) {
-                min_brightness = int.max (0, get_prop<int> (config, "min"));
+                int ?min_val = get_prop<int> (config, "min");
+                if (min_val != null) {
+                    min_brightness = int.max (0, min_val);
+                }
             }
 
             try {
