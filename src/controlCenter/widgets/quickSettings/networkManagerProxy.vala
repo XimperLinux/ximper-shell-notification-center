@@ -171,7 +171,7 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public static string ssid_to_string (uint8[] ssid) {
-            return (string) ssid;
+            return ((string) ssid).make_valid ();
         }
 
         public static string get_signal_icon (uint8 strength) {

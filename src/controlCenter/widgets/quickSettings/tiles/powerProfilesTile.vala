@@ -44,7 +44,8 @@ namespace XimperShellNotificationCenter.Widgets {
             profile_names = {};
             foreach (var profile in proxy.profiles) {
                 Variant ?v = profile.lookup ("Profile");
-                if (v != null) {
+                if (v != null
+                        && v.is_of_type (VariantType.STRING)) {
                     profile_names += v.get_string ();
                 }
             }

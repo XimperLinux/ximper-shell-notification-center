@@ -250,9 +250,12 @@ namespace XimperShellNotificationCenter.Widgets {
                 DBusConnection conn, string ?sender,
                 string path, string iface, string signal,
                 Variant params) {
-            string iface_name;
-            params.get_child (0, "s", out iface_name);
-            if (iface_name == "org.bluez.Device1") {
+            if (params.n_children () == 0) return;
+            Variant child = params.get_child_value (0);
+            if (!child.is_of_type (VariantType.STRING)) {
+                return;
+            }
+            if (child.get_string () == "org.bluez.Device1") {
                 load_devices.begin ();
             }
         }
