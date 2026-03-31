@@ -15,10 +15,6 @@ namespace XimperShellNotificationCenter.Widgets {
                     temperature = temp;
                 }
             }
-
-            _is_available =
-                Environment.find_program_in_path (
-                    "hyprsunset") != null;
         }
 
         public override bool is_available () {
@@ -27,8 +23,26 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public override void on_cc_visibility_change (
                 bool visible) {
-            if (visible && _is_available) {
-                sync_state.begin ();
+            if (visible) {
+                check_and_sync.begin ();
+            }
+        }
+
+        private async void check_and_sync () {
+            string msg;
+            bool ok = yield Functions.execute_command (
+                "pgrep -x hyprsunset", {}, out msg);
+            bool was_available = _is_available;
+            _is_available = ok
+                && msg.strip ().length > 0;
+
+            if (_is_available) {
+                yield sync_state ();
+            }
+
+            if (was_available != _is_available) {
+                // Trigger grid rebuild
+                set_visible (_is_available);
             }
         }
 
