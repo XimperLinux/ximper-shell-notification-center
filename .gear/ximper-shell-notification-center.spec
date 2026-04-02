@@ -14,6 +14,8 @@ Vcs: https://gitlab.eterfund.ru/ximperlinux/ximper-shell-notification-center.git
 
 Source: %name-%version.tar
 
+Provides: swaync
+
 BuildRequires(pre): rpm-macros-meson rpm-build-xdg
 
 BuildRequires: meson 
