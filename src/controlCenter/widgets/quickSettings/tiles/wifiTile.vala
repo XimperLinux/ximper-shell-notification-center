@@ -21,6 +21,7 @@ namespace XimperShellNotificationCenter.Widgets {
         private Gtk.Box ?current_submenu = null;
         private bool connecting = false;
         private bool updating_submenu = false;
+        private Gtk.Revealer ?open_password_revealer = null;
 
         ~WifiTile () {
             if (sync_timeout != 0) {
@@ -343,6 +344,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
             if (current_submenu != null) {
                 clear_submenu_content (current_submenu);
+                open_password_revealer = null;
                 build_ap_list (current_submenu, aps);
             }
             updating_submenu = false;
@@ -461,9 +463,15 @@ namespace XimperShellNotificationCenter.Widgets {
             item_box.append (pwd_revealer);
 
             btn.clicked.connect (() => {
-                pwd_revealer.set_reveal_child (
-                    !pwd_revealer.get_reveal_child ());
                 if (pwd_revealer.get_reveal_child ()) {
+                    pwd_revealer.set_reveal_child (false);
+                    open_password_revealer = null;
+                } else {
+                    if (open_password_revealer != null) {
+                        open_password_revealer.set_reveal_child (false);
+                    }
+                    pwd_revealer.set_reveal_child (true);
+                    open_password_revealer = pwd_revealer;
                     pwd_entry.grab_focus ();
                 }
             });
