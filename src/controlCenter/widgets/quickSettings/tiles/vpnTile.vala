@@ -281,18 +281,6 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             foreach (var vpn in vpn_list) {
-                var row = new Gtk.Box (
-                    Gtk.Orientation.HORIZONTAL, 8);
-                row.add_css_class ("submenu-row");
-
-                var row_icon = new Gtk.Image.from_icon_name (
-                    "network-vpn-symbolic");
-                var row_label = new Gtk.Label (vpn.name);
-                row_label.set_ellipsize (
-                    Pango.EllipsizeMode.END);
-                row_label.set_hexpand (true);
-                row_label.set_halign (Gtk.Align.START);
-
                 var vpn_switch = new Gtk.Switch ();
                 vpn_switch.set_valign (Gtk.Align.CENTER);
                 vpn_switch.set_active (vpn.is_active);
@@ -313,13 +301,10 @@ namespace XimperShellNotificationCenter.Widgets {
                     });
                 });
 
-                row.append (row_icon);
-                row.append (row_label);
-                row.append (vpn_switch);
-
-                var btn = new Gtk.Button ();
-                btn.set_child (row);
-                btn.add_css_class ("flat");
+                var btn = build_submenu_row (
+                    "network-vpn-symbolic",
+                    vpn.name,
+                    vpn_switch);
                 btn.clicked.connect (() => {
                     vpn_switch.set_active (
                         !vpn_switch.active);
@@ -341,20 +326,9 @@ namespace XimperShellNotificationCenter.Widgets {
                     Gtk.Orientation.HORIZONTAL));
             }
 
-            var row = new Gtk.Box (
-                Gtk.Orientation.HORIZONTAL, 8);
-            row.add_css_class ("submenu-row");
-            row.append (new Gtk.Image.from_icon_name (
-                "emblem-system-symbolic"));
-            var label = new Gtk.Label (
+            var btn = build_submenu_row (
+                "emblem-system-symbolic",
                 _("VPN Settings"));
-            label.set_hexpand (true);
-            label.set_halign (Gtk.Align.START);
-            row.append (label);
-
-            var btn = new Gtk.Button ();
-            btn.set_child (row);
-            btn.add_css_class ("flat");
 
             btn.clicked.connect (() => {
                 try {

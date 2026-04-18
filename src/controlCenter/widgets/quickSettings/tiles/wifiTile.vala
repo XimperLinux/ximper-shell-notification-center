@@ -362,19 +362,6 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             foreach (var ap in aps) {
-                var row = new Gtk.Box (
-                    Gtk.Orientation.HORIZONTAL, 8);
-                row.add_css_class ("submenu-row");
-
-                var row_icon = new Gtk.Image.from_icon_name (
-                    NetworkManagerProxy.get_signal_icon (
-                        ap.strength));
-                var row_label = new Gtk.Label (ap.ssid);
-                row_label.set_ellipsize (
-                    Pango.EllipsizeMode.END);
-                row_label.set_hexpand (true);
-                row_label.set_halign (Gtk.Align.START);
-
                 var status_stack = new Gtk.Stack ();
                 status_stack.set_transition_type (
                     Gtk.StackTransitionType.CROSSFADE);
@@ -401,15 +388,14 @@ namespace XimperShellNotificationCenter.Widgets {
                         "empty");
                 }
 
-                row.append (row_icon);
-                row.append (row_label);
-                row.append (status_stack);
+                var btn = build_submenu_row (
+                    NetworkManagerProxy.get_signal_icon (
+                        ap.strength),
+                    ap.ssid,
+                    status_stack);
 
                 var item_box = new Gtk.Box (
                     Gtk.Orientation.VERTICAL, 0);
-                var btn = new Gtk.Button ();
-                btn.set_child (row);
-                btn.add_css_class ("flat");
                 item_box.append (btn);
 
                 if (ap.secured && !ap.has_saved
@@ -525,20 +511,9 @@ namespace XimperShellNotificationCenter.Widgets {
             box.append (new Gtk.Separator (
                 Gtk.Orientation.HORIZONTAL));
 
-            var row = new Gtk.Box (
-                Gtk.Orientation.HORIZONTAL, 8);
-            row.add_css_class ("submenu-row");
-            row.append (new Gtk.Image.from_icon_name (
-                "emblem-system-symbolic"));
-            var label = new Gtk.Label (
+            var btn = build_submenu_row (
+                "emblem-system-symbolic",
                 _("Network Settings"));
-            label.set_hexpand (true);
-            label.set_halign (Gtk.Align.START);
-            row.append (label);
-
-            var btn = new Gtk.Button ();
-            btn.set_child (row);
-            btn.add_css_class ("flat");
 
             btn.clicked.connect (() => {
                 try {

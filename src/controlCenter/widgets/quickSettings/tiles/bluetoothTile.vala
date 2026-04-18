@@ -102,22 +102,6 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             foreach (var dev in bt_proxy.devices) {
-                var row = new Gtk.Box (
-                    Gtk.Orientation.HORIZONTAL, 8);
-                row.add_css_class ("submenu-row");
-
-                var row_icon = new Gtk.Image.from_icon_name (
-                    BluetoothProxy.get_device_icon (
-                        dev.icon_name));
-                var row_label = new Gtk.Label (dev.name);
-                row_label.set_ellipsize (
-                    Pango.EllipsizeMode.END);
-                row_label.set_hexpand (true);
-                row_label.set_halign (Gtk.Align.START);
-
-                row.append (row_icon);
-                row.append (row_label);
-
                 ObjectPath dev_path = dev.path;
                 bool is_connected = dev.connected;
                 bool is_busy =
@@ -125,22 +109,25 @@ namespace XimperShellNotificationCenter.Widgets {
                     && (string) bt_proxy.connecting_device
                         == (string) dev.path;
 
+                Gtk.Widget trailing;
                 if (is_busy) {
                     var spinner = new Gtk.Spinner ();
                     spinner.start ();
-                    row.append (spinner);
+                    trailing = spinner;
                 } else {
                     var action_label = new Gtk.Label (
                         is_connected
                             ? _("Disconnect")
                             : _("Connect"));
                     action_label.add_css_class ("dim-label");
-                    row.append (action_label);
+                    trailing = action_label;
                 }
 
-                var btn = new Gtk.Button ();
-                btn.set_child (row);
-                btn.add_css_class ("flat");
+                var btn = build_submenu_row (
+                    BluetoothProxy.get_device_icon (
+                        dev.icon_name),
+                    dev.name,
+                    trailing);
                 btn.set_sensitive (!is_busy);
 
                 btn.clicked.connect (() => {
@@ -169,20 +156,9 @@ namespace XimperShellNotificationCenter.Widgets {
                     Gtk.Orientation.HORIZONTAL));
             }
 
-            var row = new Gtk.Box (
-                Gtk.Orientation.HORIZONTAL, 8);
-            row.add_css_class ("submenu-row");
-            row.append (new Gtk.Image.from_icon_name (
-                "emblem-system-symbolic"));
-            var label = new Gtk.Label (
+            var btn = build_submenu_row (
+                "emblem-system-symbolic",
                 _("Bluetooth Settings"));
-            label.set_hexpand (true);
-            label.set_halign (Gtk.Align.START);
-            row.append (label);
-
-            var btn = new Gtk.Button ();
-            btn.set_child (row);
-            btn.add_css_class ("flat");
 
             btn.clicked.connect (() => {
                 try {

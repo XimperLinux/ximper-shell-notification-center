@@ -148,29 +148,16 @@ namespace XimperShellNotificationCenter.Widgets {
             string current = proxy.active_profile;
 
             foreach (string name in profile_names) {
-                var row = new Gtk.Box (
-                    Gtk.Orientation.HORIZONTAL, 8);
-                row.add_css_class ("submenu-row");
-
-                var row_icon = new Gtk.Image.from_icon_name (
-                    get_profile_icon (name));
-                var row_label = new Gtk.Label (
-                    get_profile_label (name));
-                row_label.set_hexpand (true);
-                row_label.set_halign (Gtk.Align.START);
-
-                row.append (row_icon);
-                row.append (row_label);
-
+                Gtk.Widget ?check = null;
                 if (name == current) {
-                    var check = new Gtk.Image.from_icon_name (
+                    check = new Gtk.Image.from_icon_name (
                         "object-select-symbolic");
-                    row.append (check);
                 }
 
-                var btn = new Gtk.Button ();
-                btn.set_child (row);
-                btn.add_css_class ("flat");
+                var btn = build_submenu_row (
+                    get_profile_icon (name),
+                    get_profile_label (name),
+                    check);
 
                 string profile_name = name;
                 btn.clicked.connect (() => {

@@ -148,6 +148,32 @@ namespace XimperShellNotificationCenter.Widgets {
             submenu_box.prepend (header);
         }
 
+        protected Gtk.Button build_submenu_row (
+                string icon_name,
+                string label_text,
+                Gtk.Widget ?trailing = null) {
+            var row = new Gtk.Box (
+                Gtk.Orientation.HORIZONTAL, 8);
+            row.add_css_class ("submenu-row");
+
+            row.append (
+                new Gtk.Image.from_icon_name (icon_name));
+            var lbl = new Gtk.Label (label_text);
+            lbl.set_ellipsize (Pango.EllipsizeMode.END);
+            lbl.set_hexpand (true);
+            lbl.set_halign (Gtk.Align.START);
+            row.append (lbl);
+
+            if (trailing != null) {
+                row.append (trailing);
+            }
+
+            var btn = new Gtk.Button ();
+            btn.set_child (row);
+            btn.add_css_class ("flat");
+            return btn;
+        }
+
         protected void clear_submenu_content (
                 Gtk.Box submenu_box) {
             for (var child =
