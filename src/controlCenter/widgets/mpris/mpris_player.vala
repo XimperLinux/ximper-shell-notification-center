@@ -221,6 +221,14 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             }
         }
 
+        public void set_cc_visible (bool visible) {
+            if (visible) {
+                sync_playback_timer ();
+            } else {
+                stop_position_timer ();
+            }
+        }
+
         public void before_destroy () {
             stop_position_timer ();
             source.properties_changed.disconnect (

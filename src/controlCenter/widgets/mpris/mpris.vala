@@ -265,6 +265,12 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 carousel.get_nth_page (position), true);
         }
 
+        public override void on_cc_visibility_change (bool val) {
+            players.foreach ((name, player) => {
+                player.set_cc_visible (val);
+            });
+        }
+
         private bool is_blacklisted (string name) {
             foreach (string blacklistedPattern in mpris_config.blacklist) {
                 if (blacklistedPattern == null || blacklistedPattern.length == 0) {
