@@ -43,6 +43,7 @@ namespace XimperShellNotificationCenter.Widgets {
         public ObjectPath ?connecting_device = null;
 
         private DBusConnection ?connection = null;
+        private uint reload_timeout = 0;
 
         private static BluetoothProxy ?_instance = null;
 
@@ -239,11 +240,22 @@ namespace XimperShellNotificationCenter.Widgets {
             state_changed ();
         }
 
+        private void schedule_reload_devices () {
+            if (reload_timeout != 0) {
+                Source.remove (reload_timeout);
+            }
+            reload_timeout = Timeout.add (200, () => {
+                reload_timeout = 0;
+                load_devices.begin ();
+                return Source.REMOVE;
+            });
+        }
+
         private void on_interfaces_changed (
                 DBusConnection conn, string ?sender,
                 string path, string iface, string signal,
                 Variant params) {
-            load_devices.begin ();
+            schedule_reload_devices ();
         }
 
         private void on_device_props_changed (
@@ -256,7 +268,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 return;
             }
             if (child.get_string () == "org.bluez.Device1") {
-                load_devices.begin ();
+                schedule_reload_devices ();
             }
         }
 
