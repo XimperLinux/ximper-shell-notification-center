@@ -205,6 +205,8 @@ namespace XimperShellNotificationCenter.Widgets {
             src.row = outer;
             src.scale = scl;
 
+            bool updating_from_hw = false;
+
             // Connect signals
             if (src.sysfs != null) {
                 unowned BacklightUtil util = src.sysfs;
@@ -213,10 +215,13 @@ namespace XimperShellNotificationCenter.Widgets {
                         outer.set_visible (false);
                         source_hidden ();
                     } else {
+                        updating_from_hw = true;
                         scl.set_value (percent);
+                        updating_from_hw = false;
                     }
                 });
                 scl.value_changed.connect (() => {
+                    if (updating_from_hw) return;
                     util.set_brightness.begin (
                         (float) scl.get_value ());
                     scl.tooltip_text =
@@ -232,10 +237,13 @@ namespace XimperShellNotificationCenter.Widgets {
                         outer.set_visible (false);
                         source_hidden ();
                     } else {
+                        updating_from_hw = true;
                         scl.set_value (percent);
+                        updating_from_hw = false;
                     }
                 });
                 scl.value_changed.connect (() => {
+                    if (updating_from_hw) return;
                     ddc.set_brightness.begin (
                         (float) scl.get_value ());
                     scl.tooltip_text =
