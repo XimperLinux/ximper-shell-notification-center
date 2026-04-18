@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-19 00:04+0300\n"
+"POT-Creation-Date: 2026-04-19 01:20+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,6 +62,10 @@ msgstr ""
 
 #: src/controlCenter/widgets/backlight/backlight.vala:164
 msgid "Built-in Display"
+msgstr ""
+
+#: src/controlCenter/widgets/backlight/backlight.vala:168
+msgid "Keyboard"
 msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/dndTile.vala:5
@@ -179,7 +183,7 @@ msgstr ""
 msgid "No Notifications"
 msgstr ""
 
-#: data/ui/widgets/backlight.blp:44
+#: data/ui/widgets/backlight.blp:42
 msgid "Brightness"
 msgstr ""
 

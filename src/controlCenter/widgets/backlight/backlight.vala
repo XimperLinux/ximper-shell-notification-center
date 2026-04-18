@@ -163,6 +163,10 @@ namespace XimperShellNotificationCenter.Widgets {
             if (src.is_internal) {
                 return _("Built-in Display");
             }
+            if (src.icon_name
+                    == "keyboard-brightness-symbolic") {
+                return _("Keyboard");
+            }
             return prettify_source_name (src.tooltip);
         }
 
@@ -399,12 +403,43 @@ namespace XimperShellNotificationCenter.Widgets {
             header.append (name_label);
             outer.append (header);
 
+            unowned BrightnessSource src = all_sources[index];
+            bool is_kbd = src.icon_name
+                == "keyboard-brightness-symbolic";
+            int max = src.sysfs != null
+                ? src.sysfs.get_max_value () : 100;
+            double step = is_kbd && max > 0 && max <= 20
+                ? 100.0 / max : 1.0;
+
             var scl = new Gtk.Scale.with_range (
                 Gtk.Orientation.HORIZONTAL,
-                min_brightness, 100, 1);
+                min_brightness, 100, step);
             scl.set_draw_value (false);
             scl.set_round_digits (0);
             scl.set_hexpand (true);
+
+            if (is_kbd && max > 0 && max <= 20) {
+                for (int i = 0; i <= max; i++) {
+                    scl.add_mark (
+                        i * 100.0 / max,
+                        Gtk.PositionType.BOTTOM, null);
+                }
+                int snap_max = max;
+                bool snapping = false;
+                scl.value_changed.connect (() => {
+                    if (snapping) return;
+                    double v = scl.get_value ();
+                    double snapped =
+                        Math.round (v * snap_max / 100.0)
+                        * 100.0 / snap_max;
+                    if (v != snapped) {
+                        snapping = true;
+                        scl.set_value (snapped);
+                        snapping = false;
+                    }
+                });
+            }
+
             outer.append (scl);
 
             connect_source_scale (index, scl);

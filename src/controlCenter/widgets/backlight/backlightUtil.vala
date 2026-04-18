@@ -82,12 +82,8 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public async void set_brightness (float percent) {
             this.close ();
-            if (subsystem == "backlight") {
-                int actual = calc_actual (percent);
-                login1.set_brightness.begin (subsystem, device, actual);
-            } else {
-                login1.set_brightness.begin (subsystem, device, (uint32) percent);
-            }
+            int actual = calc_actual (percent);
+            login1.set_brightness.begin (subsystem, device, actual);
             connect_monitor ();
         }
 
@@ -96,12 +92,8 @@ namespace XimperShellNotificationCenter.Widgets {
             try {
                 var dis = new DataInputStream (fd.read (null));
                 string data = dis.read_line (null);
-                if (subsystem == "backlight") {
-                    int val = calc_percent (int.parse (data));
-                    this.brightness_change (val);
-                } else {
-                    this.brightness_change (int.parse (data));
-                }
+                int val = calc_percent (int.parse (data));
+                this.brightness_change (val);
             } catch (Error e) {
                 critical ("Error %s\n", e.message);
             }
