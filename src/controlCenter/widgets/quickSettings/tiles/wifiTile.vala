@@ -579,10 +579,12 @@ namespace XimperShellNotificationCenter.Widgets {
                 string ssid, string psk) {
             if (wifi_dev_path == null) return;
             try {
+                Variant settings =
+                    build_wifi_settings (ssid, psk);
                 yield nm_proxy.call_nm (
                     "AddAndActivateConnection",
-                    new Variant ("(a{sa{sv}}oo)",
-                        build_wifi_settings (ssid, psk),
+                    new Variant ("(@a{sa{sv}}oo)",
+                        settings,
                         wifi_dev_path,
                         new ObjectPath ("/")));
             } catch (Error e) {
@@ -591,48 +593,51 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        private HashTable<string, HashTable<string, Variant>>
-                build_wifi_settings (
-                    string ssid, string psk) {
-            var result =
-                new HashTable<string, HashTable<string, Variant>> (
-                    str_hash, str_equal);
-
-            var conn = new HashTable<string, Variant> (
-                str_hash, str_equal);
-            conn.insert ("type",
-                new Variant.string ("802-11-wireless"));
-            conn.insert ("id",
-                new Variant.string (ssid));
+        private Variant build_wifi_settings (
+                string ssid, string psk) {
+            var b = new VariantBuilder (
+                new VariantType ("a{sa{sv}}"));
             string user = Environment.get_user_name ();
-            var perms = new VariantBuilder (
-                new VariantType ("as"));
-            perms.add ("s", "user:%s:".printf (user));
-            conn.insert ("permissions", perms.end ());
-            result.insert ("connection", conn);
 
-            var wifi = new HashTable<string, Variant> (
-                str_hash, str_equal);
-            var ssid_builder = new VariantBuilder (
-                new VariantType ("ay"));
-            for (int i = 0; i < ssid.data.length; i++) {
-                ssid_builder.add ("y", ssid.data[i]);
-            }
-            wifi.insert ("ssid", ssid_builder.end ());
-            result.insert ("802-11-wireless", wifi);
+            // connection
+            b.open (new VariantType ("{sa{sv}}"));
+            b.add ("s", "connection");
+            b.open (new VariantType ("a{sv}"));
+            b.add ("{sv}", "type",
+                new Variant.string ("802-11-wireless"));
+            b.add ("{sv}", "id",
+                new Variant.string (ssid));
+            b.add ("{sv}", "permissions",
+                new Variant.strv (
+                    { "user:%s:".printf (user) }));
+            b.close ();
+            b.close ();
 
+            // 802-11-wireless
+            b.open (new VariantType ("{sa{sv}}"));
+            b.add ("s", "802-11-wireless");
+            b.open (new VariantType ("a{sv}"));
+            b.add ("{sv}", "ssid",
+                new Variant.from_bytes (
+                    new VariantType ("ay"),
+                    new Bytes (ssid.data), true));
+            b.close ();
+            b.close ();
+
+            // security (optional)
             if (psk.length > 0) {
-                var sec = new HashTable<string, Variant> (
-                    str_hash, str_equal);
-                sec.insert ("key-mgmt",
+                b.open (new VariantType ("{sa{sv}}"));
+                b.add ("s", "802-11-wireless-security");
+                b.open (new VariantType ("a{sv}"));
+                b.add ("{sv}", "key-mgmt",
                     new Variant.string ("wpa-psk"));
-                sec.insert ("psk",
+                b.add ("{sv}", "psk",
                     new Variant.string (psk));
-                result.insert (
-                    "802-11-wireless-security", sec);
+                b.close ();
+                b.close ();
             }
 
-            return result;
+            return b.end ();
         }
     }
 }
