@@ -6,23 +6,47 @@ template $XimperShellNotificationCenterWidgetsVolume:
 
   Box main_volume_slider_container {
     orientation: horizontal;
+    spacing: 6;
+
+    styles ["submenu-header"]
 
     Image icon_widget {
       icon-name: "audio-volume-high-symbolic";
+      valign: center;
     }
 
-    Scale slider {
-      orientation: horizontal;
+    Stack middle_stack {
       hexpand: true;
-      draw-value: false;
+      transition-type: crossfade;
+      transition-duration: 150;
 
-      adjustment: Adjustment {
-        lower: 0;
-        upper: 100;
-        step-increment: 1;
-      };
+      StackPage {
+        name: "slider";
+        child: Scale slider {
+          orientation: horizontal;
+          hexpand: true;
+          draw-value: false;
 
-      value-changed => $on_slider_changed();
+          adjustment: Adjustment {
+            lower: 0;
+            upper: 100;
+            step-increment: 1;
+          };
+
+          value-changed => $on_slider_changed();
+        };
+      }
+
+      StackPage {
+        name: "header";
+        child: Label header_label {
+          label: _("Volume");
+          hexpand: true;
+          halign: start;
+
+          styles ["submenu-header-label"]
+        };
+      }
     }
 
     ToggleButton reveal_button {
@@ -37,6 +61,44 @@ template $XimperShellNotificationCenterWidgetsVolume:
 
     child: Box revealer_content {
       orientation: vertical;
+
+      Box main_sink_row {
+        orientation: vertical;
+        margin-top: 4;
+        margin-bottom: 4;
+        margin-start: 14;
+        margin-end: 14;
+
+        Box {
+          orientation: horizontal;
+          spacing: 6;
+
+          Image main_sink_icon {
+            icon-name: "audio-speakers-symbolic";
+          }
+
+          Label main_sink_label {
+            halign: start;
+            ellipsize: end;
+
+            styles ["dim-label", "caption"]
+          }
+        }
+
+        Scale main_sink_scale {
+          orientation: horizontal;
+          hexpand: true;
+          draw-value: false;
+
+          adjustment: Adjustment {
+            lower: 0;
+            upper: 100;
+            step-increment: 1;
+          };
+
+          value-changed => $on_main_sink_scale_changed();
+        }
+      }
 
       ListBox levels_listbox {
         activate-on-single-click: true;
@@ -54,10 +116,6 @@ template $XimperShellNotificationCenterWidgetsVolume:
       Box sink_list_box {
         orientation: vertical;
         visible: false;
-        margin-start: 4;
-        margin-end: 4;
-        margin-top: 4;
-        margin-bottom: 4;
 
         styles ["sink-selector"]
       }

@@ -10,6 +10,8 @@ namespace XimperShellNotificationCenter.Widgets {
         [GtkChild]
         unowned Gtk.Image icon_widget;
         [GtkChild]
+        unowned Gtk.Stack middle_stack;
+        [GtkChild]
         unowned Gtk.Scale slider;
         [GtkChild]
         unowned Gtk.ToggleButton reveal_button;
@@ -21,9 +23,16 @@ namespace XimperShellNotificationCenter.Widgets {
         unowned Gtk.Separator sink_separator;
         [GtkChild]
         unowned Gtk.Box sink_list_box;
+        [GtkChild]
+        unowned Gtk.Image main_sink_icon;
+        [GtkChild]
+        unowned Gtk.Label main_sink_label;
+        [GtkChild]
+        unowned Gtk.Scale main_sink_scale;
 
         IterListBoxController list_box_controller;
         uint sink_rebuild_timeout = 0;
+        private bool syncing_slider = false;
 
         private PulseDevice ?default_sink = null;
         private PulseDaemon client = new PulseDaemon ();
@@ -70,6 +79,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
         [GtkCallback]
         private void on_slider_changed () {
+            if (syncing_slider) return;
             if (default_sink != null) {
                 this.client.set_device_volume (
                     default_sink,
@@ -78,16 +88,41 @@ namespace XimperShellNotificationCenter.Widgets {
                     ((int) slider.get_value ()).to_string ();
             }
             update_volume_icon ((int) slider.get_value ());
+            syncing_slider = true;
+            main_sink_scale.set_value (slider.get_value ());
+            syncing_slider = false;
+        }
+
+        [GtkCallback]
+        private void on_main_sink_scale_changed () {
+            if (syncing_slider) return;
+            if (default_sink != null) {
+                this.client.set_device_volume (
+                    default_sink,
+                    (float) main_sink_scale.get_value ());
+            }
+            update_volume_icon (
+                (int) main_sink_scale.get_value ());
+            syncing_slider = true;
+            slider.set_value (main_sink_scale.get_value ());
+            syncing_slider = false;
         }
 
         [GtkCallback]
         private void on_reveal_toggled () {
             set_button_icon ();
             revealer.set_reveal_child (reveal_button.active);
-            if (reveal_button.active) {
-                add_css_class ("expanded");
+            bool expanded = reveal_button.active;
+            middle_stack.set_visible_child_name (
+                expanded ? "header" : "slider");
+            if (expanded) {
+                add_css_class ("submenu");
+                icon_widget.add_css_class (
+                    "submenu-header-icon");
             } else {
-                remove_css_class ("expanded");
+                remove_css_class ("submenu");
+                icon_widget.remove_css_class (
+                    "submenu-header-icon");
             }
         }
 
@@ -155,6 +190,14 @@ namespace XimperShellNotificationCenter.Widgets {
                     == PulseAudio.Direction.OUTPUT) {
                 this.default_sink = device;
                 slider.set_value (device.volume);
+                string ?name = device.get_display_name ();
+                if (name == null || name == "") {
+                    name = device.device_description
+                        ?? "";
+                }
+                main_sink_label.set_text (name);
+                main_sink_icon.set_from_icon_name (
+                    get_sink_icon (device.icon_name));
             }
         }
 

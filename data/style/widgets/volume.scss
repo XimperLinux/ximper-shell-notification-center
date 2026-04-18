@@ -1,18 +1,6 @@
 .widget-volume {
   padding: 0;
   margin: 5px 0px;
-  border-radius: var(--window-radius);
-
-  &.expanded {
-    background: var(--dialog-bg-color);
-    box-shadow: 0px 0px 10px var(--headerbar-shade-color);
-    border: 1px solid var(--border-color);
-  }
-
-  & > box {
-    padding: 0 10px;
-    margin: 0 0 0 3px;
-  }
 
   .image-button {
     background: transparent;
@@ -21,12 +9,13 @@
 
 .per-app-volume {
   background: transparent;
-  padding: 0 10px;
+  padding: 0;
   margin: 0;
   border-radius: var(--window-radius);
 
   row {
     background: transparent;
+    padding: 4px 14px;
   }
 }
 

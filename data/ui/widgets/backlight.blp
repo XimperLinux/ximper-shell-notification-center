@@ -7,17 +7,45 @@ template $XimperShellNotificationCenterWidgetsBacklight:
   Box topbar {
     orientation: horizontal;
     spacing: 6;
-    margin-start: 10;
-    margin-end: 10;
+
+    styles ["submenu-header"]
 
     Image topbar_icon {
       icon-name: "display-brightness-symbolic";
+      valign: center;
     }
 
-    Label topbar_label {
-      label: _("Brightness");
+    Stack middle_stack {
       hexpand: true;
-      halign: start;
+      transition-type: crossfade;
+      transition-duration: 150;
+
+      StackPage {
+        name: "slider";
+        child: Scale compact_scale {
+          orientation: horizontal;
+          hexpand: true;
+          draw-value: false;
+          round-digits: 0;
+
+          adjustment: Adjustment {
+            lower: 0;
+            upper: 100;
+            step-increment: 1;
+          };
+        };
+      }
+
+      StackPage {
+        name: "header";
+        child: Label topbar_label {
+          label: _("Brightness");
+          hexpand: true;
+          halign: start;
+
+          styles ["submenu-header-label"]
+        };
+      }
     }
 
     ToggleButton reveal_btn {
@@ -32,30 +60,11 @@ template $XimperShellNotificationCenterWidgetsBacklight:
 
     child: Box content {
       orientation: vertical;
-
-      Box displays_box {
-        orientation: vertical;
-        margin-start: 10;
-        margin-end: 10;
-      }
-
-      Separator separator {
-        margin-top: 8;
-        margin-bottom: 8;
-      }
-
-      Box kbd_box {
-        orientation: vertical;
-        margin-start: 10;
-        margin-end: 10;
-      }
     };
   }
 
   Box single_source_box {
     orientation: vertical;
     visible: false;
-    margin-start: 10;
-    margin-end: 10;
   }
 }

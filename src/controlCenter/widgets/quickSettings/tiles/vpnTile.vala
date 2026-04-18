@@ -262,7 +262,7 @@ namespace XimperShellNotificationCenter.Widgets {
         public override Gtk.Widget ?create_submenu () {
             var box = new Gtk.Box (
                 Gtk.Orientation.VERTICAL, 0);
-            box.add_css_class ("quick-settings-submenu");
+            box.add_css_class ("submenu");
             current_submenu = box;
 
             build_submenu_header (box);

@@ -59,30 +59,13 @@
   }
 }
 
-.quick-settings-submenu {
+.submenu {
   border-radius: var(--window-radius);
   margin: 5px 0;
   padding: 4px 0;
   background: var(--dialog-bg-color);
   border: 1px solid var(--border-color);
   box-shadow: 0px 0px 10px var(--headerbar-shade-color);
-
-  .submenu-header {
-    padding: 5px 8px;
-
-    .submenu-header-icon {
-      background: var(--accent-bg-color);
-      color: var(--accent-fg-color);
-      border-radius: 100%;
-      padding: 8px;
-      -gtk-icon-size: 24px;
-    }
-
-    .submenu-header-label {
-      font-weight: bold;
-      font-size: 1.4rem;
-    }
-  }
 
   button {
     margin: 2px 4px;
@@ -92,4 +75,21 @@
     margin-top: 4px;
     margin-bottom: 4px;
   }
+}
+
+.submenu-header {
+  padding: 5px 8px;
+}
+
+.submenu-header-icon {
+  background: var(--accent-bg-color);
+  color: var(--accent-fg-color);
+  border-radius: 100%;
+  padding: 8px;
+  -gtk-icon-size: 24px;
+}
+
+.submenu-header-label {
+  font-weight: bold;
+  font-size: 1.4rem;
 }

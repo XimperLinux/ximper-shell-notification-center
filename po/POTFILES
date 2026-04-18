@@ -16,3 +16,4 @@ src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala
 data/ui/widgets/notifications.blp
 data/ui/widgets/inhibitors.blp
 data/ui/widgets/backlight.blp
+data/ui/widgets/volume.blp

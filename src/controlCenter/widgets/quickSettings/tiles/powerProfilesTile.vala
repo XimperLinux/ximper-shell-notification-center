@@ -141,7 +141,7 @@ namespace XimperShellNotificationCenter.Widgets {
 
             var box = new Gtk.Box (
                 Gtk.Orientation.VERTICAL, 0);
-            box.add_css_class ("quick-settings-submenu");
+            box.add_css_class ("submenu");
 
             build_submenu_header (box);
 

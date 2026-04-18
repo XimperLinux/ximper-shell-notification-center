@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-31 19:15+0300\n"
+"POT-Creation-Date: 2026-04-19 00:04+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,38 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/notification/notification.vala:536
+#: src/notification/notification.vala:550
 msgid "Enter Text"
 msgstr ""
 
-#: src/notification/notification.vala:548
+#: src/notification/notification.vala:562
 msgid "Reply"
 msgstr ""
 
-#: src/notification/notification.vala:576
+#: src/notification/notification.vala:590
 #, c-format
 msgid "COPY \"%s\""
 msgstr ""
 
-#: src/notification/notification.vala:618
+#: src/notification/notification.vala:632
 msgid "Now"
 msgstr ""
 
-#: src/notification/notification.vala:622
+#: src/notification/notification.vala:636
 #, c-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:626
+#: src/notification/notification.vala:640
 #, c-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:630
+#: src/notification/notification.vala:644
 #, c-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -58,6 +58,10 @@ msgstr[1] ""
 
 #: src/controlCenter/widgets/inhibitors/inhibitors.vala:21
 msgid "Inhibitors"
+msgstr ""
+
+#: src/controlCenter/widgets/backlight/backlight.vala:164
+msgid "Built-in Display"
 msgstr ""
 
 #: src/controlCenter/widgets/quickSettings/tiles/dndTile.vala:5
@@ -72,15 +76,15 @@ msgstr ""
 msgid "Power Mode"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:95
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:96
 msgid "Performance"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:97
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:98
 msgid "Balanced"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:99
+#: src/controlCenter/widgets/quickSettings/tiles/powerProfilesTile.vala:100
 msgid "Power Saver"
 msgstr ""
 
@@ -92,74 +96,74 @@ msgstr ""
 msgid "Caffeine mode"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:8
+#: src/controlCenter/widgets/quickSettings/tiles/nightLightTile.vala:9
 msgid "Night Light"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:27
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:38
 msgid "Wi-Fi"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:94
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:58
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:105
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:64
 msgid "Disabled"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:135
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:70
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:146
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:76
 msgid "Not Connected"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:349
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:373
 msgid "No networks found"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:440
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:450
 msgid "Password"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:444
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:130
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:454
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:121
 msgid "Connect"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:504
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:520
 msgid "Connecting…"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:520
+#: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:532
 msgid "Network Settings"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:20
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:30
 msgid "VPN"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:88
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:94
 msgid "Disconnected"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:274
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:291
 msgid "No VPN connections"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:348
+#: src/controlCenter/widgets/quickSettings/tiles/vpnTile.vala:346
 msgid "VPN Settings"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:10
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:16
 msgid "Bluetooth"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:91
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:97
 msgid "Searching for devices…"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:129
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:120
 msgid "Disconnect"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:172
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:161
 msgid "Bluetooth Settings"
 msgstr ""
 
@@ -175,6 +179,10 @@ msgstr ""
 msgid "No Notifications"
 msgstr ""
 
-#: data/ui/widgets/backlight.blp:18
+#: data/ui/widgets/backlight.blp:44
 msgid "Brightness"
+msgstr ""
+
+#: data/ui/widgets/volume.blp:43
+msgid "Volume"
 msgstr ""

@@ -1,7 +1,7 @@
 namespace XimperShellNotificationCenter.Widgets {
     public class SinkInputRow : Gtk.ListBoxRow {
-        Gtk.Box container;
         Gtk.Image icon = new Gtk.Image ();
+        Gtk.Label label = new Gtk.Label (null);
         Gtk.Scale scale = new Gtk.Scale.with_range (
             Gtk.Orientation.HORIZONTAL, 0, 100, 1);
 
@@ -20,9 +20,19 @@ namespace XimperShellNotificationCenter.Widgets {
             scale.draw_value = false;
             scale.set_hexpand (true);
 
-            container = new Gtk.Box (
-                Gtk.Orientation.HORIZONTAL, 0);
-            container.append (icon);
+            label.set_halign (Gtk.Align.START);
+            label.set_ellipsize (Pango.EllipsizeMode.END);
+            label.add_css_class ("dim-label");
+            label.add_css_class ("caption");
+
+            var header = new Gtk.Box (
+                Gtk.Orientation.HORIZONTAL, 6);
+            header.append (icon);
+            header.append (label);
+
+            var container = new Gtk.Box (
+                Gtk.Orientation.VERTICAL, 0);
+            container.append (header);
             container.append (scale);
 
             set_child (container);
@@ -50,7 +60,11 @@ namespace XimperShellNotificationCenter.Widgets {
                 }
             }
             icon.set_from_icon_name (icon_name);
-            icon.set_tooltip_text (sink_input.name);
+
+            string app_name =
+                sink_input.application_binary
+                ?? sink_input.name ?? "";
+            label.set_text (app_name);
 
             scale.set_value (sink_input.volume);
             scale.tooltip_text =
