@@ -90,6 +90,7 @@ namespace XimperShellNotificationCenter {
         private static Regex tag_regex;
         private static Regex tag_unescape_regex;
         private static Regex img_tag_regex;
+        private static Regex url_regex;
         private static bool regexes_initialized = false;
 
         public bool dismissed { get; private set; default = false; }
@@ -147,6 +148,8 @@ namespace XimperShellNotificationCenter {
                     "&amp;(?=%s)".printf (unescaped));
                 img_tag_regex = new Regex (
                     "<img[^>]* src=((\"([^\"]*)\")|(\'([^\']*)\'))[^>]*>");
+                url_regex = new Regex (
+                    "(?<!href=\")(https?://[^\\s<>\"'\\)]+)");
                 regexes_initialized = true;
             } catch (Error e) {
                 stderr.printf ("Invalid regex: %s", e.message);
@@ -160,6 +163,15 @@ namespace XimperShellNotificationCenter {
                            this, "sensitive",
                            BindingFlags.SYNC_CREATE | BindingFlags.INVERT_BOOLEAN,
                            null, null);
+
+            body.activate_link.connect ((uri) => {
+                try {
+                    AppInfo.launch_default_for_uri (uri, null);
+                } catch (Error e) {
+                    warning ("Failed to open URL: %s", e.message);
+                }
+                return true;
+            });
 
             // Build the default_action gesture
             gesture = new Gtk.GestureClick ();
@@ -375,43 +387,42 @@ namespace XimperShellNotificationCenter {
                 }
             }
 
-            // Markup
+            // Sanitize markup
+            string markup = text;
             try {
-                Pango.AttrList ?attr = null;
-                string ?buf = null;
-                try {
-                    // Try parsing without any hacks
-                    Pango.parse_markup (text, -1, 0, out attr, out buf, null);
-                } catch (Error e) {
-                    // Default to hack if the initial markup couldn't be parsed
-
-                    // Escapes all characters
-                    string escaped = Markup.escape_text (text);
-                    // Replace all valid tags brackets with <,</,> so that the
-                    // markup parser only parses valid tags
-                    // Ex: &lt;b&gt;BOLD&lt;/b&gt; -> <b>BOLD</b>
-                    escaped = tag_regex.replace (escaped, escaped.length, 0, "<\\1>");
-
-                    // Unescape a few characters that may have been double escaped
-                    // Sending "<" in Discord would result in "&amp;lt;" without this
-                    // &amp;lt; -> &lt;
-                    escaped = tag_unescape_regex.replace_literal (escaped, escaped.length, 0, "&");
-
-                    // Turns it back to markup, defaults to original if not valid
-                    Pango.parse_markup (escaped, -1, 0, out attr, out buf, null);
-                }
-
-                this.body.set_text (buf);
-                if (attr != null) {
-                    this.body.set_attributes (attr);
-                }
+                Pango.AttrList ?attr_check;
+                string ?buf_check;
+                Pango.parse_markup (
+                    text, -1, 0,
+                    out attr_check, out buf_check, null);
             } catch (Error e) {
-                stderr.printf ("Could not parse Pango markup %s: %s\n",
-                               text, e.message);
-                // Sets the original text
-                this.body.set_text (text);
+                // Invalid markup - escape all, then re-enable allowed tags
+                try {
+                    string escaped = Markup.escape_text (text);
+                    escaped = tag_regex.replace (
+                        escaped, escaped.length, 0, "<\\1>");
+                    escaped = tag_unescape_regex.replace_literal (
+                        escaped, escaped.length, 0, "&");
+                    markup = escaped;
+                } catch (Error re) {
+                    markup = Markup.escape_text (text);
+                }
             }
 
+            // Wrap URLs in clickable anchor tags
+            try {
+                markup = url_regex.replace_eval (
+                    markup, markup.length, 0, 0,
+                    (mi, result) => {
+                        string url = mi.fetch (0);
+                        string safe = Markup.escape_text (url);
+                        result.append_printf (
+                            "<a href=\"%s\">%s</a>", safe, safe);
+                        return false;
+                    });
+            } catch (Error e) {}
+
+            this.body.set_markup (markup);
             this.body.set_visible (this.body.get_text ().length > 0);
         }
 
