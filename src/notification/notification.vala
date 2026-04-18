@@ -516,6 +516,9 @@ namespace XimperShellNotificationCenter {
         private void set_inline_reply () {
             // Reset state
             inline_reply_box.set_visible (false);
+            if (!ConfigModel.instance.notification_inline_replies) {
+                return;
+            }
             // Only show inline replies in popup notifications if the compositor
             // supports ON_DEMAND layer shell keyboard interactivity
             if (ConfigModel.instance.layer_shell

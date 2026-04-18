@@ -498,6 +498,12 @@ namespace XimperShellNotificationCenter {
         public int notification_window_width { get; set; default = 500; }
 
         /**
+         * If notifications should display a text field to reply
+         * if the sender requests it.
+         */
+        public bool notification_inline_replies { get; set; default = false; }
+
+        /**
          * The preferred output to open the notification window (popup notifications).
          *
          * Can either be the monitor connector name (ex: "DP-1"),

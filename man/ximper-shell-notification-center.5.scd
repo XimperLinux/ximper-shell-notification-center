@@ -109,6 +109,15 @@ config file to be able to detect config errors
 	description: Width of the notification in pixels
 
 
+*notification-inline-replies* ++
+	type: boolean ++
+	default: false ++
+	description: If notifications should display a text field to reply ++
+				 if the sender requests it. NOTE: Replying in popup ++
+				 notifications is only available if the compositor ++
+				 supports GTK Layer-Shell ON_DEMAND keyboard interactivity.
+
+
 *notification-window-preferred-output* ++
 	type: string ++
 	default: "" ++
