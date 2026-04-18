@@ -15,6 +15,10 @@ namespace XimperShellNotificationCenter.Widgets {
         private Gtk.Box ?current_submenu = null;
         private bool updating_submenu = false;
         private bool connecting = false;
+        private Gee.HashMap<string, NMActiveConnDBus> active_proxy_cache =
+            new Gee.HashMap<string, NMActiveConnDBus> ();
+        private Gee.HashMap<string, NMSettingsConnDBus> conn_proxy_cache =
+            new Gee.HashMap<string, NMSettingsConnDBus> ();
 
         ~VpnTile () {
             if (sync_timeout != 0) {
@@ -104,11 +108,17 @@ namespace XimperShellNotificationCenter.Widgets {
                     foreach (var ac_path
                              in nm.active_connections) {
                         try {
-                            var ac = yield Bus.get_proxy
-                                <NMActiveConnDBus> (
-                                    BusType.SYSTEM,
-                                    "org.freedesktop.NetworkManager",
-                                    ac_path);
+                            string key = (string) ac_path;
+                            NMActiveConnDBus ?ac =
+                                active_proxy_cache.get (key);
+                            if (ac == null) {
+                                ac = yield Bus.get_proxy
+                                    <NMActiveConnDBus> (
+                                        BusType.SYSTEM,
+                                        "org.freedesktop.NetworkManager",
+                                        ac_path);
+                                active_proxy_cache.set (key, ac);
+                            }
                             if (ac.vpn && ac.state == 2) {
                                 active_vpns.set (
                                     (string) ac.connection,
@@ -132,11 +142,17 @@ namespace XimperShellNotificationCenter.Widgets {
                 foreach (var conn_path
                          in settings.list_connections ()) {
                     try {
-                        var conn = yield Bus.get_proxy
-                            <NMSettingsConnDBus> (
-                                BusType.SYSTEM,
-                                "org.freedesktop.NetworkManager",
-                                conn_path);
+                        string key = (string) conn_path;
+                        NMSettingsConnDBus ?conn =
+                            conn_proxy_cache.get (key);
+                        if (conn == null) {
+                            conn = yield Bus.get_proxy
+                                <NMSettingsConnDBus> (
+                                    BusType.SYSTEM,
+                                    "org.freedesktop.NetworkManager",
+                                    conn_path);
+                            conn_proxy_cache.set (key, conn);
+                        }
                         var s = conn.get_settings ();
                         var conn_s = s.lookup ("connection");
                         if (conn_s == null) continue;
@@ -149,7 +165,6 @@ namespace XimperShellNotificationCenter.Widgets {
                         string name = id_var != null
                             ? id_var.get_string () : "VPN";
 
-                        string key = (string) conn_path;
                         if (seen.contains (key)) continue;
                         seen.add (key);
 

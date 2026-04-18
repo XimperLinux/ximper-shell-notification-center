@@ -22,6 +22,10 @@ namespace XimperShellNotificationCenter.Widgets {
         private bool connecting = false;
         private bool updating_submenu = false;
         private Gtk.Revealer ?open_password_revealer = null;
+        private Gee.HashMap<string, NMAccessPointDBus> ap_proxy_cache =
+            new Gee.HashMap<string, NMAccessPointDBus> ();
+        private Gee.HashMap<string, NMSettingsConnDBus> saved_proxy_cache =
+            new Gee.HashMap<string, NMSettingsConnDBus> ();
 
         ~WifiTile () {
             if (sync_timeout != 0) {
@@ -200,11 +204,17 @@ namespace XimperShellNotificationCenter.Widgets {
 
                 foreach (var ap_path in ap_paths) {
                     try {
-                        var ap =
-                            yield Bus.get_proxy<NMAccessPointDBus> (
-                                BusType.SYSTEM,
-                                "org.freedesktop.NetworkManager",
-                                ap_path);
+                        string key = (string) ap_path;
+                        NMAccessPointDBus ?ap =
+                            ap_proxy_cache.get (key);
+                        if (ap == null) {
+                            ap = yield Bus.get_proxy
+                                <NMAccessPointDBus> (
+                                    BusType.SYSTEM,
+                                    "org.freedesktop.NetworkManager",
+                                    ap_path);
+                            ap_proxy_cache.set (key, ap);
+                        }
                         string ssid =
                             NetworkManagerProxy.ssid_to_string (
                                 ap.ssid);
@@ -281,11 +291,17 @@ namespace XimperShellNotificationCenter.Widgets {
                 foreach (var conn_path
                          in settings.list_connections ()) {
                     try {
-                        var conn =
-                            yield Bus.get_proxy<NMSettingsConnDBus> (
-                                BusType.SYSTEM,
-                                "org.freedesktop.NetworkManager",
-                                conn_path);
+                        string key = (string) conn_path;
+                        NMSettingsConnDBus ?conn =
+                            saved_proxy_cache.get (key);
+                        if (conn == null) {
+                            conn = yield Bus.get_proxy
+                                <NMSettingsConnDBus> (
+                                    BusType.SYSTEM,
+                                    "org.freedesktop.NetworkManager",
+                                    conn_path);
+                            saved_proxy_cache.set (key, conn);
+                        }
                         var s = conn.get_settings ();
                         var wifi_s = s.lookup (
                             "802-11-wireless");
