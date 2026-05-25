@@ -1,7 +1,7 @@
 %define xdg_name ru.ximperlinux.shell.NotificationCenter
 
 Name: ximper-shell-notification-center
-Version: 0.1.0
+Version: 0.2.0
 Release: eter1
 License: GPL-3.0
 
@@ -74,5 +74,11 @@ A component of the Ximper Shell.
 %_datadir/fish/vendor_completions.d/%name-client.fish
 
 %changelog
+* Tue May 26 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.2.0-eter1
+- Bundle symbolic icon fallbacks
+- Fix notification focus handling on niri
+- Add notification center metadata description
+- Remove unstable dual control center layout
+
 * Sat Mar 21 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.1.0-eter1
 - Initial build
