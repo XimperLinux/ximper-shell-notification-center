@@ -50,6 +50,285 @@ interface CcDaemon : Object {
 
 private CcDaemon cc_daemon = null;
 
+private string get_user_config_path () {
+    return Path.build_path (Path.DIR_SEPARATOR.to_string (),
+                            Environment.get_user_config_dir (),
+                            "ximper-shell", "notification-center",
+                            "config.json");
+}
+
+private string get_user_style_path () {
+    return Path.build_path (Path.DIR_SEPARATOR.to_string (),
+                            Environment.get_user_config_dir (),
+                            "ximper-shell", "notification-center",
+                            "style.css");
+}
+
+private Json.Node load_json_file (string path) throws Error {
+    Json.Parser parser = new Json.Parser ();
+    parser.load_from_file (path);
+    return parser.steal_root ();
+}
+
+private Json.Node load_config_json () throws Error {
+    string user_config_path = get_user_config_path ();
+    if (File.new_for_path (user_config_path).query_exists ()) {
+        return load_json_file (user_config_path);
+    }
+    return load_json_file (Constants.CONFIG_PATH);
+}
+
+private void object_set_string_member (Json.Object object,
+                                       string name,
+                                       string value) {
+    object.set_string_member (name, value);
+}
+
+private void object_set_boolean_member (Json.Object object,
+                                        string name,
+                                        bool value) {
+    object.set_boolean_member (name, value);
+}
+
+private void object_set_uint_member (Json.Object object,
+                                     string name,
+                                     uint value) {
+    object.set_int_member (name, (int64) value);
+}
+
+private bool file_exists (string path) {
+    return File.new_for_path (path).query_exists ();
+}
+
+private string widget_type_from_key (string key) {
+    return key.split ("#")[0];
+}
+
+private string ?widget_suffix_from_key (string key) {
+    string[] parts = key.split ("#");
+    if (parts.length < 2 || parts[1].length == 0) {
+        return null;
+    }
+    return parts[1];
+}
+
+private bool metadata_array_has_type (Json.Array ?array,
+                                      string type) {
+    if (array == null) {
+        return false;
+    }
+
+    for (uint i = 0; i < array.get_length (); i++) {
+        unowned Json.Object ?object = array.get_object_element (i);
+        if (object == null || !object.has_member ("type")) {
+            continue;
+        }
+        if (object.get_string_member ("type") == type) {
+            return true;
+        }
+    }
+    return false;
+}
+
+private Json.Object build_style_info (string path) {
+    Json.Object info = new Json.Object ();
+    object_set_string_member (info, "path", path);
+    object_set_boolean_member (info, "exists", file_exists (path));
+    return info;
+}
+
+private void add_styles (Json.Object root) {
+    Json.Object styles = new Json.Object ();
+    styles.set_object_member ("default",
+                              build_style_info (Constants.STYLE_PATH));
+    styles.set_object_member ("user",
+                              build_style_info (get_user_style_path ()));
+    root.set_object_member ("styles", styles);
+}
+
+private void add_capabilities (Json.Object root) {
+    Json.Object capabilities = new Json.Object ();
+#if HAVE_PULSE_AUDIO
+    object_set_boolean_member (capabilities, "pulse-audio", true);
+#else
+    object_set_boolean_member (capabilities, "pulse-audio", false);
+#endif
+#if HAVE_DDC
+    object_set_boolean_member (capabilities, "ddc", true);
+#else
+    object_set_boolean_member (capabilities, "ddc", false);
+#endif
+    object_set_boolean_member (capabilities, "layer-shell", true);
+    root.set_object_member ("capabilities", capabilities);
+}
+
+private Json.Object build_widget_entry (string key,
+                                        Json.Object config,
+                                        Json.Object schema) {
+    string type = widget_type_from_key (key);
+    Json.Object entry = new Json.Object ();
+    object_set_string_member (entry, "key", key);
+    object_set_string_member (entry, "type", type);
+    string ?suffix = widget_suffix_from_key (key);
+    if (suffix != null) {
+        object_set_string_member (entry, "suffix", suffix);
+    }
+    object_set_boolean_member (
+        entry, "known",
+        metadata_array_has_type (
+            schema.get_array_member ("x-ximper-widgets"), type));
+
+    return entry;
+}
+
+private Json.Object build_tile_entry (Json.Object tile,
+                                      Json.Object schema) {
+    string type = tile.get_string_member_with_default ("type", "");
+    Json.Object entry = new Json.Object ();
+    object_set_string_member (entry, "type", type);
+    object_set_boolean_member (
+        entry, "known",
+        metadata_array_has_type (
+            schema.get_array_member (
+                "x-ximper-quick-settings-tiles"), type));
+    return entry;
+}
+
+private void add_preview_items (Json.Object preview,
+                                Json.Object config,
+                                Json.Object schema) {
+    Json.Array widgets = new Json.Array ();
+    Json.Array tiles = new Json.Array ();
+
+    if (config.has_member ("widgets")) {
+        unowned Json.Array configured_widgets =
+            config.get_array_member ("widgets");
+        for (uint i = 0; i < configured_widgets.get_length (); i++) {
+            widgets.add_object_element (
+                build_widget_entry (
+                    configured_widgets.get_string_element (i),
+                    config,
+                    schema));
+        }
+    }
+
+    if (config.has_member ("widget-config")) {
+        unowned Json.Object widget_config =
+            config.get_object_member ("widget-config");
+        if (widget_config != null
+            && widget_config.has_member ("quick-settings")) {
+            unowned Json.Object quick_settings =
+                widget_config.get_object_member ("quick-settings");
+            if (quick_settings != null
+                && quick_settings.has_member ("tiles")) {
+                unowned Json.Array configured_tiles =
+                    quick_settings.get_array_member ("tiles");
+                for (uint i = 0;
+                     i < configured_tiles.get_length ();
+                     i++) {
+                    unowned Json.Object ?tile =
+                        configured_tiles.get_object_element (i);
+                    if (tile != null) {
+                        tiles.add_object_element (
+                            build_tile_entry (tile, schema));
+                    }
+                }
+            }
+        }
+    }
+
+    preview.set_array_member ("widgets", widgets);
+    preview.set_array_member ("quick-settings-tiles", tiles);
+}
+
+private void add_preview (Json.Object root,
+                          Json.Object config,
+                          Json.Object schema) {
+    Json.Object preview = new Json.Object ();
+    add_preview_items (preview, config, schema);
+    root.set_object_member ("preview", preview);
+}
+
+private void add_runtime_status (Json.Object root) {
+    Json.Object runtime = new Json.Object ();
+    try {
+        XimperShellNotificationCenterDaemonData data =
+            cc_daemon.get_subscribe_data ();
+        object_set_boolean_member (runtime, "running", true);
+        object_set_boolean_member (runtime, "visible", data.cc_open);
+        object_set_boolean_member (runtime, "dnd", data.dnd);
+        object_set_uint_member (runtime, "count", data.count);
+        object_set_boolean_member (runtime, "inhibited", data.inhibited);
+    } catch (Error e) {
+        object_set_boolean_member (runtime, "running", false);
+        object_set_boolean_member (runtime, "visible", false);
+        object_set_boolean_member (runtime, "dnd", false);
+        object_set_uint_member (runtime, "count", 0);
+        object_set_boolean_member (runtime, "inhibited", false);
+    }
+    root.set_object_member ("runtime", runtime);
+}
+
+private void add_paths (Json.Object root) {
+    Json.Object paths = new Json.Object ();
+    object_set_string_member (paths, "config", get_user_config_path ());
+    object_set_string_member (paths, "default-config", Constants.CONFIG_PATH);
+    object_set_string_member (paths, "schema", Constants.CONFIG_SCHEMA_PATH);
+    root.set_object_member ("paths", paths);
+}
+
+private Json.Node ?schema_member_node (Json.Object schema, string name) {
+    if (!schema.has_member (name)) {
+        return null;
+    }
+    return schema.get_member (name).copy ();
+}
+
+private void add_schema_metadata (Json.Object root,
+                                  Json.Object schema) {
+    Json.Object metadata = new Json.Object ();
+
+    Json.Node ?node = schema_member_node (schema, "x-ximper-widgets");
+    if (node != null) {
+        metadata.set_member ("widgets", node);
+    }
+
+    node = schema_member_node (schema, "x-ximper-quick-settings-tiles");
+    if (node != null) {
+        metadata.set_member ("quick-settings-tiles", node);
+    }
+
+    node = schema_member_node (schema, "properties");
+    if (node != null) {
+        metadata.set_member ("properties", node);
+    }
+
+    root.set_object_member ("metadata", metadata);
+}
+
+private void print_describe () throws Error {
+    Json.Object root = new Json.Object ();
+    Json.Node config = load_config_json ();
+    Json.Node schema = load_json_file (Constants.CONFIG_SCHEMA_PATH);
+
+    root.set_member ("config", config);
+    add_runtime_status (root);
+    add_paths (root);
+    add_styles (root);
+    add_capabilities (root);
+    add_schema_metadata (root, schema.get_object ());
+    add_preview (
+        root, config.get_object (), schema.get_object ());
+
+    Json.Node root_node = new Json.Node (Json.NodeType.OBJECT);
+    root_node.set_object (root);
+    Json.Generator generator = new Json.Generator ();
+    generator.set_pretty (true);
+    generator.set_root (root_node);
+    print (generator.to_data (null));
+    print ("\n");
+}
+
 private void print_help (string[] args) {
     print ("Usage:\n");
     print ("  %s <OPTION>\n".printf (args[0]));
@@ -57,6 +336,7 @@ private void print_help (string[] args) {
     print ("  -h, \t --help \t\t\t Show help options\n");
     print ("  -v, \t --version \t\t\t Prints version\n");
     print ("Options:\n");
+    print ("      \t --describe \t\t\t Print config, runtime state, and schema metadata as JSON\n");
     print ("  -R, \t --reload-config \t\t Reload the config file\n");
     print ("  -rs, \t --reload-css \t\t\t Reload the css file. Location change requires restart\n");
     print ("  -t, \t --toggle-panel \t\t Toggle the notification panel\n");
@@ -151,6 +431,9 @@ public int command_line (ref string[] args, bool skip_wait) {
             case "-v":
                 stdout.printf ("%s\n", Constants.VERSION);
                 break;
+            case "--describe":
+                print_describe ();
+                break;
             case "--reload-config":
             case "-R":
                 cc_daemon.reload_config ();
@@ -235,7 +518,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                     print ("Added inhibitor: \"%s\"", args[1]);
                     break;
                 }
-                stderr.printf ("Inhibitor: \"%s\" already added!...", args[1]);
+                stderr.printf ("Inhibitor: \"%s\" already added!…", args[1]);
                 break;
             case "--inhibitor-remove":
             case "-Ir":
@@ -248,7 +531,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                     print ("Removed inhibitor: \"%s\"", args[1]);
                     break;
                 }
-                stderr.printf ("Inhibitor: \"%s\" does not exist!...", args[1]);
+                stderr.printf ("Inhibitor: \"%s\" does not exist!…", args[1]);
                 break;
             case "inhibitors-clear":
             case "-Ic":
@@ -256,7 +539,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                     print ("Cleared all inhibitors");
                     break;
                 }
-                print ("No inhibitors to clear...");
+                print ("No inhibitors to clear…");
                 break;
             case "--subscribe":
             case "-s":
@@ -330,7 +613,7 @@ public int command_line (ref string[] args, bool skip_wait) {
 
 void print_connection_error () {
     stderr.printf (
-        "Could not connect to CC service. Will wait for connection...\n");
+        "Could not connect to CC service. Will wait for connection…\n");
 }
 
 int try_connect (owned string[] args) {

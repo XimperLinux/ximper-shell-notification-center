@@ -3,5 +3,8 @@ public class Constants {
     public const string VERSIONNUM = @VERSION_NUM@;
     public const string GETTEXT_PACKAGE = @GETTEXT_PACKAGE@;
     public const string LOCALEDIR = @LOCALEDIR@;
+    public const string CONFIG_PATH = @CONFIG_PATH@;
+    public const string CONFIG_SCHEMA_PATH = @CONFIG_SCHEMA_PATH@;
+    public const string STYLE_PATH = @STYLE_PATH@;
     public const uint ANIMATION_DURATION = 400;
 }

@@ -3,6 +3,150 @@
   "title": "XimperShellNotificationCenter JSON schema",
   "type": "object",
   "additionalProperties": false,
+  "x-ximper-options": {
+    "reload-command": "ximper-shell-notification-center-client --reload-config",
+    "config-path": "~/.config/ximper-shell/notification-center/config.json",
+    "style-path": "~/.config/ximper-shell/notification-center/style.css"
+  },
+  "x-ximper-widgets": [
+    {
+      "type": "backlight",
+      "title": "Backlight",
+      "description": "Unified display, DDC/CI monitor, and keyboard brightness control",
+      "repeatable": true,
+      "config-ref": "#/widgets/backlight"
+    },
+    {
+      "type": "volume",
+      "title": "Volume",
+      "description": "PulseAudio volume control",
+      "repeatable": true,
+      "config-ref": "#/widgets/volume",
+      "optional-feature": "pulse-audio"
+    },
+    {
+      "type": "quick-settings",
+      "title": "Quick Settings",
+      "description": "GNOME-style quick settings toggle tiles",
+      "repeatable": true,
+      "config-ref": "#/widgets/quick-settings"
+    },
+    {
+      "type": "inhibitors",
+      "title": "Inhibitors",
+      "description": "Notification center inhibitors",
+      "repeatable": true,
+      "config-ref": "#/widgets/inhibitors"
+    },
+    {
+      "type": "mpris",
+      "title": "MPRIS",
+      "description": "Media player controls",
+      "repeatable": true,
+      "config-ref": "#/widgets/mpris"
+    },
+    {
+      "type": "notifications",
+      "title": "Notifications",
+      "description": "Notification history",
+      "repeatable": false,
+      "config-ref": "#/widgets/notifications"
+    },
+    {
+      "type": "label",
+      "title": "Label",
+      "description": "Custom text label",
+      "repeatable": true,
+      "config-ref": "#/widgets/label"
+    }
+  ],
+  "x-ximper-quick-settings-tiles": [
+    {
+      "type": "wifi",
+      "title": "Wi-Fi",
+      "description": "Wi-Fi control through NetworkManager",
+      "repeatable": false
+    },
+    {
+      "type": "vpn",
+      "title": "VPN",
+      "description": "VPN control through NetworkManager",
+      "repeatable": false
+    },
+    {
+      "type": "bluetooth",
+      "title": "Bluetooth",
+      "description": "Bluetooth control through BlueZ",
+      "repeatable": false
+    },
+    {
+      "type": "power-profiles",
+      "title": "Power Profiles",
+      "description": "Power profile switching through power-profiles-daemon",
+      "repeatable": false
+    },
+    {
+      "type": "dnd",
+      "title": "Do Not Disturb",
+      "description": "Notification Do Not Disturb toggle",
+      "repeatable": false,
+      "requires-widget": "notifications"
+    },
+    {
+      "type": "dark-mode",
+      "title": "Dark Mode",
+      "description": "GNOME color scheme toggle",
+      "repeatable": false
+    },
+    {
+      "type": "night-light",
+      "title": "Night Light",
+      "description": "Night light control through hyprsunset",
+      "repeatable": false,
+      "properties": {
+        "temperature": {
+          "type": "integer",
+          "description": "Color temperature in Kelvin",
+          "default": 4500
+        }
+      }
+    },
+    {
+      "type": "caffeine",
+      "title": "Caffeine",
+      "description": "Idle inhibitor toggle through logind",
+      "repeatable": false
+    },
+    {
+      "type": "command",
+      "title": "Command",
+      "description": "Custom command toggle",
+      "repeatable": true,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Button label"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon name"
+        },
+        "command": {
+          "type": "string",
+          "description": "Command to run on toggle"
+        },
+        "update-command": {
+          "type": "string",
+          "description": "Command to check state when control center opens"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Initial active state",
+          "default": false
+        }
+      }
+    }
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -28,7 +172,8 @@
     "layer-shell": {
       "type": "boolean",
       "description": "Whether or not the windows should be opened as layer-shell surfaces. Note: Requires ximper-shell-notification-center restart to apply",
-      "default": true
+      "default": true,
+      "x-ximper-requires-restart": true
     },
     "layer-shell-cover-screen": {
       "type": "boolean",
@@ -230,8 +375,8 @@
     "widgets": {
       "type": "array",
       "uniqueItems": true,
-      "description": "Which order and which widgets to display. If the \"notifications\" widget isn't specified, it will be placed at the bottom.",
-      "default": ["inhibitors", "title", "notifications"],
+      "description": "Which order and which widgets to display.",
+      "default": ["backlight", "volume", "quick-settings", "inhibitors", "mpris", "notifications"],
       "items": {
         "type": "string",
         "$comment": "Sadly can't use regex and enums at the same time. Fix in the future?",
