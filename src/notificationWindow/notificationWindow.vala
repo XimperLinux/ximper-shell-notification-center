@@ -91,7 +91,9 @@ namespace XimperShellNotificationCenter {
 
         private inline void set_keyboard_mode () {
             if (app.use_layer_shell) {
-                if (app.has_layer_on_demand && get_mapped ()) {
+                if (app.has_layer_on_demand
+                    && get_mapped ()
+                    && inline_reply_notifications.size > 0) {
                     GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.ON_DEMAND);
                 } else {
                     GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.NONE);
@@ -290,6 +292,7 @@ namespace XimperShellNotificationCenter {
 
             if (notification.has_inline_reply) {
                 inline_reply_notifications.remove (param.applied_id);
+                set_keyboard_mode ();
             }
 
             // Remove notification and its destruction timeout
@@ -316,10 +319,15 @@ namespace XimperShellNotificationCenter {
                 ((Gtk.Widget) this).unrealize ();
             }
 
+            if (noti.has_inline_reply) {
+                inline_reply_notifications.add (param.applied_id);
+            }
+
             set_visible (true);
 
             list.append.begin (noti);
             notification_ids.set (param.applied_id, noti);
+            set_keyboard_mode ();
         }
 
         /** Removes the notification widget with ID. Doesn't dismiss */
@@ -336,9 +344,14 @@ namespace XimperShellNotificationCenter {
                 // Replace the ID, could be changed depending on the
                 // replacement method used
                 notification_ids.unset (id);
+                inline_reply_notifications.remove (id);
                 notification_ids.set (new_params.applied_id, notification);
 
                 notification.replace_notification (new_params);
+                if (notification.has_inline_reply) {
+                    inline_reply_notifications.add (new_params.applied_id);
+                }
+                set_keyboard_mode ();
                 // Position the notification in the beginning/end of the list
                 // and scroll to the new item
                 list.move_to_beginning (notification, true);

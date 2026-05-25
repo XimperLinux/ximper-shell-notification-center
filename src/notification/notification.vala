@@ -526,6 +526,7 @@ namespace XimperShellNotificationCenter {
 
         private void set_inline_reply () {
             // Reset state
+            has_inline_reply = false;
             inline_reply_box.set_visible (false);
             if (!ConfigModel.instance.notification_inline_replies) {
                 return;
@@ -655,7 +656,7 @@ namespace XimperShellNotificationCenter {
             remove_noti_timeout ();
             lock (dismissed) {
                 if (dismissed) {
-                    debug ("Trying to dismiss already dismissed notification. Skipping...");
+                    debug ("Trying to dismiss already dismissed notification. Skipping…");
                     return;
                 }
                 dismissed_by_swipe = by_swipe;
