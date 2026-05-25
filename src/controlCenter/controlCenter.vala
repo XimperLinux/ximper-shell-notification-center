@@ -16,10 +16,6 @@ namespace XimperShellNotificationCenter {
         private List<unowned Widgets.BaseWidget> widgets;
         private const string[] DEFAULT_WIDGETS = { "notifications" };
 
-            private Gtk.Box ?dual_container = null;
-        private Gtk.Box ?left_column = null;
-        private Gtk.SizeGroup ?dual_size_group = null;
-
         private string ?monitor_name = null;
 
         public ControlCenter () {
@@ -199,14 +195,6 @@ namespace XimperShellNotificationCenter {
                 remove_from_parent (notifications_widget);
             }
 
-            // Remove dual layout container
-            if (dual_container != null) {
-                box.remove (dual_container);
-                dual_container = null;
-                left_column = null;
-                dual_size_group = null;
-            }
-
             // Reset widgets list, keep notifications
             widgets = new List<unowned Widgets.BaseWidget> ();
             if (notifications_widget != null) {
@@ -216,20 +204,6 @@ namespace XimperShellNotificationCenter {
             string[] w = ConfigModel.instance.widgets.data;
             if (w.length == 0) {
                 w = DEFAULT_WIDGETS;
-            }
-
-            bool is_dual =
-                ConfigModel.instance.control_center_layout
-                    == "dual"
-                && notifications_widget != null;
-
-            // Prepare target containers
-            Gtk.Box widgets_target;
-            if (is_dual) {
-                setup_dual_container ();
-                widgets_target = left_column;
-            } else {
-                widgets_target = box;
             }
 
             bool has_notifications = false;
@@ -253,51 +227,14 @@ namespace XimperShellNotificationCenter {
                 }
 
                 widgets.append (widget);
-                widgets_target.append (widget);
+                box.append (widget);
             }
 
             // Add notifications
             if (has_notifications) {
-                if (is_dual) {
-                    var right = new Gtk.Box (
-                        Gtk.Orientation.VERTICAL, 0);
-                    right.add_css_class (
-                        "notifications-column");
-                    right.set_hexpand (true);
-                    dual_size_group.add_widget (right);
-                    right.append (notifications_widget);
-                    dual_container.append (right);
-                } else {
-                    box.append (notifications_widget);
-                }
+                box.append (notifications_widget);
                 notifications_widget.reload_config ();
             }
-
-            if (is_dual) {
-                box.append (dual_container);
-            }
-        }
-
-        private void setup_dual_container () {
-            dual_container = new Gtk.Box (
-                Gtk.Orientation.HORIZONTAL, 0);
-            dual_container.add_css_class ("dual-layout");
-            dual_container.set_vexpand (true);
-
-            dual_size_group = new Gtk.SizeGroup (
-                Gtk.SizeGroupMode.HORIZONTAL);
-
-            left_column = new Gtk.Box (
-                Gtk.Orientation.VERTICAL, 0);
-            left_column.add_css_class ("widgets-column");
-            left_column.set_hexpand (true);
-            dual_size_group.add_widget (left_column);
-
-            var separator = new Gtk.Separator (
-                Gtk.Orientation.VERTICAL);
-
-            dual_container.append (left_column);
-            dual_container.append (separator);
         }
 
         /** Resets the UI positions */

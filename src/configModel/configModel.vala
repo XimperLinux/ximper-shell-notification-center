@@ -659,14 +659,6 @@ namespace XimperShellNotificationCenter {
         public string control_center_preferred_output { get; set; default = ""; }
 
         /**
-         * Panel layout: "single" (vertical) or "dual" (two columns).
-         */
-        public string control_center_layout {
-            get; set; default = "single";
-        }
-
-
-        /**
          * Notification body image height, in pixels.
          */
         private const int NOTIFICATION_BODY_IMAGE_MINIMUM_HEIGHT = 100;
@@ -853,7 +845,7 @@ namespace XimperShellNotificationCenter {
             var tmp_table = new OrderedHashTable<T> ();
 
             if (node.get_node_type () != Json.NodeType.OBJECT) {
-                stderr.printf ("Node %s is not a json object!...\n",
+                stderr.printf ("Node %s is not a json object!…\n",
                                property_name);
                 return tmp_table;
             }
@@ -1013,7 +1005,7 @@ namespace XimperShellNotificationCenter {
             GenericArray<T> tmp_array = new GenericArray<T> ();
 
             if (node.get_node_type () != Json.NodeType.ARRAY) {
-                stderr.printf ("Node %s is not a json array!...\n",
+                stderr.printf ("Node %s is not a json array!…\n",
                                property_name);
                 return tmp_array;
             }

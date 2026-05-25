@@ -298,9 +298,11 @@
     },
     "control-center-layout": {
       "type": "string",
-      "description": "Panel layout: single (vertical column) or dual (widgets and notifications side by side)",
+      "description": "Deprecated. Ignored.",
       "default": "single",
-      "enum": ["single", "dual"]
+      "enum": ["single", "dual"],
+      "deprecated": true,
+      "x-ximper-hidden": true
     },
     "transition-time": {
       "type": "integer",

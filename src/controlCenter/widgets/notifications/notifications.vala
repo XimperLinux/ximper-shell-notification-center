@@ -101,26 +101,17 @@ namespace XimperShellNotificationCenter.Widgets {
             bool dynamic =
                 ConfigModel.instance
                     .control_center_dynamic_height;
-            bool is_dual =
-                ConfigModel.instance.control_center_layout
-                    == "dual";
-            set_vexpand (is_dual || !dynamic);
+            set_vexpand (!dynamic);
             scrolled_window.set_propagate_natural_height (
-                dynamic && !is_dual);
+                dynamic);
             update_header_visibility ();
         }
 
         private void update_header_visibility () {
             bool has_notis = !is_empty ();
-            bool is_dual =
-                ConfigModel.instance.control_center_layout
-                    == "dual";
 
-            // Placeholder only in dual mode when empty
-            bool show_placeholder = is_dual && !has_notis;
-            placeholder_box.set_visible (show_placeholder);
-            scrolled_window.set_visible (!show_placeholder
-                && (is_dual || has_notis));
+            placeholder_box.set_visible (false);
+            scrolled_window.set_visible (has_notis);
 
             switch (show_title) {
                 case "true":
@@ -134,8 +125,7 @@ namespace XimperShellNotificationCenter.Widgets {
                     title_label.set_visible (false);
                     break;
                 default: // auto
-                    header_box.set_visible (
-                        is_dual || has_notis);
+                    header_box.set_visible (has_notis);
                     title_label.set_visible (true);
                     clear_all_button.set_sensitive (
                         has_notis);
