@@ -141,8 +141,9 @@
     },
     "ignore-gtk-theme": {
       "type": "boolean",
-      "description": "Unsets the GTK_THEME environment variable, fixing a lot of issues with GTK themes ruining the users custom CSS themes.",
-      "default": true
+      "description": "Unsets the GTK_THEME environment variable, fixing a lot of issues with GTK themes ruining the users custom CSS themes. Note: Requires ximper-shell-notification-center restart to apply",
+      "default": true,
+      "x-ximper-requires-restart": true
     },
     "positionX": {
       "type": "string",
