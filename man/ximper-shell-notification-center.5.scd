@@ -249,8 +249,6 @@ config file to be able to detect config errors
 	Valid array values (see *widget-config* for more information): ++
 		*notifications*++
 			optional: true ++
-		*label*++
-			optional: true ++
 		*mpris*++
 			optional: true ++
 		*quick-settings*++
@@ -267,10 +265,6 @@ config file to be able to detect config errors
 		Which order and which widgets to display. ++
 		If the \"notifications\" widget isn't specified, it ++
 		will be placed at the bottom. ++
-	multiple of same widget: ++
-		Append a # with any value to the end of the widget name. ++
-		Example: "label#MyLabel" ++
-		To address this widget specifically in the css file use the css class .MyLabel ++
 	example:
 ```
 {
@@ -284,10 +278,6 @@ config file to be able to detect config errors
 *widget-config* ++
 	type: object ++
 	description: Configure specific widget properties. ++
-	multiple of same widget: ++
-		Append a # with any value to the end of the widget name. ++
-		Example: "label#MyLabel" ++
-		To address this widget specifically in the css file use the css class .MyLabel ++
 	Widgets to customize: ++
 		*notifications*++
 			type: object ++
@@ -304,21 +294,6 @@ config file to be able to detect config errors
 						false: hidden, only clear button ++
 						shown when notifications exist. ++
 			description: The Notifications Widget. ++
-		*label*++
-			type: object ++
-			css class: widget-label ++
-			properties: ++
-				text: ++
-					type: string ++
-					optional: true ++
-					default: "Label Text" ++
-					description: The text content of the widget ++
-				clear-all-button: ++
-					type: integer ++
-					optional: true ++
-					default: 5 ++
-					description: The maximum lines ++
-			description: A generic widget that allows the user to add custom text. ++
 		*mpris*++
 			type: object ++
 			css classes: ++
@@ -459,10 +434,6 @@ config file to be able to detect config errors
 	"widget-config": {
 		"notifications": {
 			"show-title": "auto"
-		},
-		"label": {
-			"max-lines": 5,
-			"text": "Label Text"
 		},
 		"mpris": {
 			"blacklist": ["playerctld"]

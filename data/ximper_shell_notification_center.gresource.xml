@@ -65,7 +65,6 @@
     <file preprocess="xml-stripblanks">ui/notification_close_button.ui</file>
     <file preprocess="xml-stripblanks">ui/widgets/mpris_player.ui</file>
     <file preprocess="xml-stripblanks">ui/widgets/notifications.ui</file>
-    <file preprocess="xml-stripblanks">ui/widgets/label.ui</file>
 
     <file preprocess="xml-stripblanks">ui/widgets/inhibitors.ui</file>
     <file preprocess="xml-stripblanks">ui/widgets/volume.ui</file>

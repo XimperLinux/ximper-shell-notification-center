@@ -13,14 +13,12 @@
       "type": "backlight",
       "title": "Backlight",
       "description": "Unified display, DDC/CI monitor, and keyboard brightness control",
-      "repeatable": true,
       "config-ref": "#/widgets/backlight"
     },
     {
       "type": "volume",
       "title": "Volume",
       "description": "PulseAudio volume control",
-      "repeatable": true,
       "config-ref": "#/widgets/volume",
       "optional-feature": "pulse-audio"
     },
@@ -28,36 +26,25 @@
       "type": "quick-settings",
       "title": "Quick Settings",
       "description": "GNOME-style quick settings toggle tiles",
-      "repeatable": true,
       "config-ref": "#/widgets/quick-settings"
     },
     {
       "type": "inhibitors",
       "title": "Inhibitors",
       "description": "Notification center inhibitors",
-      "repeatable": true,
       "config-ref": "#/widgets/inhibitors"
     },
     {
       "type": "mpris",
       "title": "MPRIS",
       "description": "Media player controls",
-      "repeatable": true,
       "config-ref": "#/widgets/mpris"
     },
     {
       "type": "notifications",
       "title": "Notifications",
       "description": "Notification history",
-      "repeatable": false,
       "config-ref": "#/widgets/notifications"
-    },
-    {
-      "type": "label",
-      "title": "Label",
-      "description": "Custom text label",
-      "repeatable": true,
-      "config-ref": "#/widgets/label"
     }
   ],
   "x-ximper-quick-settings-tiles": [
@@ -381,8 +368,7 @@
       "default": ["backlight", "volume", "quick-settings", "inhibitors", "mpris", "notifications"],
       "items": {
         "type": "string",
-        "$comment": "Sadly can't use regex and enums at the same time. Fix in the future?",
-        "pattern": "^[a-zA-Z0-9_-]{1,}(#[a-zA-Z0-9_-]{1,}){0,1}?$"
+        "enum": ["backlight", "volume", "quick-settings", "inhibitors", "mpris", "notifications"]
       }
     },
     "widget-config": {
@@ -395,23 +381,20 @@
           "$comment": "References the widget structure from \"widgets\" below",
           "$ref": "#/widgets/notifications"
         },
-        "^label(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
-          "$ref": "#/widgets/label"
-        },
-        "^mpris(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+        "mpris": {
           "$ref": "#/widgets/mpris"
         },
-        "^backlight(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+        "backlight": {
           "$ref": "#/widgets/backlight"
         },
-        "^inhibitors(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+        "inhibitors": {
           "$comment": "References the widget structure from \"widgets\" below",
           "$ref": "#/widgets/inhibitors"
         },
-        "^volume(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+        "volume": {
           "$ref": "#/widgets/volume"
         },
-        "^quick-settings(#[a-zA-Z0-9_-]{1,}){0,1}?$": {
+        "quick-settings": {
           "$ref": "#/widgets/quick-settings"
         }
       }
@@ -429,23 +412,6 @@
           "description": "Title bar visibility: auto (show when notifications exist), true (always visible), false (hidden, only clear button shown when notifications exist)",
           "default": "auto",
           "enum": ["auto", "true", "false"]
-        }
-      }
-    },
-    "label": {
-      "type": "object",
-      "description": "A generic widget that allows the user to add custom text",
-      "additionalProperties": false,
-      "properties": {
-        "text": {
-          "type": "string",
-          "description": "The text content of the widget",
-          "default": "Label Text"
-        },
-        "max-lines": {
-          "type": "integer",
-          "description": "The maximum lines",
-          "default": 5
         }
       }
     },

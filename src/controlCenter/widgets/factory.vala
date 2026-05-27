@@ -16,9 +16,6 @@ namespace XimperShellNotificationCenter.Widgets {
                 is_notifications = true;
                 message ("Loading widget: widget-notifications");
                 return null;
-            case "label":
-                widget = new Label (suffix);
-                break;
             case "mpris":
                 widget = new Mpris.Mpris (suffix);
                 break;

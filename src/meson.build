@@ -33,8 +33,6 @@ widget_sources = [
   'controlCenter/widgets/factory.vala',
   # Widget: Notifications
   'controlCenter/widgets/notifications/notifications.vala',
-  # Widget: Label
-  'controlCenter/widgets/label/label.vala',
   # Widget: MPRIS
   'controlCenter/widgets/mpris/mpris.vala',
   'controlCenter/widgets/mpris/interfaces.vala',
