@@ -92,11 +92,15 @@ namespace XimperShellNotificationCenter.Widgets {
             void* dh;
             rc = Ddcutil.open_display2 (dlist.info[idx].dref, true, out dh);
             if (rc != 0) {
-                warning ("Failed to open DDC display: %d", rc);
+                debug ("Failed to open DDC display: %d", rc);
                 brightness_change (-1);
                 return;
             }
             handle = dh;
+        }
+
+        public bool is_available () {
+            return handle != null;
         }
 
         public void start () {
@@ -106,6 +110,14 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public void close () {
             stop_polling ();
+        }
+
+        public void release () {
+            stop_polling ();
+            if (handle != null) {
+                Ddcutil.close_display (handle);
+                handle = null;
+            }
         }
 
         private void start_polling () {
@@ -168,11 +180,7 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         ~DdcUtil () {
-            stop_polling ();
-            if (handle != null) {
-                Ddcutil.close_display (handle);
-                handle = null;
-            }
+            release ();
         }
     }
 }

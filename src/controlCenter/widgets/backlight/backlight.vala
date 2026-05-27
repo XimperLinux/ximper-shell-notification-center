@@ -54,13 +54,7 @@ namespace XimperShellNotificationCenter.Widgets {
         public Backlight (string suffix) {
             base (suffix);
 
-            Json.Object ?config = get_config (this);
-            if (config != null) {
-                int ?min_val = get_prop<int> (config, "min");
-                if (min_val != null) {
-                    min_brightness = int.max (0, min_val);
-                }
-            }
+            reload_config ();
 
             try {
                 osd_proxy = Bus.get_proxy_sync (BusType.SESSION,
@@ -80,6 +74,30 @@ namespace XimperShellNotificationCenter.Widgets {
             compact_scale.set_range (min_brightness, 100);
 
             build_ui ();
+        }
+
+        public override void reload_config () {
+            min_brightness = 0;
+
+            Json.Object ?config = get_config (this);
+            if (config != null) {
+                int ?min_val = get_prop<int> (config, "min");
+                if (min_val != null) {
+                    min_brightness = int.max (0, min_val);
+                }
+            }
+
+            compact_scale.set_range (min_brightness, 100);
+
+            if (source_scales == null) {
+                return;
+            }
+
+            for (int i = 0; i < source_scales.length; i++) {
+                foreach (Gtk.Scale scale in source_scales[i]) {
+                    scale.set_range (min_brightness, 100);
+                }
+            }
         }
 
         private void detect_sources () {
@@ -112,6 +130,9 @@ namespace XimperShellNotificationCenter.Widgets {
             var ddc_list = DdcUtil.detect_displays ();
             for (int i = 0; i < ddc_list.length; i++) {
                 var ddc = new DdcUtil (ddc_list[i].dispno);
+                if (!ddc.is_available ()) {
+                    continue;
+                }
                 ddc_displays += BrightnessSource () {
                     sysfs = null,
                     ddc = ddc,
@@ -478,6 +499,19 @@ namespace XimperShellNotificationCenter.Widgets {
 
             if (val) {
                 reveal_btn.set_active (false);
+            }
+        }
+
+        public override void on_removed () {
+            for (int i = 0; i < all_sources.length; i++) {
+                if (all_sources[i].sysfs != null) {
+                    all_sources[i].sysfs.close ();
+                }
+#if HAVE_DDC
+                if (all_sources[i].ddc != null) {
+                    all_sources[i].ddc.release ();
+                }
+#endif
             }
         }
     }

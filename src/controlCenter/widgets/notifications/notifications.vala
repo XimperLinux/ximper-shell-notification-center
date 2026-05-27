@@ -88,7 +88,9 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        public void reload_config () {
+        public override void reload_config () {
+            show_title = "auto";
+
             Json.Object ?config = get_config (this);
             if (config != null) {
                 string ?st = get_prop<string> (

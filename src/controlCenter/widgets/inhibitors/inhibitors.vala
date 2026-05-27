@@ -18,7 +18,6 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public Inhibitors (string suffix) {
             base (suffix);
-            title = _("Inhibitors");
 
             ximper_shell_notification_center_daemon.inhibited_changed.connect ((length) => {
                 if (!ximper_shell_notification_center_daemon.inhibited) {
@@ -28,6 +27,15 @@ namespace XimperShellNotificationCenter.Widgets {
                 show ();
                 title_widget.set_text ("%s %u".printf (title, length));
             });
+
+            reload_config ();
+
+            hide ();
+        }
+
+        public override void reload_config () {
+            title = _("Inhibitors");
+            has_clear_all_button = true;
 
             Json.Object ?config = get_config (this);
             if (config != null) {
@@ -47,8 +55,6 @@ namespace XimperShellNotificationCenter.Widgets {
 
             title_widget.set_text (title);
             clear_all_button.set_visible (has_clear_all_button);
-
-            hide ();
         }
 
         [GtkCallback]

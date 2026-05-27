@@ -12,8 +12,8 @@ namespace XimperShellNotificationCenter {
 
         private Gtk.EventControllerKey key_controller;
 
-        /** Unsorted list of copies of all notifications */
-        private List<unowned Widgets.BaseWidget> widgets;
+        /** Current control center widgets in configured order */
+        private Gee.ArrayList<Widgets.BaseWidget> widgets;
         private const string[] DEFAULT_WIDGETS = { "notifications" };
 
         private string ?monitor_name = null;
@@ -21,9 +21,9 @@ namespace XimperShellNotificationCenter {
         public ControlCenter () {
             Object (css_name: "blankwindow");
 
-            widgets = new List<unowned Widgets.BaseWidget> ();
+            widgets = new Gee.ArrayList<Widgets.BaseWidget> ();
             if (notifications_widget != null) {
-                widgets.append (notifications_widget);
+                widgets.add (notifications_widget);
             }
 
             if (app.use_layer_shell) {
@@ -133,6 +133,13 @@ namespace XimperShellNotificationCenter {
                     this.monitor_name = null;
                     set_anchor ();
                 }
+
+                if (old == null || !widgets_equal (get_widget_keys (old),
+                                                   get_widget_keys (config))) {
+                    add_widgets ();
+                } else {
+                    reload_widgets ();
+                }
             });
         }
 
@@ -184,35 +191,59 @@ namespace XimperShellNotificationCenter {
             }
         }
 
-        /** Adds all custom widgets. Removes previous widgets */
-        public void add_widgets () {
-            // Detach all widgets from parents first
-            foreach (unowned Widgets.BaseWidget widget
-                     in widgets) {
-                remove_from_parent (widget);
+        private string[] get_widget_keys (ConfigModel config) {
+            string[] result = config.widgets.data;
+            if (result.length == 0) {
+                result = DEFAULT_WIDGETS;
             }
-            if (notifications_widget != null) {
-                remove_from_parent (notifications_widget);
+            return result;
+        }
+
+        private bool widgets_equal (string[] old_widgets,
+                                    string[] new_widgets) {
+            if (old_widgets.length != new_widgets.length) {
+                return false;
             }
 
-            // Reset widgets list, keep notifications
-            widgets = new List<unowned Widgets.BaseWidget> ();
-            if (notifications_widget != null) {
-                widgets.append (notifications_widget);
+            for (int i = 0; i < old_widgets.length; i++) {
+                if (old_widgets[i] != new_widgets[i]) {
+                    return false;
+                }
             }
 
-            string[] w = ConfigModel.instance.widgets.data;
-            if (w.length == 0) {
-                w = DEFAULT_WIDGETS;
+            return true;
+        }
+
+        private void reload_widgets () {
+            foreach (Widgets.BaseWidget widget in widgets) {
+                widget.reload_config ();
+            }
+        }
+
+        private Gee.ArrayList<Widgets.BaseWidget> build_widget_list (string[] keys) {
+            var available = new Gee.HashMap<string, Widgets.BaseWidget> ();
+            foreach (Widgets.BaseWidget widget in widgets) {
+                available.set (widget.key, widget);
             }
 
+            var result = new Gee.ArrayList<Widgets.BaseWidget> ();
             bool has_notifications = false;
 
-            foreach (string key in w) {
+            foreach (string key in keys) {
                 bool is_notif;
-                Widgets.BaseWidget ?widget =
-                    Widgets.get_widget_from_key (
-                        key, out is_notif);
+                Widgets.BaseWidget ?widget = null;
+
+                if (key == "notifications") {
+                    is_notif = true;
+                } else {
+                    widget = available.get (key);
+                    if (widget != null) {
+                        is_notif = false;
+                    } else {
+                        widget = Widgets.get_widget_from_key (
+                            key, out is_notif);
+                    }
+                }
 
                 if (is_notif) {
                     if (notifications_widget == null
@@ -220,20 +251,54 @@ namespace XimperShellNotificationCenter {
                         continue;
                     }
                     has_notifications = true;
-                    continue;
-                }
-                if (widget == null) {
+                    result.add (notifications_widget);
                     continue;
                 }
 
-                widgets.append (widget);
+                if (widget != null) {
+                    result.add (widget);
+                }
+            }
+
+            return result;
+        }
+
+        private bool list_contains_widget (
+                Gee.ArrayList<Widgets.BaseWidget> list,
+                Widgets.BaseWidget widget) {
+            foreach (Widgets.BaseWidget item in list) {
+                if (item == widget) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Syncs the widget list without rebuilding unchanged widgets */
+        public void add_widgets () {
+            string[] w = ConfigModel.instance.widgets.data;
+            if (w.length == 0) {
+                w = DEFAULT_WIDGETS;
+            }
+
+            var next_widgets = build_widget_list (w);
+
+            foreach (Widgets.BaseWidget widget in widgets) {
+                if (!list_contains_widget (next_widgets, widget)) {
+                    widget.on_removed ();
+                    remove_from_parent (widget);
+                }
+            }
+
+            foreach (Widgets.BaseWidget widget in next_widgets) {
+                remove_from_parent (widget);
                 box.append (widget);
             }
 
-            // Add notifications
-            if (has_notifications) {
-                box.append (notifications_widget);
-                notifications_widget.reload_config ();
+            widgets = next_widgets;
+            reload_widgets ();
+            foreach (Widgets.BaseWidget widget in widgets) {
+                widget.on_cc_visibility_change (visible);
             }
         }
 

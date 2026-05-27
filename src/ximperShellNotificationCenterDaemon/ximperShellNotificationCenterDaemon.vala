@@ -65,7 +65,6 @@ namespace XimperShellNotificationCenter {
             print ("\n");
             message ("Reloading config\n");
             ConfigModel.reload_config ();
-            control_center.add_widgets ();
         }
 
         /**

@@ -63,6 +63,13 @@ namespace XimperShellNotificationCenter.Widgets {
             base (suffix);
             set_orientation (Gtk.Orientation.VERTICAL);
 
+            reload_config ();
+        }
+
+        public override void reload_config () {
+            clear_grid ();
+            tiles = new List<QuickSettingsTile> ();
+
             Json.Object ?config = get_config (this);
             if (config == null) {
                 return;

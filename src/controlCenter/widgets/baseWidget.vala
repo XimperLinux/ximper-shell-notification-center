@@ -39,6 +39,13 @@ namespace XimperShellNotificationCenter.Widgets {
         public virtual void on_cc_visibility_change (bool value) {
         }
 
+        public virtual void on_removed () {
+            on_cc_visibility_change (false);
+        }
+
+        public virtual void reload_config () {
+        }
+
         protected T ?get_prop<T> (Json.Object config, string value_key, out bool found = null) {
             found = false;
             if (!config.has_member (value_key)) {

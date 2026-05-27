@@ -74,7 +74,19 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
             carousel_box.append (button_next);
             append (carousel_box);
 
-            // Config
+            reload_config ();
+
+            hide ();
+            try {
+                setup_mpris ();
+            } catch (Error e) {
+                critical ("MPRIS Widget error: %s", e.message);
+            }
+        }
+
+        public override void reload_config () {
+            mpris_config.blacklist = {};
+
             Json.Object ?config = get_config (this);
             if (config != null) {
                 Json.Array ?blacklist = get_prop_array (
@@ -94,11 +106,16 @@ namespace XimperShellNotificationCenter.Widgets.Mpris {
                 }
             }
 
-            hide ();
-            try {
-                setup_mpris ();
-            } catch (Error e) {
-                critical ("MPRIS Widget error: %s", e.message);
+            foreach (string name in players.get_keys_as_array ()) {
+                if (is_blacklisted (name)) {
+                    remove_player (name);
+                    continue;
+                }
+                if (check_player_metadata_empty (name)) {
+                    remove_player_from_carousel (name);
+                } else {
+                    add_player_to_carousel (name);
+                }
             }
         }
 
