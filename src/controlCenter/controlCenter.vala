@@ -131,11 +131,13 @@ namespace XimperShellNotificationCenter {
                     || old.control_center_preferred_output != monitor_name
                     || this.monitor_name != monitor_name) {
                     this.monitor_name = null;
-                    set_anchor ();
                 }
+                set_anchor ();
 
-                if (old == null || !widgets_equal (get_widget_keys (old),
-                                                   get_widget_keys (config))) {
+                if (old == null
+                        || old.notification_daemon != config.notification_daemon
+                        || !widgets_equal (get_widget_keys (old),
+                                           get_widget_keys (config))) {
                     add_widgets ();
                 } else {
                     reload_widgets ();

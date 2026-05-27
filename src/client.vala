@@ -130,6 +130,11 @@ private bool metadata_array_has_type (Json.Array ?array,
     return false;
 }
 
+private bool notification_daemon_enabled (Json.Object config) {
+    return config.get_boolean_member_with_default (
+        "notification-daemon", true);
+}
+
 private Json.Object build_style_info (string path) {
     Json.Object info = new Json.Object ();
     object_set_string_member (info, "path", path);
@@ -204,9 +209,14 @@ private void add_preview_items (Json.Object preview,
         unowned Json.Array configured_widgets =
             config.get_array_member ("widgets");
         for (uint i = 0; i < configured_widgets.get_length (); i++) {
+            string widget = configured_widgets.get_string_element (i);
+            if (widget_type_from_key (widget) == "notifications"
+                    && !notification_daemon_enabled (config)) {
+                continue;
+            }
             widgets.add_object_element (
                 build_widget_entry (
-                    configured_widgets.get_string_element (i),
+                    widget,
                     config,
                     schema));
         }
@@ -284,16 +294,39 @@ private Json.Node ?schema_member_node (Json.Object schema, string name) {
     return schema.get_member (name).copy ();
 }
 
+private Json.Node filtered_widgets_metadata (Json.Object config,
+                                             Json.Object schema) {
+    unowned Json.Array source =
+        schema.get_array_member ("x-ximper-widgets");
+    Json.Array result = new Json.Array ();
+
+    for (uint i = 0; i < source.get_length (); i++) {
+        unowned Json.Object ?widget = source.get_object_element (i);
+        if (widget == null) {
+            continue;
+        }
+        if (widget.get_string_member_with_default ("type", "")
+                == "notifications"
+                && !notification_daemon_enabled (config)) {
+            continue;
+        }
+        result.add_element (source.get_element (i).copy ());
+    }
+
+    Json.Node node = new Json.Node (Json.NodeType.ARRAY);
+    node.set_array (result);
+    return node;
+}
+
 private void add_schema_metadata (Json.Object root,
+                                  Json.Object config,
                                   Json.Object schema) {
     Json.Object metadata = new Json.Object ();
 
-    Json.Node ?node = schema_member_node (schema, "x-ximper-widgets");
-    if (node != null) {
-        metadata.set_member ("widgets", node);
-    }
+    metadata.set_member ("widgets",
+                         filtered_widgets_metadata (config, schema));
 
-    node = schema_member_node (schema, "x-ximper-quick-settings-tiles");
+    Json.Node ?node = schema_member_node (schema, "x-ximper-quick-settings-tiles");
     if (node != null) {
         metadata.set_member ("quick-settings-tiles", node);
     }
@@ -316,7 +349,7 @@ private void print_describe () throws Error {
     add_paths (root);
     add_styles (root);
     add_capabilities (root);
-    add_schema_metadata (root, schema.get_object ());
+    add_schema_metadata (root, config.get_object (), schema.get_object ());
     add_preview (
         root, config.get_object (), schema.get_object ());
 

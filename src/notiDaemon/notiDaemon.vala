@@ -44,8 +44,12 @@ namespace XimperShellNotificationCenter {
             NotificationClosed (id, reason);
             notification_ids.remove (id);
 
-            notifications_widget.remove_notification (id);
-            floating_notifications.remove_notification (id);
+            if (notifications_widget != null) {
+                notifications_widget.remove_notification (id);
+            }
+            if (floating_notifications != null) {
+                floating_notifications.remove_notification (id);
+            }
 
             ximper_shell_notification_center_daemon.emit_subscribe ();
         }
@@ -63,9 +67,13 @@ namespace XimperShellNotificationCenter {
             foreach (unowned uint32 id in ids) {
                 NotificationClosed (id, reason);
                 notification_ids.remove (id);
-                floating_notifications.remove_notification (id);
+                if (floating_notifications != null) {
+                    floating_notifications.remove_notification (id);
+                }
             }
-            notifications_widget.remove_group (group_name_id);
+            if (notifications_widget != null) {
+                notifications_widget.remove_group (group_name_id);
+            }
 
             ximper_shell_notification_center_daemon.emit_subscribe ();
         }
@@ -78,7 +86,9 @@ namespace XimperShellNotificationCenter {
             notification_ids.clear ();
 
             remove_all_floating_notifications (false, null);
-            notifications_widget.remove_all_notifications (true);
+            if (notifications_widget != null) {
+                notifications_widget.remove_all_notifications (true);
+            }
 
             ximper_shell_notification_center_daemon.emit_subscribe ();
         }
@@ -234,7 +244,8 @@ namespace XimperShellNotificationCenter {
             bool added = false;
             bool removed = false;
 
-            if (hide_floating_notification_reasons.length == 0) {
+            if (floating_notifications != null
+                    && hide_floating_notification_reasons.length == 0) {
                 added = true;
                 if (notification_id_to_replace > 0) {
                     debug ("Replacing Notification: ID:%u -> ID:%u\n",
@@ -255,11 +266,13 @@ namespace XimperShellNotificationCenter {
                     // being Control Center-only
                     debug ("Removing replaced Floating Notification: ID:%u\n",
                            notification_id_to_replace);
-                    floating_notifications.remove_notification (notification_id_to_replace);
+                    if (floating_notifications != null) {
+                        floating_notifications.remove_notification (notification_id_to_replace);
+                    }
                 }
             }
 
-            if (!param.ignore_cc ()) {
+            if (notifications_widget != null && !param.ignore_cc ()) {
                 added = true;
                 if (notification_id_to_replace > 0) {
                     debug ("Replacing CC Notification: ID:%u -> ID:%u\n",
@@ -277,7 +290,9 @@ namespace XimperShellNotificationCenter {
                     // Remove the old notification due to it possibly being floating-only
                     debug ("Removing replaced CC Notification: ID:%u\n",
                            notification_id_to_replace);
-                    notifications_widget.remove_notification (notification_id_to_replace);
+                    if (notifications_widget != null) {
+                        notifications_widget.remove_notification (notification_id_to_replace);
+                    }
                 }
             }
 

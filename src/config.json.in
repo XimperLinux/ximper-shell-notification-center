@@ -4,6 +4,7 @@
   "positionY": "top",
   "layer": "overlay",
   "layer-shell": true,
+  "notification-daemon": true,
   "control-center-width": 400,
   "control-center-height": 740,
   "control-center-dynamic-height": true,

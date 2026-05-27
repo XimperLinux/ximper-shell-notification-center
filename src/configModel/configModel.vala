@@ -429,6 +429,12 @@ namespace XimperShellNotificationCenter {
         public bool layer_shell { get; set; default = true; }
 
         /**
+         * Whether or not the notification daemon should own
+         * org.freedesktop.Notifications.
+         */
+        public bool notification_daemon { get; set; default = true; }
+
+        /**
          * Wether or not the windows should cover the whole screen when
          * layer-shell is used.
          */

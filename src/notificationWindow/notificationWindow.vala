@@ -65,8 +65,10 @@ namespace XimperShellNotificationCenter {
                     || old.notification_window_preferred_output != monitor_name
                     || NotificationWindow.monitor_name != monitor_name) {
                     NotificationWindow.monitor_name = null;
-                    set_anchor ();
                 }
+                default_width = config.notification_window_width;
+                set_default_size (config.notification_window_width, -1);
+                set_anchor ();
             });
         }
 

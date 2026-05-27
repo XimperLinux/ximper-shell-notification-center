@@ -33,6 +33,10 @@ namespace XimperShellNotificationCenter {
     public class NotificationCenter : Gtk.Application {
         private bool activated = false;
         private Array<BlankWindow> blank_windows = new Array<BlankWindow> ();
+        private DBusConnection session_bus;
+        private uint notification_name_id = 0;
+        private uint notification_object_id = 0;
+        private bool dnd_signal_connected = false;
 
         // Only set on start due to some limitations of GtkLayerShell
         public bool use_layer_shell = true;
@@ -101,9 +105,8 @@ namespace XimperShellNotificationCenter {
             has_layer_on_demand = use_layer_shell &&
                 GtkLayerShell.get_protocol_version () >= 4;
 
-            DBusConnection conn;
             try {
-                conn = Bus.get_sync (GLib.BusType.SESSION, null);
+                session_bus = Bus.get_sync (GLib.BusType.SESSION, null);
             } catch (Error e) {
                 error ("Could not connect to DBus!... (%s)\n", e.message);
             }
@@ -111,41 +114,10 @@ namespace XimperShellNotificationCenter {
             noti_daemon = new NotiDaemon ();
             ximper_shell_notification_center_daemon = new XimperShellNotificationCenterDaemon ();
 
-            // Register notification daemon only if notifications widget is enabled
-            bool has_notifications = false;
-            foreach (string w in ConfigModel.instance.widgets.data) {
-                if (w.has_prefix ("notifications")) {
-                    has_notifications = true;
-                    break;
-                }
-            }
-
-            if (has_notifications) {
-                Bus.own_name_on_connection (conn,
-                                            "org.freedesktop.Notifications",
-                                            bus_name_flags,
-                                            () => {
-                    try {
-                        conn.register_object ("/org/freedesktop/Notifications", noti_daemon);
-                        init.callback ();
-                    } catch (Error e) {
-                        error ("Could not register notification service: \"%s\"", e.message);
-                    }
-                },
-                                            () => {
-                    stderr.printf (
-                        "Could not acquire notification name. " +
-                        "Please close any other notification daemon " +
-                        "like mako or dunst\n");
-                    Process.exit (1);
-                });
-                yield;
-            }
-
             // Ximper Shell Notification Center Daemon
             // Name is already owned by GApplication via register()
             try {
-                conn.register_object (
+                session_bus.register_object (
                     "/ru/ximperlinux/shell/NotificationCenter",
                     ximper_shell_notification_center_daemon);
             } catch (Error e) {
@@ -154,13 +126,36 @@ namespace XimperShellNotificationCenter {
 
             xdg_activation = new XdgActivationHelper ();
 
-            if (has_notifications) {
+            sync_notification_daemon ();
+
+            config_reload.connect ((old, config) => {
+                sync_notification_daemon ();
+            });
+            control_center = new ControlCenter ();
+            // Update on start
+            ximper_shell_notification_center_daemon.emit_subscribe ();
+
+            config_reload.connect ((old, config) => {
+                reload_blank_windows ();
+            });
+
+            monitors.items_changed.connect (monitors_changed);
+            Idle.add_once (() => monitors_changed (0, 0, monitors.get_n_items ()));
+        }
+
+        private void ensure_notification_ui () {
+            if (notifications_widget == null) {
                 notifications_widget = new Widgets.Notifications ();
+            }
+            if (floating_notifications == null) {
                 floating_notifications = new NotificationWindow ();
                 add_window (floating_notifications);
-
+            }
+            if (!dnd_signal_connected) {
+                dnd_signal_connected = true;
                 noti_daemon.on_dnd_toggle.connect ((dnd) => {
-                    if (dnd && floating_notifications.visible) {
+                    if (dnd && floating_notifications != null
+                            && floating_notifications.visible) {
                         noti_daemon
                             .remove_all_floating_notifications (
                             true, (noti) => {
@@ -172,13 +167,70 @@ namespace XimperShellNotificationCenter {
                         .emit_subscribe ();
                 });
             }
+        }
 
-            control_center = new ControlCenter ();
-            // Update on start
-            ximper_shell_notification_center_daemon.emit_subscribe ();
+        private void enable_notification_daemon () {
+            ensure_notification_ui ();
 
-            monitors.items_changed.connect (monitors_changed);
-            Idle.add_once (() => monitors_changed (0, 0, monitors.get_n_items ()));
+            if (notification_name_id != 0) {
+                return;
+            }
+
+            notification_name_id = Bus.own_name_on_connection (
+                session_bus,
+                "org.freedesktop.Notifications",
+                bus_name_flags,
+                () => {
+                if (!ConfigModel.instance.notification_daemon) {
+                    return;
+                }
+                try {
+                    if (notification_object_id == 0) {
+                        notification_object_id = session_bus.register_object (
+                            "/org/freedesktop/Notifications",
+                            noti_daemon);
+                    }
+                } catch (Error e) {
+                    error ("Could not register notification service: \"%s\"", e.message);
+                }
+            },
+                () => {
+                stderr.printf (
+                    "Could not acquire notification name. " +
+                    "Please close any other notification daemon " +
+                    "like mako or dunst\n");
+                notification_name_id = 0;
+            });
+        }
+
+        private void disable_notification_daemon () {
+            if (notification_object_id != 0) {
+                session_bus.unregister_object (notification_object_id);
+                notification_object_id = 0;
+            }
+            if (notification_name_id != 0) {
+                Bus.unown_name (notification_name_id);
+                notification_name_id = 0;
+            }
+            if (floating_notifications != null) {
+                floating_notifications.remove_all_notifications (false, null);
+                remove_window (floating_notifications);
+                floating_notifications.close ();
+                floating_notifications = null;
+            }
+            if (notifications_widget != null) {
+                notifications_widget.remove_all_notifications (false);
+                notifications_widget.on_removed ();
+                notifications_widget = null;
+            }
+        }
+
+        private void sync_notification_daemon () {
+            if (ConfigModel.instance.notification_daemon) {
+                enable_notification_daemon ();
+            } else {
+                disable_notification_daemon ();
+            }
         }
 
         private void monitors_changed (uint position, uint removed, uint added) {
@@ -228,6 +280,26 @@ namespace XimperShellNotificationCenter {
             }
             foreach (unowned BlankWindow win in blank_windows.data) {
                 win.set_visible (false);
+            }
+        }
+
+        private void reload_blank_windows () {
+            if (!use_layer_shell) {
+                return;
+            }
+
+            foreach (unowned BlankWindow win in blank_windows.data) {
+                win.reload_config ();
+            }
+
+            if (!control_center.get_visibility ()) {
+                return;
+            }
+
+            if (ConfigModel.instance.layer_shell_cover_screen) {
+                show_blank_windows (null);
+            } else {
+                hide_blank_windows ();
             }
         }
 

@@ -77,10 +77,14 @@ namespace XimperShellNotificationCenter {
 
             GtkLayerShell.set_exclusive_zone (this, -1);
 
-            GtkLayerShell.set_layer (
-                this, ConfigModel.instance.control_center_layer.to_layer ());
+            reload_config ();
 
             add_css_class ("blank-window");
+        }
+
+        public void reload_config () {
+            GtkLayerShell.set_layer (
+                this, ConfigModel.instance.control_center_layer.to_layer ());
         }
 
         protected override void snapshot (Gtk.Snapshot snapshot) {

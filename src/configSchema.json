@@ -162,6 +162,11 @@
       "default": true,
       "x-ximper-requires-restart": true
     },
+    "notification-daemon": {
+      "type": "boolean",
+      "description": "Whether or not the daemon should receive system notifications",
+      "default": true
+    },
     "layer-shell-cover-screen": {
       "type": "boolean",
       "description": "Whether or not the windows should cover the whole screen when layer-shell is used. May exceed the height of the monitor if the value is too large. Fixes animations in compositors like Hyprland.",
