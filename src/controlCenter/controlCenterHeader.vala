@@ -291,7 +291,7 @@ namespace XimperShellNotificationCenter {
 
         private void add_power_action (string icon_name,
                                        string label,
-                                       PowerActionCallback callback) {
+                                       owned PowerActionCallback callback) {
             var button = new Gtk.Button ();
             button.add_css_class ("flat");
 
