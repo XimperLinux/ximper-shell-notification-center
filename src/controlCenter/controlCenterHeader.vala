@@ -240,14 +240,10 @@ namespace XimperShellNotificationCenter {
         private void update_power_menu () {
             remove_power_menu_children ();
 
-            string ?session_id =
-                Environment.get_variable ("XDG_SESSION_ID");
-            if (session_id != null && session_id.length > 0) {
-                add_power_action (
-                    "system-log-out-symbolic",
-                    _("Log Out"),
-                    () => logout_session (session_id));
-            }
+            add_power_action (
+                "system-log-out-symbolic",
+                _("Log Out"),
+                logout_session);
 
             if (can_login1_action ("suspend")) {
                 add_power_action (
@@ -345,11 +341,11 @@ namespace XimperShellNotificationCenter {
             }
         }
 
-        private void logout_session (string session_id) {
+        private void logout_session () {
             power_revealer.set_reveal_child (false);
             control_center.set_visibility (false);
-            string cmd = "loginctl terminate-session %s".printf (
-                Shell.quote (session_id));
+            string cmd = "loginctl terminate-user %s".printf (
+                Shell.quote (Environment.get_user_name ()));
             run_command.begin (cmd);
         }
 
