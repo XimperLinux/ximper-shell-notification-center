@@ -32,6 +32,8 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public void start () {
+            clear_devices ();
+            quitting = false;
             get_context ();
         }
 
@@ -56,6 +58,32 @@ namespace XimperShellNotificationCenter.Widgets {
         public signal void new_device (PulseDevice device);
         public signal void change_device (PulseDevice device);
         public signal void remove_device (PulseDevice device);
+
+        private void clear_devices () {
+            PulseSinkInput[] sink_inputs = {};
+            foreach (var sink_input in active_sinks.values) {
+                sink_inputs += sink_input;
+            }
+            foreach (var sink_input in sink_inputs) {
+                remove_active_sink (sink_input);
+            }
+            active_sinks.clear ();
+
+            PulseDevice[] devices = {};
+            foreach (var device in sinks.values) {
+                device.removed = true;
+                device.is_default = false;
+                devices += device;
+            }
+            foreach (var device in devices) {
+                remove_device (device);
+            }
+            sinks.clear ();
+
+            default_sink = null;
+            default_sink_name = null;
+            default_source_name = null;
+        }
 
         private void get_context () {
             var ctx = new Context (mainloop.get_api (), null);
@@ -439,7 +467,7 @@ namespace XimperShellNotificationCenter.Widgets {
             device.device_description = info.description;
             device.device_index = info.index;
 
-            bool is_default = device.device_name == this.default_source_name;
+            bool is_default = device.device_name == this.default_sink_name;
             device.is_default = is_default;
 
             device.is_muted = info.mute == 1;

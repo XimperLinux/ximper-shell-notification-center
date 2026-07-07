@@ -64,7 +64,7 @@ namespace XimperShellNotificationCenter.Widgets {
                 debug ("OSD service not available: %s", e.message);
             }
 
-            detect_sources ();
+            all_sources = detect_sources (out primary_index);
 
             if (all_sources.length == 0) {
                 hide ();
@@ -100,10 +100,11 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        private void detect_sources () {
+        private BrightnessSource[] detect_sources (out int primary) {
             BrightnessSource[] sysfs_displays = {};
             BrightnessSource[] ddc_displays = {};
             BrightnessSource[] kbd = {};
+            BrightnessSource[] sources = {};
 
             // Scan /sys/class/backlight/ for display backlights (internal)
             try {
@@ -167,16 +168,19 @@ namespace XimperShellNotificationCenter.Widgets {
             }
 
             // Order: internal first, then DDC displays, then keyboards
-            foreach (var s in sysfs_displays) all_sources += s;
-            foreach (var s in ddc_displays) all_sources += s;
-            foreach (var s in kbd) all_sources += s;
+            foreach (var s in sysfs_displays) sources += s;
+            foreach (var s in ddc_displays) sources += s;
+            foreach (var s in kbd) sources += s;
 
-            for (int i = 0; i < all_sources.length; i++) {
-                if (all_sources[i].is_internal) {
-                    primary_index = i;
+            primary = -1;
+            for (int i = 0; i < sources.length; i++) {
+                if (sources[i].is_internal) {
+                    primary = i;
                     break;
                 }
             }
+
+            return sources;
         }
 
         private string get_source_label (int index) {
@@ -346,6 +350,18 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private void build_ui () {
+            clear_box (content);
+            clear_box (single_source_box);
+            remove_css_class ("has-collapse");
+            remove_css_class ("submenu");
+            topbar_icon.remove_css_class ("submenu-header-icon");
+            reveal_btn.set_active (false);
+            revealer.set_reveal_child (false);
+            topbar.set_visible (true);
+            revealer.set_visible (true);
+            single_source_box.set_visible (false);
+            hidden_count = 0;
+
             source_scales =
                 new Gee.ArrayList<Gtk.Scale>[all_sources.length];
             for (int i = 0; i < all_sources.length; i++) {
@@ -478,6 +494,10 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public override void on_cc_visibility_change (bool val) {
+            if (val) {
+                refresh_sources ();
+            }
+
             for (int i = 0; i < all_sources.length; i++) {
                 if (all_sources[i].sysfs != null) {
                     if (val) {
@@ -502,17 +522,71 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
-        public override void on_removed () {
-            for (int i = 0; i < all_sources.length; i++) {
-                if (all_sources[i].sysfs != null) {
-                    all_sources[i].sysfs.close ();
+        private void refresh_sources () {
+            int new_primary;
+            BrightnessSource[] new_sources = detect_sources (
+                out new_primary);
+
+            if (same_sources (all_sources, new_sources)) {
+                release_sources (new_sources);
+                return;
+            }
+
+            release_sources (all_sources);
+            all_sources = new_sources;
+            primary_index = new_primary;
+
+            if (all_sources.length == 0) {
+                hide ();
+                return;
+            }
+
+            show ();
+            build_ui ();
+            reload_config ();
+        }
+
+        private static bool same_sources (BrightnessSource[] a,
+                                          BrightnessSource[] b) {
+            if (a.length != b.length) {
+                return false;
+            }
+
+            for (int i = 0; i < a.length; i++) {
+                if (a[i].icon_name != b[i].icon_name
+                        || a[i].tooltip != b[i].tooltip
+                        || a[i].is_internal != b[i].is_internal) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static void clear_box (Gtk.Box box) {
+            for (var child = box.get_first_child (); child != null;) {
+                var next = child.get_next_sibling ();
+                box.remove (child);
+                child = next;
+            }
+        }
+
+        private static void release_sources (
+                BrightnessSource[] sources) {
+            for (int i = 0; i < sources.length; i++) {
+                if (sources[i].sysfs != null) {
+                    sources[i].sysfs.close ();
                 }
 #if HAVE_DDC
-                if (all_sources[i].ddc != null) {
-                    all_sources[i].ddc.release ();
+                if (sources[i].ddc != null) {
+                    sources[i].ddc.release ();
                 }
 #endif
             }
+        }
+
+        public override void on_removed () {
+            release_sources (all_sources);
         }
     }
 }
