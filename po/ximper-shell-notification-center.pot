@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-19 01:20+0300\n"
+"POT-Creation-Date: 2026-07-07 21:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,53 +18,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/notification/notification.vala:550
+#: src/notification/notification.vala:551
 msgid "Enter Text"
 msgstr ""
 
-#: src/notification/notification.vala:562
+#: src/notification/notification.vala:563
 msgid "Reply"
 msgstr ""
 
-#: src/notification/notification.vala:590
+#: src/notification/notification.vala:591
 #, c-format
 msgid "COPY \"%s\""
 msgstr ""
 
-#: src/notification/notification.vala:632
+#: src/notification/notification.vala:633
 msgid "Now"
 msgstr ""
 
-#: src/notification/notification.vala:636
+#: src/notification/notification.vala:637
 #, c-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:640
+#: src/notification/notification.vala:641
 #, c-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/notification/notification.vala:644
+#: src/notification/notification.vala:645
 #, c-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/controlCenter/widgets/inhibitors/inhibitors.vala:21
+#: src/controlCenter/controlCenterHeader.vala:59
+msgid "Settings"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:69
+msgid "Lock"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:127
+msgid "Power"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:248
+msgid "Log Out"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:255
+msgid "Suspend"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:261
+msgid "Hibernate"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:267
+msgid "Restart"
+msgstr ""
+
+#: src/controlCenter/controlCenterHeader.vala:273
+msgid "Power Off"
+msgstr ""
+
+#: src/controlCenter/widgets/inhibitors/inhibitors.vala:37
 msgid "Inhibitors"
 msgstr ""
 
-#: src/controlCenter/widgets/backlight/backlight.vala:164
+#: src/controlCenter/widgets/backlight/backlight.vala:189
 msgid "Built-in Display"
 msgstr ""
 
-#: src/controlCenter/widgets/backlight/backlight.vala:168
+#: src/controlCenter/widgets/backlight/backlight.vala:193
 msgid "Keyboard"
 msgstr ""
 
@@ -96,7 +128,7 @@ msgstr ""
 msgid "Caffeine"
 msgstr ""
 
-#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:69
 msgid "Caffeine mode"
 msgstr ""
 

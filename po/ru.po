@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-19 01:20+0300\n"
+"POT-Creation-Date: 2026-07-07 21:02+0300\n"
 "PO-Revision-Date: 2026-03-24 00:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -15,27 +15,27 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/notification/notification.vala:550
+#: src/notification/notification.vala:551
 msgid "Enter Text"
 msgstr "Введите текст"
 
-#: src/notification/notification.vala:562
+#: src/notification/notification.vala:563
 msgid "Reply"
 msgstr "Ответить"
 
-#: src/notification/notification.vala:590
+#: src/notification/notification.vala:591
 #, c-format
 msgid "COPY \"%s\""
 msgstr "КОПИРОВАТЬ \"%s\""
 
-#: src/notification/notification.vala:632
+#: src/notification/notification.vala:633
 msgid "Now"
 msgstr "Сейчас"
 
-#: src/notification/notification.vala:636
+#: src/notification/notification.vala:637
 #, c-format
 msgid "%d min ago"
 msgid_plural "%d mins ago"
@@ -43,7 +43,7 @@ msgstr[0] "%d мин. назад"
 msgstr[1] "%d мин. назад"
 msgstr[2] "%d мин. назад"
 
-#: src/notification/notification.vala:640
+#: src/notification/notification.vala:641
 #, c-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
@@ -51,7 +51,7 @@ msgstr[0] "%d ч. назад"
 msgstr[1] "%d ч. назад"
 msgstr[2] "%d ч. назад"
 
-#: src/notification/notification.vala:644
+#: src/notification/notification.vala:645
 #, c-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -59,15 +59,47 @@ msgstr[0] "%d д. назад"
 msgstr[1] "%d д. назад"
 msgstr[2] "%d д. назад"
 
-#: src/controlCenter/widgets/inhibitors/inhibitors.vala:21
+#: src/controlCenter/controlCenterHeader.vala:59
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/controlCenter/controlCenterHeader.vala:69
+msgid "Lock"
+msgstr "Заблокировать"
+
+#: src/controlCenter/controlCenterHeader.vala:127
+msgid "Power"
+msgstr "Питание"
+
+#: src/controlCenter/controlCenterHeader.vala:248
+msgid "Log Out"
+msgstr "Выйти"
+
+#: src/controlCenter/controlCenterHeader.vala:255
+msgid "Suspend"
+msgstr "Сон"
+
+#: src/controlCenter/controlCenterHeader.vala:261
+msgid "Hibernate"
+msgstr "Гибернация"
+
+#: src/controlCenter/controlCenterHeader.vala:267
+msgid "Restart"
+msgstr "Перезагрузить"
+
+#: src/controlCenter/controlCenterHeader.vala:273
+msgid "Power Off"
+msgstr "Выключить"
+
+#: src/controlCenter/widgets/inhibitors/inhibitors.vala:37
 msgid "Inhibitors"
 msgstr "Блокировки"
 
-#: src/controlCenter/widgets/backlight/backlight.vala:164
+#: src/controlCenter/widgets/backlight/backlight.vala:189
 msgid "Built-in Display"
 msgstr "Встроенный дисплей"
 
-#: src/controlCenter/widgets/backlight/backlight.vala:168
+#: src/controlCenter/widgets/backlight/backlight.vala:193
 msgid "Keyboard"
 msgstr "Клавиатура"
 
@@ -99,7 +131,7 @@ msgstr "Энергосбережение"
 msgid "Caffeine"
 msgstr "Кофеин"
 
-#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:49
+#: src/controlCenter/widgets/quickSettings/tiles/caffeineTile.vala:69
 msgid "Caffeine mode"
 msgstr "Режим кофеина"
 
