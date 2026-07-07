@@ -15,6 +15,7 @@ namespace XimperShellNotificationCenter {
         /** Current control center widgets in configured order */
         private Gee.ArrayList<Widgets.BaseWidget> widgets;
         private const string[] DEFAULT_WIDGETS = { "notifications" };
+        private ControlCenterHeader header;
 
         private string ?monitor_name = null;
 
@@ -121,6 +122,9 @@ namespace XimperShellNotificationCenter {
             ((Gtk.Widget) this).add_controller (key_controller);
             key_controller.key_released.connect (key_released_event_cb);
             key_controller.key_pressed.connect (key_press_event_cb);
+
+            header = new ControlCenterHeader ();
+            box.prepend (header);
 
             add_widgets ();
 
@@ -477,6 +481,7 @@ namespace XimperShellNotificationCenter {
             if (this.visible == visibility) {
                 return;
             }
+            header.close_power_menu ();
             // Destroy the wl_surface to get a new "enter-monitor" signal and
             // fixes issues where keyboard shortcuts stop working after clearing
             // all notifications.

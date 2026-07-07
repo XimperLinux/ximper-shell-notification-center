@@ -1,5 +1,6 @@
 src/main.vala
 src/notification/notification.vala
+src/controlCenter/controlCenterHeader.vala
 src/controlCenter/widgets/inhibitors/inhibitors.vala
 src/controlCenter/widgets/volume/volume.vala
 src/controlCenter/widgets/backlight/backlight.vala

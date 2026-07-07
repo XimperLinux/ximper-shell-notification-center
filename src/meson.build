@@ -77,6 +77,7 @@ app_sources = [
   'notificationGroup/notificationGroup.vala',
   'notificationGroup/expandableGroup.vala',
   'controlCenter/controlCenter.vala',
+  'controlCenter/controlCenterHeader.vala',
   widget_sources,
   'blankWindow/blankWindow.vala',
   'functions.vala',
