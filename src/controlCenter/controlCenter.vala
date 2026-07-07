@@ -219,6 +219,7 @@ namespace XimperShellNotificationCenter {
         private void reload_widgets () {
             foreach (Widgets.BaseWidget widget in widgets) {
                 widget.reload_config ();
+                widget.on_cc_visibility_change (visible);
             }
         }
 

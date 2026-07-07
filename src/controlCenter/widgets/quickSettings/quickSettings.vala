@@ -88,9 +88,10 @@ namespace XimperShellNotificationCenter.Widgets {
                 if (tile_cfg == null) {
                     continue;
                 }
-                string ?type_id =
-                    tile_cfg.get_string_member_with_default (
-                        "type", null);
+                string ?type_id = null;
+                if (tile_cfg.has_member ("type")) {
+                    type_id = tile_cfg.get_string_member ("type");
+                }
                 if (type_id == null) {
                     continue;
                 }
@@ -100,27 +101,27 @@ namespace XimperShellNotificationCenter.Widgets {
                 if (tile == null) {
                     continue;
                 }
+                connect_tile_signals (tile);
 
                 tiles.append (tile);
             }
 
-            // Connect signals once
-            foreach (unowned QuickSettingsTile tile in tiles) {
-                tile.submenu_requested.connect (() => {
-                    int row = find_tile_row (tile);
-                    if (row >= 0) {
-                        on_submenu_requested (tile, row);
-                    }
-                });
-                tile.submenu_update_requested.connect (() => {
-                    int row = find_tile_row (tile);
-                    if (row >= 0) {
-                        update_submenu (tile, row);
-                    }
-                });
-            }
-
             build_grid ();
+        }
+
+        private void connect_tile_signals (QuickSettingsTile tile) {
+            tile.submenu_requested.connect (() => {
+                int row = find_tile_row (tile);
+                if (row >= 0) {
+                    on_submenu_requested (tile, row);
+                }
+            });
+            tile.submenu_update_requested.connect (() => {
+                int row = find_tile_row (tile);
+                if (row >= 0) {
+                    update_submenu (tile, row);
+                }
+            });
         }
 
         private int find_tile_row (QuickSettingsTile tile) {

@@ -7,22 +7,40 @@ namespace XimperShellNotificationCenter.Widgets {
     }
 
     public class CaffeineTile : QuickSettingsTile {
-        private Login1Manager ?login1 = null;
-        private int inhibit_fd = -1;
+        private static Login1Manager ?login1 = null;
+        private static int inhibit_fd = -1;
 
         public CaffeineTile (Json.Object ?cfg) {
             base ("display-brightness-symbolic",
                   _("Caffeine"));
+
+            if (!ensure_login1 ()) {
+                set_visible (false);
+                return;
+            }
+
+            active = caffeine_active ();
             update_icon ();
+        }
+
+        private static bool ensure_login1 () {
+            if (login1 != null) {
+                return true;
+            }
 
             try {
                 login1 = Bus.get_proxy_sync (BusType.SYSTEM,
                     "org.freedesktop.login1",
                     "/org/freedesktop/login1");
+                return true;
             } catch (Error e) {
                 warning ("logind not available: %s", e.message);
-                set_visible (false);
+                return false;
             }
+        }
+
+        private static bool caffeine_active () {
+            return inhibit_fd >= 0;
         }
 
         private void update_icon () {
@@ -32,9 +50,11 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public override void on_toggle () {
-            if (login1 == null) return;
+            if (!ensure_login1 ()) {
+                return;
+            }
 
-            if (active) {
+            if (caffeine_active ()) {
                 release_inhibitor ();
             } else {
                 acquire_inhibitor ();
@@ -69,6 +89,8 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public override void on_cc_visibility_change (bool visible) {
+            active = caffeine_active ();
+            update_icon ();
         }
     }
 }

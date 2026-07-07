@@ -11,13 +11,11 @@ namespace XimperShellNotificationCenter.Widgets {
             bool initial_active = false;
 
             if (cfg != null) {
-                string ?i = cfg.get_string_member_with_default (
-                    "icon", null);
-                if (i != null) icon_name = i;
-                string ?l = cfg.get_string_member_with_default (
-                    "label", null);
-                if (l != null) {
-                    label = l;
+                if (cfg.has_member ("icon")) {
+                    icon_name = cfg.get_string_member ("icon");
+                }
+                if (cfg.has_member ("label")) {
+                    label = cfg.get_string_member ("label");
                 } else {
                     warning ("Command tile missing 'label'");
                 }
