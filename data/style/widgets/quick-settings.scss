@@ -93,3 +93,25 @@
   font-weight: bold;
   font-size: 1.4rem;
 }
+
+.bluetooth-device-row {
+  margin: 2px 4px;
+
+  > button {
+    margin: 0;
+  }
+}
+
+.bluetooth-device-connected {
+  color: var(--success-bg-color);
+}
+
+.bluetooth-device-battery-icon {
+  -gtk-icon-size: 14px;
+}
+
+.bluetooth-forget-button {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 4px;
+}

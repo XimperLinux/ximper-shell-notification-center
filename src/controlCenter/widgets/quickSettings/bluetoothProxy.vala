@@ -6,6 +6,8 @@ namespace XimperShellNotificationCenter.Widgets {
         public abstract bool discovering { get; }
         public abstract void start_discovery () throws Error;
         public abstract void stop_discovery () throws Error;
+        public abstract void remove_device (
+            ObjectPath device) throws Error;
     }
 
     [DBus (name = "org.bluez.Device1")]
@@ -27,6 +29,8 @@ namespace XimperShellNotificationCenter.Widgets {
         string icon_name;
         bool connected;
         bool paired;
+        bool trusted;
+        int battery_percentage;
     }
 
     public class BluetoothProxy : Object {
@@ -150,7 +154,9 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private async void load_devices () {
-            var new_list =
+            var known_devices =
+                new Gee.ArrayList<BluetoothDeviceInfo?> ();
+            var discovered_devices =
                 new Gee.ArrayList<BluetoothDeviceInfo?> ();
 
             try {
@@ -174,36 +180,84 @@ namespace XimperShellNotificationCenter.Widgets {
                         continue;
                     }
 
+                    Variant ?device_props = null;
+                    Variant ?battery_props = null;
+
                     var iface_iter = ifaces.iterator ();
                     string iface_name;
                     Variant props;
                     while (iface_iter.next ("{s@a{sv}}",
                                             out iface_name,
                                             out props)) {
-                        if (iface_name
-                                != "org.bluez.Device1") {
-                            continue;
-                        }
-                        var info = parse_device (
-                            path, props);
-                        if (info.paired
-                                || info.name != info.address) {
-                            new_list.add (info);
+                        switch (iface_name) {
+                            case "org.bluez.Device1":
+                                device_props = props;
+                                break;
+                            case "org.bluez.Battery1":
+                                battery_props = props;
+                                break;
                         }
                     }
+
+                    if (device_props != null) {
+                        var info = parse_device (
+                            path, device_props);
+                        info.battery_percentage =
+                            parse_battery_percentage (
+                                battery_props);
+
+                        if (info.paired
+                                || info.trusted
+                                || info.connected) {
+                            known_devices.add (info);
+                        } else if (info.name != info.address) {
+                            discovered_devices.add (info);
+                        }
+                    }
+                }
+
+                foreach (var info in discovered_devices) {
+                    known_devices.add (info);
                 }
             } catch (Error e) {
                 warning ("load_devices: %s", e.message);
             }
 
-            _devices = new_list;
+            _devices = known_devices;
             devices_changed ();
+        }
+
+        private static int parse_battery_percentage (
+                Variant ?props) {
+            if (props == null) {
+                return -1;
+            }
+
+            var prop_iter = props.iterator ();
+            string key;
+            Variant val;
+            while (prop_iter.next ("{sv}", out key, out val)) {
+                switch (key) {
+                    case "Percentage":
+                        return (int) val.get_byte ();
+                }
+            }
+
+            return -1;
+        }
+
+        public static bool is_known_device (
+                BluetoothDeviceInfo dev) {
+            return dev.paired
+                || dev.trusted
+                || dev.connected;
         }
 
         private BluetoothDeviceInfo parse_device (
                 string path, Variant props) {
             var info = BluetoothDeviceInfo ();
             info.path = new ObjectPath (path);
+            info.battery_percentage = -1;
 
             var prop_iter = props.iterator ();
             string key;
@@ -221,6 +275,9 @@ namespace XimperShellNotificationCenter.Widgets {
                         break;
                     case "Paired":
                         info.paired = val.get_boolean ();
+                        break;
+                    case "Trusted":
+                        info.trusted = val.get_boolean ();
                         break;
                     case "Icon":
                         info.icon_name = val.get_string ();
@@ -267,7 +324,9 @@ namespace XimperShellNotificationCenter.Widgets {
             if (!child.is_of_type (VariantType.STRING)) {
                 return;
             }
-            if (child.get_string () == "org.bluez.Device1") {
+            string interface_name = child.get_string ();
+            if (interface_name == "org.bluez.Device1"
+                    || interface_name == "org.bluez.Battery1") {
                 schedule_reload_devices ();
             }
         }
@@ -334,6 +393,17 @@ namespace XimperShellNotificationCenter.Widgets {
             }
             connecting_device = null;
             devices_changed ();
+        }
+
+        public void forget_device (ObjectPath device_path) {
+            if (adapter == null) return;
+
+            try {
+                adapter.remove_device (device_path);
+                schedule_reload_devices ();
+            } catch (Error e) {
+                warning ("forget_device: %s", e.message);
+            }
         }
 
         public string ? get_connected_device_name () {

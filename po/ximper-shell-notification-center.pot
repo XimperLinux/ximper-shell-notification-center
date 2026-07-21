@@ -199,6 +199,10 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:226
+msgid "Forget"
+msgstr ""
+
 #: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:161
 msgid "Bluetooth Settings"
 msgstr ""

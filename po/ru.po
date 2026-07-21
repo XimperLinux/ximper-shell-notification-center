@@ -202,6 +202,10 @@ msgstr "Поиск устройств…"
 msgid "Disconnect"
 msgstr "Отключить"
 
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:226
+msgid "Forget"
+msgstr "Забыть"
+
 #: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:161
 msgid "Bluetooth Settings"
 msgstr "Настройки Bluetooth"
