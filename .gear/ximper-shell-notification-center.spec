@@ -1,7 +1,7 @@
 %define xdg_name ru.ximperlinux.shell.NotificationCenter
 
 Name: ximper-shell-notification-center
-Version: 0.3.0
+Version: 0.4.0
 Release: eter1
 License: GPL-3.0
 
@@ -74,6 +74,12 @@ A component of the Ximper Shell.
 %_datadir/fish/vendor_completions.d/%name-client.fish
 
 %changelog
+* Fri Sep 11 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.4.0-eter1
+- Show Bluetooth device battery levels and allow forgetting devices
+- Fix duplicate and malformed Wi-Fi network names
+- Allow audio amplification above 100%
+- Add screen capture action
+
 * Wed Jul 08 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.3.0-eter1
 - Add control center header
 - Refresh audio and brightness devices on panel open
