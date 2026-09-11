@@ -3,6 +3,7 @@
   <gresource prefix="/ru/ximperlinux/shell/NotificationCenter">
     <file preprocess="xml-stripblanks">icons/scalable/actions/application-x-executable-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/application-x-executable.svg</file>
+    <file preprocess="xml-stripblanks">icons/scalable/actions/applets-screenshooter-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/audio-card-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/audio-headphones-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/scalable/actions/audio-speakers-symbolic.svg</file>

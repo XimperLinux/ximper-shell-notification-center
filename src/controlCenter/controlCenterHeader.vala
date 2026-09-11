@@ -30,6 +30,7 @@ namespace XimperShellNotificationCenter {
         private Gtk.Box battery_box;
         private Gtk.Image battery_icon;
         private Gtk.Label battery_label;
+        private Gtk.Button screenshot_button;
         private Gtk.Button settings_button;
         private Gtk.Button power_button;
         private Gtk.Revealer power_revealer;
@@ -54,15 +55,21 @@ namespace XimperShellNotificationCenter {
             battery_box = build_battery_box ();
             left.append (battery_box);
 
+            var right = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
+            right.set_halign (Gtk.Align.END);
+            right.set_valign (Gtk.Align.CENTER);
+
+            screenshot_button = build_icon_button (
+                "applets-screenshooter-symbolic",
+                _("Screenshot"));
+            screenshot_button.clicked.connect (open_screenshot);
+            right.append (screenshot_button);
+
             settings_button = build_icon_button (
                 "preferences-system-symbolic",
                 _("Settings"));
             settings_button.clicked.connect (open_settings);
-            left.append (settings_button);
-
-            var right = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8);
-            right.set_halign (Gtk.Align.END);
-            right.set_valign (Gtk.Align.CENTER);
+            right.append (settings_button);
 
             var lock_button = build_icon_button (
                 "system-lock-screen-symbolic",
@@ -90,6 +97,7 @@ namespace XimperShellNotificationCenter {
 
             connect_battery ();
             connect_login1 ();
+            update_screenshot_visibility ();
             update_settings_visibility ();
             update_power_menu ();
         }
@@ -215,6 +223,32 @@ namespace XimperShellNotificationCenter {
         private void update_settings_visibility () {
             settings_button.set_visible (
                 Environment.find_program_in_path ("tuner") != null);
+        }
+
+        private void update_screenshot_visibility () {
+            screenshot_button.set_visible (
+                Environment.find_program_in_path (
+                    "ximper-shell-screen-capture") != null);
+        }
+
+        private void open_screenshot () {
+            screenshot_button.set_sensitive (false);
+            control_center.set_visibility (false);
+            Timeout.add_once (750, () => {
+                screenshot_button.set_sensitive (true);
+                launch_screenshot ();
+            });
+        }
+
+        private void launch_screenshot () {
+            try {
+                Process.spawn_command_line_async (
+                    "ximper-shell-screen-capture --show");
+            } catch (Error e) {
+                warning ("Failed to launch screen capture: %s",
+                         e.message);
+                screenshot_button.set_visible (false);
+            }
         }
 
         private void open_settings () {

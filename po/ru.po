@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ximper-shell-notification-center 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-07 21:02+0300\n"
+"POT-Creation-Date: 2026-09-11 16:26+0300\n"
 "PO-Revision-Date: 2026-03-24 00:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
@@ -59,35 +59,39 @@ msgstr[0] "%d д. назад"
 msgstr[1] "%d д. назад"
 msgstr[2] "%d д. назад"
 
-#: src/controlCenter/controlCenterHeader.vala:59
+#: src/controlCenter/controlCenterHeader.vala:64
+msgid "Screenshot"
+msgstr "Снимок экрана"
+
+#: src/controlCenter/controlCenterHeader.vala:70
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/controlCenter/controlCenterHeader.vala:69
+#: src/controlCenter/controlCenterHeader.vala:76
 msgid "Lock"
 msgstr "Заблокировать"
 
-#: src/controlCenter/controlCenterHeader.vala:127
+#: src/controlCenter/controlCenterHeader.vala:135
 msgid "Power"
 msgstr "Питание"
 
-#: src/controlCenter/controlCenterHeader.vala:248
+#: src/controlCenter/controlCenterHeader.vala:271
 msgid "Log Out"
 msgstr "Выйти"
 
-#: src/controlCenter/controlCenterHeader.vala:255
+#: src/controlCenter/controlCenterHeader.vala:277
 msgid "Suspend"
 msgstr "Сон"
 
-#: src/controlCenter/controlCenterHeader.vala:261
+#: src/controlCenter/controlCenterHeader.vala:283
 msgid "Hibernate"
 msgstr "Гибернация"
 
-#: src/controlCenter/controlCenterHeader.vala:267
+#: src/controlCenter/controlCenterHeader.vala:289
 msgid "Restart"
 msgstr "Перезагрузить"
 
-#: src/controlCenter/controlCenterHeader.vala:273
+#: src/controlCenter/controlCenterHeader.vala:295
 msgid "Power Off"
 msgstr "Выключить"
 
@@ -162,7 +166,7 @@ msgid "Password"
 msgstr "Пароль"
 
 #: src/controlCenter/widgets/quickSettings/tiles/wifiTile.vala:454
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:121
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:174
 msgid "Connect"
 msgstr "Подключить"
 
@@ -198,15 +202,15 @@ msgstr "Bluetooth"
 msgid "Searching for devices…"
 msgstr "Поиск устройств…"
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:120
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:173
 msgid "Disconnect"
 msgstr "Отключить"
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:226
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:236
 msgid "Forget"
 msgstr "Забыть"
 
-#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:161
+#: src/controlCenter/widgets/quickSettings/tiles/bluetoothTile.vala:269
 msgid "Bluetooth Settings"
 msgstr "Настройки Bluetooth"
 
