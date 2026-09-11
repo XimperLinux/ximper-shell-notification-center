@@ -34,6 +34,15 @@ namespace XimperShellNotificationCenter.Widgets {
         uint sink_rebuild_timeout = 0;
         private bool syncing_slider = false;
 
+        private const double NORMAL_VOLUME = 100.0;
+        private static double amplified_volume {
+            get {
+                return NORMAL_VOLUME
+                    * (double) PulseAudio.Volume.sw_from_dB (11.0)
+                    / (double) PulseAudio.Volume.NORM;
+            }
+        }
+
         private PulseDevice ?default_sink = null;
         private PulseDaemon client = new PulseDaemon ();
 
@@ -50,6 +59,8 @@ namespace XimperShellNotificationCenter.Widgets {
 
         public Volume (string suffix) {
             base (suffix);
+
+            reload_config ();
 
             list_box_controller = new IterListBoxController (
                 levels_listbox);
@@ -75,6 +86,35 @@ namespace XimperShellNotificationCenter.Widgets {
                 on_device_changed);
 
             update_reveal_visibility ();
+        }
+
+        public override void reload_config () {
+            bool allow_amplified_volume = false;
+            Json.Object ?config = get_config (this);
+            if (config != null) {
+                bool ?value = get_prop<bool> (
+                    config, "allow-volume-above-100-percent");
+                if (value != null) {
+                    allow_amplified_volume = value;
+                }
+            }
+
+            double upper = allow_amplified_volume
+                ? amplified_volume
+                : NORMAL_VOLUME;
+
+            syncing_slider = true;
+            slider.set_range (0, upper);
+            main_sink_scale.set_range (0, upper);
+            slider.clear_marks ();
+            main_sink_scale.clear_marks ();
+            if (allow_amplified_volume) {
+                slider.add_mark (
+                    NORMAL_VOLUME, Gtk.PositionType.BOTTOM, null);
+                main_sink_scale.add_mark (
+                    NORMAL_VOLUME, Gtk.PositionType.BOTTOM, null);
+            }
+            syncing_slider = false;
         }
 
         [GtkCallback]

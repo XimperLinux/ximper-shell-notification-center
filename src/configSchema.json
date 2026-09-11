@@ -469,7 +469,13 @@
       "type": "object",
       "description": "PulseAudio volume control widget",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "allow-volume-above-100-percent": {
+          "type": "boolean",
+          "description": "Allow output volume amplification up to the PulseAudio UI maximum (about 153%)",
+          "default": false
+        }
+      }
     },
     "quick-settings": {
       "type": "object",
