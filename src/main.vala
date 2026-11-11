@@ -36,7 +36,6 @@ namespace XimperShellNotificationCenter {
         private DBusConnection session_bus;
         private uint notification_name_id = 0;
         private uint notification_object_id = 0;
-        private bool dnd_signal_connected = false;
 
         // Only set on start due to some limitations of GtkLayerShell
         public bool use_layer_shell = true;
@@ -132,6 +131,7 @@ namespace XimperShellNotificationCenter {
                 sync_notification_daemon ();
             });
             control_center = new ControlCenter ();
+            noti_daemon.on_dnd_toggle.connect (on_dnd_toggle);
             // Update on start
             ximper_shell_notification_center_daemon.emit_subscribe ();
 
@@ -153,22 +153,15 @@ namespace XimperShellNotificationCenter {
                 floating_notifications = new NotificationWindow ();
                 add_window (floating_notifications);
             }
-            if (!dnd_signal_connected) {
-                dnd_signal_connected = true;
-                noti_daemon.on_dnd_toggle.connect ((dnd) => {
-                    if (dnd && floating_notifications != null
-                            && floating_notifications.visible) {
-                        noti_daemon
-                            .remove_all_floating_notifications (
-                            true, (noti) => {
-                            return noti.param.urgency
-                                != UrgencyLevels.CRITICAL;
-                        });
-                    }
-                    ximper_shell_notification_center_daemon
-                        .emit_subscribe ();
+        }
+
+        private void on_dnd_toggle (bool dnd) {
+            if (dnd && floating_notifications != null && floating_notifications.visible) {
+                noti_daemon.remove_all_floating_notifications (true, (noti) => {
+                    return noti.param.urgency != UrgencyLevels.CRITICAL;
                 });
             }
+            ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
         private void enable_notification_daemon () {
