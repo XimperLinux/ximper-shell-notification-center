@@ -8,7 +8,7 @@ ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=dbus
-BusName=org.freedesktop.Notifications
+BusName=ru.ximperlinux.shell.NotificationCenter
 ExecStart=@bindir@/ximper-shell-notification-center
 ExecReload=@bindir@/ximper-shell-notification-center-client --reload-config ; @bindir@/ximper-shell-notification-center-client --reload-css
 Restart=on-failure
