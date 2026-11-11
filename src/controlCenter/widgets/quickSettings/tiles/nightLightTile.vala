@@ -33,17 +33,16 @@ namespace XimperShellNotificationCenter.Widgets {
             bool ok = yield Functions.execute_command (
                 "pgrep -x hyprsunset", {}, out msg);
             bool was_available = _is_available;
-            _is_available = ok
-                && msg.strip ().length > 0;
+            _is_available = ok;
+
+            if (was_available != _is_available) {
+                availability_changed ();
+            }
 
             if (_is_available) {
                 yield sync_state ();
             }
 
-            if (was_available != _is_available) {
-                // Trigger grid rebuild
-                set_visible (_is_available);
-            }
         }
 
         private async void sync_state () {

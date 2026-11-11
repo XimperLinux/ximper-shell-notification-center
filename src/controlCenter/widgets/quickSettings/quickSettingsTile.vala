@@ -103,6 +103,8 @@ namespace XimperShellNotificationCenter.Widgets {
             }
         }
 
+        public signal void availability_changed ();
+
         public virtual bool is_available () {
             return true;
         }

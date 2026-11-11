@@ -110,6 +110,7 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private void connect_tile_signals (QuickSettingsTile tile) {
+            tile.availability_changed.connect (build_grid);
             tile.submenu_requested.connect (() => {
                 int row = find_tile_row (tile);
                 if (row >= 0) {
