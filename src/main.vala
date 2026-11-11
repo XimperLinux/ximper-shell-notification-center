@@ -139,8 +139,10 @@ namespace XimperShellNotificationCenter {
                 reload_blank_windows ();
             });
 
-            monitors.items_changed.connect (monitors_changed);
-            Idle.add_once (() => monitors_changed (0, 0, monitors.get_n_items ()));
+            if (use_layer_shell) {
+                monitors.items_changed.connect (monitors_changed);
+                monitors_changed (0, 0, monitors.get_n_items ());
+            }
         }
 
         private void ensure_notification_ui () {
