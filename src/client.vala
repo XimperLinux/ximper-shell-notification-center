@@ -567,6 +567,7 @@ public int command_line (ref string[] args, bool skip_wait) {
                 stderr.printf ("Inhibitor: \"%s\" does not exist!…", args[1]);
                 break;
             case "inhibitors-clear":
+            case "--inhibitors-clear":
             case "-Ic":
                 if (cc_daemon.clear_inhibitors ()) {
                     print ("Cleared all inhibitors");
