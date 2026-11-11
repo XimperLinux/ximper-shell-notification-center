@@ -679,6 +679,10 @@ int try_connect (owned string[] args) {
         }
         return 0;
     } catch (Error e) {
+        if ("--skip-wait" in args || "-sw" in args) {
+            printerr ("%s\n", e.message);
+            return 1;
+        }
         print_connection_error ();
         return 1;
     }
@@ -686,6 +690,9 @@ int try_connect (owned string[] args) {
 
 public int main (string[] args) {
     if (try_connect (args[1 :]) == 1) {
+        if ("--skip-wait" in args || "-sw" in args) {
+            return 1;
+        }
         MainLoop loop = new MainLoop ();
         Bus.watch_name (
             BusType.SESSION,
