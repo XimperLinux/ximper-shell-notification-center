@@ -31,11 +31,6 @@ namespace XimperShellNotificationCenter.Widgets {
             fd = File.new_for_path (path_current);
             if (fd.query_exists ()) {
                 set_max_value ();
-                try {
-                    monitor = fd.monitor (FileMonitorFlags.NONE, null);
-                } catch (Error e) {
-                    critical ("Error %s\n", e.message);
-                }
             } else {
                 this.brightness_change (-1);
                 warning ("Could not find device %s\n", path_current);
@@ -66,25 +61,31 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         private void connect_monitor () {
-            if (monitor != null) {
-                // connect monitor to monitor changes
+            if (monitor != null) return;
+            try {
+                monitor = fd.monitor (FileMonitorFlags.NONE, null);
                 monitor.changed.connect ((src, dest, event) => {
                     get_brightness ();
                 });
+            } catch (Error e) {
+                warning ("Could not monitor brightness: %s", e.message);
             }
         }
 
         public void close () {
             if (monitor != null) {
                 monitor.cancel ();
+                monitor = null;
             }
         }
 
         public async void set_brightness (float percent) {
-            this.close ();
             int actual = calc_actual (percent);
-            login1.set_brightness.begin (subsystem, device, actual);
-            connect_monitor ();
+            try {
+                yield login1.set_brightness (subsystem, device, actual);
+            } catch (Error e) {
+                warning ("Could not set brightness: %s", e.message);
+            }
         }
 
         // get current brightness and emit signal
