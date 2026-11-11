@@ -324,6 +324,9 @@ namespace XimperShellNotificationCenter {
          */
         [DBus (name = "CloseNotification")]
         public void close_notification (uint32 id) throws DBusError, IOError {
+            if (!notification_ids.contains (id)) {
+                throw new DBusError.INVALID_ARGS ("Unknown notification ID: %u", id);
+            }
             request_dismiss_notification_id (id, ClosedReasons.CLOSED_BY_CLOSENOTIFICATION, false);
         }
 
