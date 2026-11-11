@@ -334,7 +334,12 @@ namespace XimperShellNotificationCenter {
             }
             notification_ids.unset (id);
             notification_ids.set (new_params.applied_id, notification);
+            urgent_notifications.remove (id);
+            if (new_params.urgency == UrgencyLevels.CRITICAL) {
+                urgent_notifications.add (new_params.applied_id);
+            }
             notification.replace_notification (new_params);
+            update_state ();
             return true;
         }
 
