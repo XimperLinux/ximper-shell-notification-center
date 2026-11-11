@@ -234,8 +234,7 @@ namespace XimperShellNotificationCenter {
                 hide_floating_notification_reasons += "Control Center is visible";
             }
             // Don't show the notification window if dnd or inhibited
-            bool bypass_dnd = param.urgency == UrgencyLevels.CRITICAL || param.ximper_shell_notification_center_bypass_dnd;
-            if (!bypass_dnd && (dnd || ximper_shell_notification_center_daemon.inhibited)) {
+            if (!param.bypasses_dnd () && (dnd || ximper_shell_notification_center_daemon.inhibited)) {
                 hide_floating_notification_reasons +=
                     "Do Not Disturb is enabled or an Inhibitor is running";
             }

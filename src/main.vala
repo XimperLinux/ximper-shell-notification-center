@@ -158,7 +158,7 @@ namespace XimperShellNotificationCenter {
         private void on_dnd_toggle (bool dnd) {
             if (dnd && floating_notifications != null && floating_notifications.visible) {
                 noti_daemon.remove_all_floating_notifications (true, (noti) => {
-                    return noti.param.urgency != UrgencyLevels.CRITICAL;
+                    return !noti.param.bypasses_dnd ();
                 });
             }
             ximper_shell_notification_center_daemon.emit_subscribe ();

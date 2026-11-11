@@ -155,6 +155,10 @@ namespace XimperShellNotificationCenter {
         /** Always show the notification, regardless of dnd/inhibit state */
         public bool ximper_shell_notification_center_bypass_dnd { get; private set; }
 
+        public bool bypasses_dnd () {
+            return urgency == UrgencyLevels.CRITICAL || ximper_shell_notification_center_bypass_dnd;
+        }
+
         public Array<Action> actions { get; private set; }
 
         public DesktopAppInfo ?desktop_app_info { get; private set; default = null; }
