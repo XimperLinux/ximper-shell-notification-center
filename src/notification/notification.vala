@@ -772,6 +772,9 @@ namespace XimperShellNotificationCenter {
             // Removes the previous timeout
             remove_noti_timeout ();
 
+            if (param.expire_timeout == 0) {
+                return;
+            }
             uint timeout;
             switch (param.urgency) {
                 case UrgencyLevels.LOW :
