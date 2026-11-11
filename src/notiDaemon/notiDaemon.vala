@@ -78,13 +78,17 @@ namespace XimperShellNotificationCenter {
             ximper_shell_notification_center_daemon.emit_subscribe ();
         }
 
-        internal void request_dismiss_all_notifications (ClosedReasons reason) {
-            debug ("Dismissing all notifications, reason:%s", reason.to_string ());
+        internal void invalidate_all_notifications (ClosedReasons reason) {
             foreach (uint32 id in notification_ids) {
                 NotificationClosed (id, reason);
             }
             notification_ids.clear ();
+            synchronous_ids.remove_all ();
+        }
 
+        internal void request_dismiss_all_notifications (ClosedReasons reason) {
+            debug ("Dismissing all notifications, reason:%s", reason.to_string ());
+            invalidate_all_notifications (reason);
             remove_all_floating_notifications (false, null);
             if (notifications_widget != null) {
                 notifications_widget.remove_all_notifications (true);
@@ -187,7 +191,7 @@ namespace XimperShellNotificationCenter {
                                         HashTable<string, Variant> hints,
                                         int expire_timeout) throws DBusError, IOError {
             uint32 id = replaces_id;
-            if (replaces_id == 0 || replaces_id > noti_id) {
+            if (!notification_ids.contains (replaces_id)) {
                 id = ++noti_id;
             }
             id = uint32.max (id, 1);

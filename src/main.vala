@@ -199,6 +199,7 @@ namespace XimperShellNotificationCenter {
         }
 
         private void disable_notification_daemon () {
+            noti_daemon.invalidate_all_notifications (ClosedReasons.UNDEFINED);
             if (notification_object_id != 0) {
                 session_bus.unregister_object (notification_object_id);
                 notification_object_id = 0;
