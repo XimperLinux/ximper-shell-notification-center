@@ -36,6 +36,7 @@ namespace XimperShellNotificationCenter {
         private DBusConnection session_bus;
         private uint notification_name_id = 0;
         private uint notification_object_id = 0;
+        public bool notification_service_active { get; private set; }
 
         // Only set on start due to some limitations of GtkLayerShell
         public bool use_layer_shell = true;
@@ -185,6 +186,7 @@ namespace XimperShellNotificationCenter {
                             "/org/freedesktop/Notifications",
                             noti_daemon);
                     }
+                    notification_service_active = true;
                 } catch (Error e) {
                     error ("Could not register notification service: \"%s\"", e.message);
                 }
@@ -194,11 +196,12 @@ namespace XimperShellNotificationCenter {
                     "Could not acquire notification name. " +
                     "Please close any other notification daemon " +
                     "like mako or dunst\n");
-                notification_name_id = 0;
+                notification_service_active = false;
             });
         }
 
         private void disable_notification_daemon () {
+            notification_service_active = false;
             noti_daemon.invalidate_all_notifications (ClosedReasons.UNDEFINED);
             if (notification_object_id != 0) {
                 session_bus.unregister_object (notification_object_id);

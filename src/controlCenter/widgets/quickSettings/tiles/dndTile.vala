@@ -5,6 +5,7 @@ namespace XimperShellNotificationCenter.Widgets {
                   _("Do Not Disturb"));
             active = noti_daemon.dnd;
             update_icon ();
+            app.notify["notification-service-active"].connect (on_service_changed);
 
             noti_daemon.on_dnd_toggle.connect ((dnd) => {
                 active = dnd;
@@ -13,7 +14,11 @@ namespace XimperShellNotificationCenter.Widgets {
         }
 
         public override bool is_available () {
-            return notifications_widget != null;
+            return app.notification_service_active;
+        }
+
+        private void on_service_changed () {
+            availability_changed ();
         }
 
         private void update_icon () {

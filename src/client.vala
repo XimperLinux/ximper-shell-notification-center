@@ -238,7 +238,8 @@ private void add_preview_items (Json.Object preview,
                      i++) {
                     unowned Json.Object ?tile =
                         configured_tiles.get_object_element (i);
-                    if (tile != null) {
+                    if (tile != null && (notification_daemon_enabled (config)
+                            || tile.get_string_member_with_default ("type", "") != "dnd")) {
                         tiles.add_object_element (
                             build_tile_entry (tile, schema));
                     }
@@ -294,10 +295,8 @@ private Json.Node ?schema_member_node (Json.Object schema, string name) {
     return schema.get_member (name).copy ();
 }
 
-private Json.Node filtered_widgets_metadata (Json.Object config,
-                                             Json.Object schema) {
-    unowned Json.Array source =
-        schema.get_array_member ("x-ximper-widgets");
+private Json.Node filtered_metadata (Json.Object config, Json.Array source,
+                                     string daemon_only_type) {
     Json.Array result = new Json.Array ();
 
     for (uint i = 0; i < source.get_length (); i++) {
@@ -306,7 +305,7 @@ private Json.Node filtered_widgets_metadata (Json.Object config,
             continue;
         }
         if (widget.get_string_member_with_default ("type", "")
-                == "notifications"
+                == daemon_only_type
                 && !notification_daemon_enabled (config)) {
             continue;
         }
@@ -324,14 +323,16 @@ private void add_schema_metadata (Json.Object root,
     Json.Object metadata = new Json.Object ();
 
     metadata.set_member ("widgets",
-                         filtered_widgets_metadata (config, schema));
+                         filtered_metadata (config, schema.get_array_member ("x-ximper-widgets"),
+                                            "notifications"));
 
-    Json.Node ?node = schema_member_node (schema, "x-ximper-quick-settings-tiles");
-    if (node != null) {
-        metadata.set_member ("quick-settings-tiles", node);
+    if (schema.has_member ("x-ximper-quick-settings-tiles")) {
+        metadata.set_member ("quick-settings-tiles",
+                             filtered_metadata (config, schema.get_array_member ("x-ximper-quick-settings-tiles"),
+                                                "dnd"));
     }
 
-    node = schema_member_node (schema, "properties");
+    Json.Node ?node = schema_member_node (schema, "properties");
     if (node != null) {
         metadata.set_member ("properties", node);
     }
