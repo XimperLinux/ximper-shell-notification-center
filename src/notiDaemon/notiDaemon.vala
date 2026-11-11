@@ -102,11 +102,10 @@ namespace XimperShellNotificationCenter {
                 if (func == null || func (notification)) {
                     // Send DISMISSED to valid TRANSIENT notifications
                     unowned NotifyParams param = notification.param;
-                    if (param.applied_id > 0 && param.ignore_cc ()) {
+                    if (param.ignore_cc () && notification_ids.remove (param.applied_id)) {
                         debug ("Closing floating-only notification with ID:%u while hiding",
                                param.applied_id);
                         NotificationClosed (param.applied_id, ClosedReasons.DISMISSED);
-                        notification_ids.remove (param.applied_id);
                     }
                     return true;
                 }
