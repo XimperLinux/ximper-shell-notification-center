@@ -268,9 +268,8 @@ namespace XimperShellNotificationCenter {
          */
         public void remove_all_notifications (bool transition,
                                               notification_filter_func ?filter_func) {
-            notification_ids.clear ();
-            inline_reply_notifications.clear ();
-            foreach (unowned AnimatedListItem item in list.children) {
+            // Removing without a transition can unlink the current list item immediately.
+            foreach (unowned AnimatedListItem item in list.children.copy ()) {
                 if (item.destroying) {
                     continue;
                 }
@@ -281,7 +280,9 @@ namespace XimperShellNotificationCenter {
                 }
             }
 
-            set_visible (false);
+            if (notification_ids.is_empty) {
+                set_visible (false);
+            }
         }
 
         private void remove_notification_internal (Notification notification, bool transition) {
