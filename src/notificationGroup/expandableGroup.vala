@@ -80,6 +80,11 @@ namespace XimperShellNotificationCenter {
             }
             is_expanded = value;
 
+            if (value) {
+                foreach (unowned Gtk.Widget widget in widgets) {
+                    widget.set_visible (true);
+                }
+            }
             animate (is_expanded ? 1 : 0);
 
             this.queue_resize ();
@@ -89,12 +94,21 @@ namespace XimperShellNotificationCenter {
             widget.set_parent (this);
             widgets.prepend (widget);
             n_children++;
+            if (!is_expanded && animation_progress == 0) {
+                unowned Gtk.Widget ?overflow = widgets.nth_data (NUM_STACKED_NOTIFICATIONS);
+                if (overflow != null) overflow.set_visible (false);
+            }
         }
 
         public void remove (Gtk.Widget widget) {
             bool widget_visible = widget.get_visible ();
+            visible_widgets.remove (widget);
             widget.unparent ();
             widgets.remove (widget);
+            if (widget_visible && !is_expanded && animation_progress == 0) {
+                unowned Gtk.Widget ?last = widgets.nth_data (NUM_STACKED_NOTIFICATIONS - 1);
+                if (last != null) last.set_visible (true);
+            }
             if (widget_visible) {
                 queue_resize ();
             }
@@ -192,6 +206,7 @@ namespace XimperShellNotificationCenter {
             int y = 0;
             i = 0;
             foreach (unowned Gtk.Widget child in widgets) {
+                if (!child.should_layout ()) continue;
                 WidgetHeights computed_height = heights[i];
                 WidgetAlloc child_allocation = WidgetAlloc () {
                     y = 0,
@@ -399,6 +414,12 @@ namespace XimperShellNotificationCenter {
         }
 
         void animation_done_cb () {
+            if (!is_expanded && animation_progress == 0) {
+                for (unowned List<Gtk.Widget> link = widgets.nth (NUM_STACKED_NOTIFICATIONS);
+                     link != null; link = link.next) {
+                    link.data.set_visible (false);
+                }
+            }
             this.queue_allocate ();
         }
 
