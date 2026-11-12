@@ -354,43 +354,46 @@ namespace XimperShellNotificationCenter {
 
         /** Get the static singleton and reload the config */
         public static unowned ConfigModel init (string ?path) {
-            _path = path;
-            reload_config ();
+            _path = Functions.get_config_path (path);
+            try {
+                reload_config ();
+            } catch (Error e) {
+                warning ("Using default configuration: %s", e.message);
+                _instance = new ConfigModel ();
+            }
             return _instance;
         }
 
         public delegate void ModifyNode (Json.Node node);
 
         /** Reloads the config and calls `ModifyNode` before deserializing */
-        public static void reload_config (ModifyNode modify_cb = () => {}) {
-            // Re-check if config file path still exists
-            string path = Functions.get_config_path (_path);
-            path = File.new_for_path (path).get_path () ?? path;
+        public static void reload_config (ModifyNode modify_cb = () => {}) throws Error {
+            string path = _path;
             message ("Loading Config: \"%s\"", path);
 
-            ConfigModel m = null;
-            try {
-                if (path.strip ().length == 0) {
-                    return;
-                }
-                Json.Parser parser = new Json.Parser ();
-                parser.load_from_file (path);
-                Json.Node ?node = parser.get_root ();
-                if (node == null) {
-                    throw new Json.ParserError.PARSE ("Node is null!");
-                }
+            var parser = new Json.Parser ();
+            parser.load_from_file (path);
+            unowned Json.Node ?node = parser.get_root ();
+            if (node == null || node.get_node_type () != Json.NodeType.OBJECT) {
+                throw new IOError.INVALID_DATA ("Expected a configuration object");
+            }
+            modify_cb (node);
 
-                modify_cb (node);
-
-                ConfigModel model = Json.gobject_deserialize (
-                    typeof (ConfigModel), node) as ConfigModel;
-                if (model == null) {
-                    throw new Json.ParserError.UNKNOWN ("Json model is null!");
+            // Validate the original JSON integer before GObject narrows it to uint.
+            unowned Json.Object config = node.get_object ();
+            foreach (unowned string key in new string[] { "notification-history-limit", "notification_history_limit" }) {
+                unowned Json.Node ?limit = config.get_member (key);
+                if (limit == null) continue;
+                if (limit.get_value_type () != typeof (int64)
+                    || limit.get_int () < 0 || limit.get_int () > uint.MAX) {
+                    throw new IOError.INVALID_DATA (
+                        "notification-history-limit must be an integer between 0 and %u", uint.MAX);
                 }
-                m = model;
-            } catch (Error e) {
-                critical (e.message);
-                m = new ConfigModel ();
+            }
+
+            ConfigModel ?m = Json.gobject_deserialize (typeof (ConfigModel), node) as ConfigModel;
+            if (m == null) {
+                throw new IOError.INVALID_DATA ("Could not deserialize configuration");
             }
 
             ConfigModel ?previous_config = _instance;
@@ -440,6 +443,8 @@ namespace XimperShellNotificationCenter {
          */
         public bool layer_shell_cover_screen { get; set; default = true; }
 
+
+        public uint notification_history_limit { get; set; default = 200; }
 
         /** The timeout for notifications with NORMAL priority */
         private const int TIMEOUT_DEFAULT = 10;
@@ -1113,7 +1118,7 @@ namespace XimperShellNotificationCenter {
         public void change_value (string member_name,
                                   Variant value,
                                   bool write = true,
-                                  string ?path = null) {
+                                  string ?path = null) throws Error {
             reload_config ((node) => {
                 unowned Json.Object obj = node.get_object ();
                 if (obj == null) {

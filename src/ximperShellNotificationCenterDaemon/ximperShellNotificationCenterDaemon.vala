@@ -64,7 +64,11 @@ namespace XimperShellNotificationCenter {
         public void reload_config () throws Error {
             print ("\n");
             message ("Reloading config\n");
-            ConfigModel.reload_config ();
+            try {
+                ConfigModel.reload_config ();
+            } catch (Error e) {
+                throw new DBusError.INVALID_ARGS ("Configuration reload failed: %s", e.message);
+            }
         }
 
         /**

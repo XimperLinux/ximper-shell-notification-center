@@ -234,6 +234,13 @@
       "default": 200,
       "minimum": 200
     },
+    "notification-history-limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295,
+      "default": 200,
+      "description": "Maximum number of non-critical notifications kept in history. Set to 0 for unlimited history."
+    },
     "timeout": {
       "type": "integer",
       "description": "The notification timeout for notifications with normal priority",

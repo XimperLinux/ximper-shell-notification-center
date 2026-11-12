@@ -8,6 +8,8 @@ namespace XimperShellNotificationCenter {
         private HashTable<string, uint32> synchronous_ids =
             new HashTable<string, uint32> (str_hash, str_equal);
         private Gee.HashSet<uint32> notification_ids = new Gee.HashSet<uint32> ();
+        // Non-critical control-center notifications, oldest update first.
+        private Queue<uint32> history_ids = new Queue<uint32> ();
 
         /** Do Not Disturb state */
         internal bool dnd { get; set; default = false; }
@@ -39,10 +41,16 @@ namespace XimperShellNotificationCenter {
                 return;
             }
 
+            dismiss_notification_id (id, reason);
+            ximper_shell_notification_center_daemon.emit_subscribe ();
+        }
+
+        private void dismiss_notification_id (uint32 id, ClosedReasons reason) {
             debug ("Dismissing notification with ID:%u, reason:%s",
                    id, reason.to_string ());
             NotificationClosed (id, reason);
             notification_ids.remove (id);
+            history_ids.remove (id);
 
             if (notifications_widget != null) {
                 notifications_widget.remove_notification (id);
@@ -50,8 +58,15 @@ namespace XimperShellNotificationCenter {
             if (floating_notifications != null) {
                 floating_notifications.remove_notification (id);
             }
+        }
 
-            ximper_shell_notification_center_daemon.emit_subscribe ();
+        internal bool trim_history () {
+            uint limit = ConfigModel.instance.notification_history_limit;
+            if (limit == 0 || history_ids.length <= limit) return false;
+            while (history_ids.length > limit) {
+                dismiss_notification_id (history_ids.peek_head (), ClosedReasons.UNDEFINED);
+            }
+            return true;
         }
 
         internal inline void request_dismiss_notification (NotifyParams param,
@@ -67,6 +82,7 @@ namespace XimperShellNotificationCenter {
             foreach (unowned uint32 id in ids) {
                 NotificationClosed (id, reason);
                 notification_ids.remove (id);
+                history_ids.remove (id);
                 if (floating_notifications != null) {
                     floating_notifications.remove_notification (id);
                 }
@@ -83,6 +99,7 @@ namespace XimperShellNotificationCenter {
                 NotificationClosed (id, reason);
             }
             notification_ids.clear ();
+            history_ids.clear ();
             synchronous_ids.remove_all ();
         }
 
@@ -274,7 +291,8 @@ namespace XimperShellNotificationCenter {
                 }
             }
 
-            if (notifications_widget != null && !param.ignore_cc ()) {
+            bool in_history = notifications_widget != null && !param.ignore_cc ();
+            if (in_history) {
                 added = true;
                 if (notification_id_to_replace > 0) {
                     debug ("Replacing CC Notification: ID:%u -> ID:%u\n",
@@ -302,9 +320,14 @@ namespace XimperShellNotificationCenter {
             if (added || removed) {
                 if (notification_id_to_replace > 0) {
                     notification_ids.remove (notification_id_to_replace);
+                    history_ids.remove (notification_id_to_replace);
                 }
                 if (added) {
                     notification_ids.add (id);
+                }
+                if (in_history && param.urgency != UrgencyLevels.CRITICAL) {
+                    history_ids.push_tail (id);
+                    trim_history ();
                 }
 
                 ximper_shell_notification_center_daemon.emit_subscribe ();

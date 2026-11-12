@@ -88,6 +88,16 @@ config file to be able to detect config errors
 		compositors exclusive zones. An example would be setting it to ++
 		*false* to cover your panel/dock.
 
+*notification-history-limit* ++
+	type: integer ++
+	default: 200 ++
+	description: Maximum number of low and normal urgency notifications kept in ++
+		history across all applications. When the limit is exceeded, the oldest ++
+		notification is closed first. Updating a notification makes it the newest. ++
+		Critical notifications and popup-only notifications do not count toward ++
+		the limit. Set to 0 for unlimited history. Reloading the configuration ++
+		applies the new limit immediately.
+
 *timeout* ++
 	type: integer ++
 	default: 10 ++

@@ -137,14 +137,14 @@ args = [
   '--target-glib=2.82',
 ]
 
-executable('ximper-shell-notification-center',
+daemon_exe = executable('ximper-shell-notification-center',
   [ app_sources, app_resources ],
   vala_args: args,
   dependencies: app_deps,
   install: true,
 )
 
-executable('ximper-shell-notification-center-client',
+client_exe = executable('ximper-shell-notification-center-client',
   ['client.vala', constants],
   vala_args: args,
   dependencies: app_deps,
@@ -161,3 +161,9 @@ config_json = configure_file(
 
 install_data(config_json, install_dir : config_path)
 install_data('configSchema.json', install_dir : config_path)
+
+test('Rejected config reload preserves notification history', find_program('bash'),
+  args: [files('../tests/history-reload.sh'), daemon_exe, client_exe, style_files[0],
+         meson.project_source_root() / 'data'],
+  timeout: 60,
+)

@@ -635,8 +635,8 @@ public int command_line (ref string[] args, bool skip_wait) {
                 break;
         }
     } catch (Error e) {
-        stderr.printf (e.message + "\n");
-        if (skip_wait) {
+        printerr ("%s\n", e.message);
+        if (skip_wait || e is DBusError.INVALID_ARGS) {
             Process.exit (1);
         }
         return 1;

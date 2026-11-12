@@ -130,6 +130,9 @@ namespace XimperShellNotificationCenter {
 
             config_reload.connect ((old, config) => {
                 sync_notification_daemon ();
+                if (noti_daemon.trim_history ()) {
+                    ximper_shell_notification_center_daemon.emit_subscribe ();
+                }
             });
             control_center = new ControlCenter ();
             noti_daemon.on_dnd_toggle.connect (on_dnd_toggle);
