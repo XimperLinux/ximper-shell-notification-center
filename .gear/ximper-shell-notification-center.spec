@@ -1,7 +1,7 @@
 %define xdg_name ru.ximperlinux.shell.NotificationCenter
 
 Name: ximper-shell-notification-center
-Version: 0.4.0
+Version: 0.5.0
 Release: eter1
 License: GPL-3.0
 
@@ -74,6 +74,14 @@ A component of the Ximper Shell.
 %_datadir/fish/vendor_completions.d/%name-client.fish
 
 %changelog
+* Thu Nov 12 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.5.0-eter1
+- Speed up panel opening with large notification histories
+- Honor persistent notification timeouts and Do Not Disturb exceptions
+- Fix notification closure signals, ID lifetime and group urgency updates
+- Fix panel-only startup and hide Do Not Disturb when the notification service is inactive
+- Fix monitor removal, brightness updates and Night Light tile visibility
+- Honor --skip-wait and --inhibitors-clear in the client
+
 * Fri Sep 11 2026 Kirill Unitsaev <fiersik@altlinux.org> 0.4.0-eter1
 - Show Bluetooth device battery levels and allow forgetting devices
 - Fix duplicate and malformed Wi-Fi network names
