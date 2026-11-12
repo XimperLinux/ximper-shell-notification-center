@@ -263,6 +263,7 @@ private void add_preview (Json.Object root,
 private void add_runtime_status (Json.Object root) {
     Json.Object runtime = new Json.Object ();
     try {
+        if (cc_daemon == null) throw new IOError.NOT_CONNECTED ("Offline");
         XimperShellNotificationCenterDaemonData data =
             cc_daemon.get_subscribe_data ();
         object_set_boolean_member (runtime, "running", true);
@@ -345,6 +346,7 @@ private void print_describe () throws Error {
     Json.Node config = load_config_json ();
     Json.Node schema = load_json_file (Constants.CONFIG_SCHEMA_PATH);
 
+    root.set_int_member ("api_version", 1);
     root.set_member ("config", config);
     add_runtime_status (root);
     add_paths (root);
@@ -691,6 +693,22 @@ int try_connect (owned string[] args) {
 }
 
 public int main (string[] args) {
+    if (args.length == 2 && args[1] == "--describe") {
+        try {
+            cc_daemon = Bus.get_proxy_sync (BusType.SESSION,
+                "ru.ximperlinux.shell.NotificationCenter",
+                "/ru/ximperlinux/shell/NotificationCenter", DBusProxyFlags.DO_NOT_AUTO_START);
+        } catch (Error e) {
+            // Configuration and schema are available outside a desktop session.
+        }
+        try {
+            print_describe ();
+            return 0;
+        } catch (Error e) {
+            printerr ("%s\n", e.message);
+            return 1;
+        }
+    }
     if (try_connect (args[1 :]) == 1) {
         if ("--skip-wait" in args || "-sw" in args) {
             return 1;
